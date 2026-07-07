@@ -81,10 +81,12 @@
 
     <header class="hidden md:flex items-center justify-between px-4 h-16 bg-brand-bg shrink-0">
         <div class="flex items-center gap-4 w-[238px]">
-            <button class="p-2 hover:bg-gray-200 rounded-full transition-colors flex items-center justify-center">
+            <button onclick="window.__toggleSidebar()"
+                class="p-2 hover:bg-gray-200 rounded-full transition-colors flex items-center justify-center">
                 <span class="material-symbols-outlined">menu</span>
             </button>
-            <div class="flex items-center gap-2 cursor-pointer">
+            <div onclick="window.__switchFolder('recibidos', document.querySelector('#folder-nav a'))"
+                class="flex items-center gap-2 cursor-pointer">
                 <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_default_1x_r5.png"
                     alt="Gmail Logo" class="h-10 opacity-90" />
             </div>
@@ -92,31 +94,36 @@
 
         <div
             class="flex-1 max-w-[720px] bg-[#eaf1fb] hover:bg-white hover:shadow-md rounded-full flex items-center px-2 py-1 h-12 transition-all focus-within:bg-white focus-within:shadow-md">
-            <button class="p-2 rounded-full hover:bg-gray-100 flex items-center justify-center">
+            <button onclick="document.getElementById('search-desktop').focus()"
+                class="p-2 rounded-full hover:bg-gray-100 flex items-center justify-center">
                 <span class="material-symbols-outlined">search</span>
             </button>
-            <input type="text" placeholder="Buscar correo"
+            <input id="search-desktop" type="text" placeholder="Buscar correo" oninput="window.__filterMail(this.value)"
                 class="bg-transparent border-none focus:ring-0 w-full px-2 outline-none text-base" />
-            <button class="p-2 rounded-full hover:bg-gray-100 flex items-center justify-center">
+            <button onclick="window.__toast('Filtros de búsqueda no disponibles en esta demo')"
+                class="p-2 rounded-full hover:bg-gray-100 flex items-center justify-center">
                 <span class="material-symbols-outlined">tune</span>
             </button>
         </div>
 
         <div class="flex items-center gap-1 pr-2">
-            <button
+            <button onclick="window.__toggleStatus()"
                 class="hidden md:flex items-center gap-2 px-3 py-1.5 hover:bg-gray-200 rounded-full border border-transparent mr-2">
-                <div class="w-2.5 h-2.5 bg-green-600 rounded-full"></div>
-                <span class="text-sm font-medium">Activo</span>
+                <div id="status-dot" class="w-2.5 h-2.5 bg-green-600 rounded-full"></div>
+                <span id="status-text" class="text-sm font-medium">Activo</span>
                 <span class="material-symbols-outlined" style="font-size: 16px;">expand_more</span>
             </button>
 
-            <button class="p-2 hover:bg-gray-200 rounded-full flex items-center justify-center">
+            <button onclick="window.__toast('Ayuda no disponible en esta demo')"
+                class="p-2 hover:bg-gray-200 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">help</span>
             </button>
-            <button class="p-2 hover:bg-gray-200 rounded-full flex items-center justify-center">
+            <button onclick="window.__toast('Configuración no disponible en esta demo')"
+                class="p-2 hover:bg-gray-200 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">settings</span>
             </button>
-            <button class="p-2 hover:bg-gray-200 rounded-full flex items-center justify-center">
+            <button onclick="window.__toast('Aplicaciones de Google no disponibles en esta demo')"
+                class="p-2 hover:bg-gray-200 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">apps</span>
             </button>
 
@@ -148,7 +155,7 @@
                             R
                         </div>
                         <h3 data-greeting="Hola, " class="text-xl font-medium text-gray-900">Hola, Ramiro</h3>
-                        <button
+                        <button onclick="window.__toast('Gestión de cuenta no disponible en esta demo')"
                             class="mt-4 w-full py-2 px-4 border border-gray-300 rounded-full text-brand-blue font-medium hover:bg-brand-hover transition-colors">
                             Gestionar tu cuenta de Google
                         </button>
@@ -162,7 +169,8 @@
         <!-- Mobile Bottom Nav -->
         <div
             class="md:hidden fixed bottom-0 left-0 right-0 h-[72px] bg-[#1a1a1c] flex items-center justify-around z-50 shadow-[0_-4px_6px_rgba(0,0,0,0.3)]">
-            <div class="flex flex-col items-center justify-center relative cursor-pointer group">
+            <div onclick="window.__switchFolder('recibidos', document.querySelector('#folder-nav a'))"
+                class="flex flex-col items-center justify-center relative cursor-pointer group">
                 <div class="px-5 py-0.5 rounded-full bg-[#004a77] relative mb-3">
                     <span class="material-symbols-outlined icon-fill text-[#c2e7ff] mt-0.5">mail</span>
                     <div
@@ -170,32 +178,33 @@
                         99+</div>
                 </div>
             </div>
-            <div class="flex flex-col items-center justify-center cursor-pointer text-[#9aa0a6] mb-3 relative">
+            <div onclick="window.__toast('Meet no disponible en esta demo')"
+                class="flex flex-col items-center justify-center cursor-pointer text-[#9aa0a6] mb-3 relative">
                 <span class="material-symbols-outlined">videocam</span>
             </div>
         </div>
 
         <!-- Desktop Slim Sidebar (Gmail style) -->
         <div class="hidden md:flex w-[72px] flex-col items-center py-4 bg-brand-bg shrink-0 gap-4">
-            <div
+            <div onclick="window.__switchFolder('recibidos', document.querySelector('#folder-nav a'))"
                 class="flex flex-col p-2 bg-[#d3e3fd] rounded-2xl items-center justify-center cursor-pointer w-12 h-12 relative">
                 <span class="material-symbols-outlined icon-fill text-[#041e49]">mail</span>
                 <div class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 rounded-full">
                     63</div>
             </div>
-            <div
+            <div onclick="window.__toast('Chat no disponible en esta demo')"
                 class="flex flex-col p-2 hover:bg-gray-200 rounded-2xl items-center justify-center cursor-pointer w-12 h-12">
                 <span class="material-symbols-outlined">chat_bubble</span>
             </div>
-            <div
+            <div onclick="window.__toast('Meet no disponible en esta demo')"
                 class="flex flex-col p-2 hover:bg-gray-200 rounded-2xl items-center justify-center cursor-pointer w-12 h-12">
                 <span class="material-symbols-outlined">videocam</span>
             </div>
         </div>
 
-        <nav class="hidden md:flex w-[256px] flex-col shrink-0 overflow-y-auto">
+        <nav id="folder-nav" class="hidden md:flex w-[256px] flex-col shrink-0 overflow-y-auto">
             <div class="py-2 pl-2">
-                <button
+                <button onclick="window.__openCompose()"
                     class="flex items-center gap-4 bg-brand-light text-brand-blue pl-4 pr-6 py-4 rounded-2xl shadow-sm hover:shadow-md hover:bg-[#b0dcf8] transition-all">
                     <span class="material-symbols-outlined" style="color: #0b57d0;">edit</span>
                     <span class="font-medium">Redactar</span>
@@ -203,7 +212,7 @@
             </div>
 
             <div class="pr-4 space-y-0.5 mt-2">
-                <a href="#"
+                <a href="#" onclick="event.preventDefault(); window.__switchFolder('recibidos', this)"
                     class="flex items-center justify-between bg-[#d3e3fd] text-[#041e49] px-6 py-1.5 rounded-r-full font-medium">
                     <div class="flex items-center gap-4">
                         <span class="material-symbols-outlined icon-fill">inbox</span>
@@ -212,23 +221,27 @@
                     <span class="text-xs font-bold">63</span>
                 </a>
 
-                <a href="#" class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
+                <a href="#" onclick="event.preventDefault(); window.__switchFolder('destacados', this)"
+                    class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
                     <span class="material-symbols-outlined">star</span>
                     Destacados
                 </a>
-                <a href="#" class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
+                <a href="#" onclick="event.preventDefault(); window.__switchFolder('pospuestos', this)"
+                    class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
                     <span class="material-symbols-outlined">schedule</span>
                     Pospuestos
                 </a>
-                <a href="#" class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
+                <a href="#" onclick="event.preventDefault(); window.__switchFolder('enviados', this)"
+                    class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
                     <span class="material-symbols-outlined">send</span>
                     Enviados
                 </a>
-                <a href="#" class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
+                <a href="#" onclick="event.preventDefault(); window.__switchFolder('borradores', this)"
+                    class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
                     <span class="material-symbols-outlined">draft</span>
                     Borradores
                 </a>
-                <a href="#"
+                <a href="#" onclick="event.preventDefault(); window.__toast('Categorías no disponibles en esta demo')"
                     class="flex items-center justify-between px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700 group">
                     <div class="flex items-center gap-4">
                         <span class="material-symbols-outlined">label</span>
@@ -236,14 +249,15 @@
                     </div>
                     <span class="material-symbols-outlined text-[16px] hidden group-hover:block">arrow_drop_down</span>
                 </a>
-                <a href="#" class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
+                <a href="#" onclick="event.preventDefault(); window.__toast('Más carpetas no disponibles en esta demo')"
+                    class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
                     <span class="material-symbols-outlined">expand_more</span>
                     Más
                 </a>
             </div>
 
             <div class="mt-4 px-4 pb-2 border-b border-gray-200">
-                <div
+                <div onclick="window.__toast('Crear etiqueta no disponible en esta demo')"
                     class="flex items-center justify-between text-gray-800 font-medium py-1 px-2 hover:bg-gray-200 rounded cursor-pointer">
                     <span>Etiquetas</span>
                     <span class="material-symbols-outlined" style="font-size: 18px;">add</span>
@@ -261,8 +275,10 @@
             <!-- Mobile Header & Title -->
             <div class="md:hidden px-4 pt-3 pb-1 shrink-0 z-10 bg-[#0f0f0f]">
                 <div class="bg-[#202124] rounded-full h-[52px] flex items-center px-4 gap-4 mt-1 border border-[#333]">
-                    <span class="material-symbols-outlined text-[#e8eaed] text-[24px]">menu</span>
-                    <input type="text" placeholder="Buscar en el correo"
+                    <span onclick="window.__toggleMobileDrawer()"
+                        class="material-symbols-outlined text-[#e8eaed] text-[24px] cursor-pointer">menu</span>
+                    <input id="search-mobile" type="text" placeholder="Buscar en el correo"
+                        oninput="window.__filterMail(this.value)"
                         class="bg-transparent border-none focus:ring-0 w-full outline-none text-[16px] text-[#e8eaed] placeholder-[#9aa0a6] mt-0.5" />
                     <div onclick="document.getElementById('mobile-profile-modal').classList.remove('hidden')"
                         class="w-8 h-8 rounded-full bg-[#1b3a57] border border-blue-500 overflow-hidden shrink-0 flex items-center justify-center cursor-pointer active:scale-95 transition-transform">
@@ -275,7 +291,7 @@
             </div>
 
             <!-- Mobile FAB -->
-            <div
+            <div onclick="window.__openCompose()"
                 class="md:hidden fixed bottom-[90px] right-4 bg-[#c2e7ff] hover:bg-[#a8d3f0] text-[#041e49] rounded-[16px] px-5 py-4 flex items-center justify-center shadow-lg z-50 cursor-pointer gap-2 transition-colors">
                 <span class="material-symbols-outlined icon-fill">edit</span>
                 <span class="font-medium mr-1 text-[13px]">Redactar</span>
@@ -283,37 +299,41 @@
 
             <div class="hidden md:flex items-center justify-between px-4 h-12 border-b border-gray-100">
                 <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-0.5 hover:bg-gray-100 p-1 rounded cursor-pointer">
-                        <span class="material-symbols-outlined" style="font-size: 18px;">check_box_outline_blank</span>
+                    <div onclick="window.__toggleSelectAll(this)"
+                        class="flex items-center gap-0.5 hover:bg-gray-100 p-1 rounded cursor-pointer">
+                        <span id="select-all-icon" class="material-symbols-outlined"
+                            style="font-size: 18px;">check_box_outline_blank</span>
                         <span class="material-symbols-outlined" style="font-size: 16px;">arrow_drop_down</span>
                     </div>
-                    <span
+                    <span onclick="window.__refreshInbox()"
                         class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full cursor-pointer">refresh</span>
-                    <span
+                    <span onclick="window.__toast('Más opciones no disponibles en esta demo')"
                         class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full cursor-pointer">more_vert</span>
                 </div>
 
                 <div class="flex items-center text-xs text-gray-500 font-medium">
                     <span class="mr-3">1-50 de 130</span>
-                    <span
+                    <span onclick="window.__toast('No hay más correos para mostrar')"
                         class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full cursor-pointer text-gray-300">chevron_left</span>
-                    <span
+                    <span onclick="window.__toast('No hay más correos para mostrar')"
                         class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full cursor-pointer text-gray-600">chevron_right</span>
-                    <div class="flex items-center gap-1 ml-4 hover:bg-gray-100 p-1.5 rounded cursor-pointer">
+                    <div onclick="window.__toast('Cambio de idioma no disponible en esta demo')"
+                        class="flex items-center gap-1 ml-4 hover:bg-gray-100 p-1.5 rounded cursor-pointer">
                         <span>Es</span>
                         <span class="material-symbols-outlined" style="font-size: 16px;">arrow_drop_down</span>
                     </div>
                 </div>
             </div>
 
-            <div class="hidden md:block m-4 border border-gray-200 rounded-2xl relative bg-white">
-                <button class="absolute top-2 right-2 p-1.5 hover:bg-gray-100 rounded-full text-gray-500">
+            <div id="tips-banner" class="hidden md:block m-4 border border-gray-200 rounded-2xl relative bg-white">
+                <button onclick="window.__dismissBanner()"
+                    class="absolute top-2 right-2 p-1.5 hover:bg-gray-100 rounded-full text-gray-500">
                     <span class="material-symbols-outlined">close</span>
                 </button>
                 <div class="p-6 pb-4">
                     <h2 class="text-base font-medium text-gray-800 mb-6">Empieza a utilizar Gmail</h2>
                     <div class="grid grid-cols-3 gap-4">
-                        <div
+                        <div onclick="window.__toast('Configuración no disponible en esta demo')"
                             class="flex items-center gap-3 border border-gray-200 rounded-xl p-3 cursor-pointer hover:bg-gray-50">
                             <div
                                 class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
@@ -322,7 +342,7 @@
                             <span class="text-sm font-medium text-gray-700 leading-tight">Personaliza tu bandeja de
                                 entrada</span>
                         </div>
-                        <div
+                        <div onclick="window.__toast('Firma no disponible en esta demo')"
                             class="flex items-center gap-3 border border-gray-200 rounded-xl p-3 cursor-pointer hover:bg-gray-50">
                             <div
                                 class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600 shrink-0">
@@ -330,7 +350,7 @@
                             </div>
                             <span class="text-sm font-medium text-gray-700 leading-tight">Definir una firma</span>
                         </div>
-                        <div
+                        <div onclick="window.__enableNotifications(this)"
                             class="flex items-center gap-3 border border-gray-200 rounded-xl p-3 cursor-pointer hover:bg-gray-50">
                             <div
                                 class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600 shrink-0">
@@ -342,7 +362,7 @@
                     </div>
                 </div>
             </div>
-            <div class="flex-1 overflow-y-auto bg-white max-md:bg-[#0f0f0f] max-md:pb-32">
+            <div id="email-list" class="flex-1 overflow-y-auto bg-white max-md:bg-[#0f0f0f] max-md:pb-32">
 
                 <!-- Correos falsos -->
                 <div
@@ -375,6 +395,14 @@
                         8:30</div>
                     <span
                         class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
+                    <div
+                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
+                        <span
+                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
+                    </div>
                 </div>
 
                 <div
@@ -407,6 +435,14 @@
                         7:12</div>
                     <span
                         class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
+                    <div
+                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
+                        <span
+                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
+                    </div>
                 </div>
 
                 <div
@@ -439,6 +475,14 @@
                         ayer</div>
                     <span
                         class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
+                    <div
+                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
+                        <span
+                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
+                    </div>
                 </div>
 
                 <div
@@ -471,6 +515,14 @@
                         2 abr</div>
                     <span
                         class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
+                    <div
+                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
+                        <span
+                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
+                    </div>
                 </div>
 
                 <div
@@ -503,6 +555,14 @@
                         1 abr</div>
                     <span
                         class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
+                    <div
+                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
+                        <span
+                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
+                    </div>
                 </div>
 
                 <div
@@ -851,7 +911,7 @@
                 </div>
 
                 <!-- Correo secreto: al abrirse muestra un mensaje con un boton que activa la configuracion -->
-                <div onclick="window.__openEmailView()"
+                <div data-secret="1"
                     class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
                     <div
                         class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#5f6368] text-gray-200 font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
@@ -881,31 +941,44 @@
                         28 mar</div>
                     <span
                         class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
+                    <div
+                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
+                        <span
+                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
+                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
+                    </div>
                 </div>
 
             </div>
         </main>
 
         <aside class="hidden xl:flex w-14 flex-col items-center py-4 bg-brand-bg shrink-0 border-l border-transparent">
-            <button class="p-2 hover:bg-gray-200 rounded-full mb-4">
+            <button onclick="window.__toast('Calendar no disponible en esta demo')"
+                class="p-2 hover:bg-gray-200 rounded-full mb-4">
                 <img src="https://www.gstatic.com/companion/icon_assets/calendar_2020q4_2x.png" alt="Calendar"
                     class="w-5 h-5">
             </button>
-            <button class="p-2 hover:bg-gray-200 rounded-full mb-4">
+            <button onclick="window.__toast('Keep no disponible en esta demo')"
+                class="p-2 hover:bg-gray-200 rounded-full mb-4">
                 <img src="https://www.gstatic.com/companion/icon_assets/keep_2020q4v3_2x.png" alt="Keep"
                     class="w-5 h-5">
             </button>
-            <button class="p-2 hover:bg-gray-200 rounded-full mb-4">
+            <button onclick="window.__toast('Tasks no disponible en esta demo')"
+                class="p-2 hover:bg-gray-200 rounded-full mb-4">
                 <img src="https://www.gstatic.com/companion/icon_assets/tasks_2021_2x.png" alt="Tasks" class="w-5 h-5">
             </button>
-            <button class="p-2 hover:bg-gray-200 rounded-full mb-4">
+            <button onclick="window.__toast('Contacts no disponible en esta demo')"
+                class="p-2 hover:bg-gray-200 rounded-full mb-4">
                 <img src="https://www.gstatic.com/companion/icon_assets/contacts_2022_2x.png" alt="Contacts"
                     class="w-5 h-5">
             </button>
 
             <div class="w-5 border-t border-gray-300 my-2"></div>
 
-            <button class="p-2 hover:bg-gray-200 rounded-full mt-2 flex items-center justify-center">
+            <button onclick="window.__toast('Agregar aplicaciones no disponible en esta demo')"
+                class="p-2 hover:bg-gray-200 rounded-full mt-2 flex items-center justify-center">
                 <span class="material-symbols-outlined" style="font-size: 20px;">add</span>
             </button>
         </aside>
@@ -936,14 +1009,14 @@
                     <div data-avatar
                         class="w-[66px] h-[66px] rounded-full bg-teal-600 flex items-center justify-center text-[34px] font-medium text-white">
                         R</div>
-                    <div
-                        class="absolute bottom-0 right-0 bg-[#303134] rounded-full p-[3px] border-[2px] border-[#202124]">
+                    <div onclick="window.__toast('Cambiar foto no disponible en esta demo')"
+                        class="absolute bottom-0 right-0 bg-[#303134] rounded-full p-[3px] border-[2px] border-[#202124] cursor-pointer">
                         <span
                             class="material-symbols-outlined text-[13px] text-gray-300 flex items-center justify-center">photo_camera</span>
                     </div>
                 </div>
                 <h2 data-greeting="Hola " class="text-[22px] font-medium text-[#e8eaed] mt-4 mb-4">Hola Ramiro</h2>
-                <button
+                <button onclick="window.__toast('Gestión de cuenta no disponible en esta demo')"
                     class="border border-[#5f6368] rounded-full px-5 py-[7px] text-[13px] text-[#e8eaed] font-medium hover:bg-[#303134] active:bg-[#3a3b3e] transition-colors">Administrar
                     tu Cuenta de Google</button>
             </div>
@@ -961,18 +1034,20 @@
                 </div>
                 <div class="text-[12px] text-[#9aa0a6] mb-4 mt-[6px]">180 GB de 200 GB</div>
                 <div class="flex justify-end pr-2 pb-1">
-                    <button class="text-[#8ab4f8] font-medium text-[13px]">Administrar almacenamiento</button>
+                    <button onclick="window.__toast('Gestión de almacenamiento no disponible en esta demo')"
+                        class="text-[#8ab4f8] font-medium text-[13px]">Administrar almacenamiento</button>
                 </div>
             </div>
 
             <!-- Accounts List -->
             <div class="bg-[#303134] rounded-[24px] overflow-hidden mx-1">
-                <div class="flex justify-between items-center p-4 cursor-pointer active:bg-[#3c4043] transition-colors">
+                <div onclick="window.__toast('Cambio de cuenta no disponible en esta demo')"
+                    class="flex justify-between items-center p-4 cursor-pointer active:bg-[#3c4043] transition-colors">
                     <span class="text-[#e8eaed] text-[15px] font-medium">Cambiar de cuenta</span>
                     <span class="material-symbols-outlined text-[#9aa0a6]">expand_less</span>
                 </div>
 
-                <div
+                <div onclick="window.__toast('Cambio de cuenta no disponible en esta demo')"
                     class="flex items-center justify-between p-4 cursor-pointer hover:bg-[#3c4043] active:bg-[#3c4043] border-t border-[#444] transition-colors">
                     <div class="flex items-center gap-[14px]">
                         <div
@@ -987,13 +1062,13 @@
                 </div>
 
 
-                <div
+                <div onclick="window.__toast('Agregar cuenta no disponible en esta demo')"
                     class="flex items-center gap-4 p-4 py-[14px] cursor-pointer hover:bg-[#3c4043] active:bg-[#3c4043] border-t border-[#444] transition-colors">
                     <span class="material-symbols-outlined text-[#e8eaed] font-light text-[22px] ml-1">add</span>
                     <span class="text-[#e8eaed] text-[14px] font-medium ml-[2px]">Agregar otra cuenta</span>
                 </div>
 
-                <div
+                <div onclick="window.__toast('Gestión de cuentas no disponible en esta demo')"
                     class="flex items-center gap-4 p-4 py-[14px] cursor-pointer hover:bg-[#3c4043] active:bg-[#3c4043] border-t border-[#444] transition-colors">
                     <span
                         class="material-symbols-outlined text-[#e8eaed] font-light text-[20px] ml-1">manage_accounts</span>
@@ -1018,36 +1093,48 @@
                 <span class="material-symbols-outlined">arrow_back</span>
             </button>
             <div class="w-px h-6 bg-gray-300 mx-1 hidden md:block"></div>
-            <button class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
+            <button
+                onclick="window.__archiveRow(document.querySelector('[data-secret=&quot;1&quot;]')); document.getElementById('secret-email-modal').classList.add('hidden')"
+                class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">archive</span>
             </button>
-            <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+            <button onclick="window.__toast('Correo marcado como spam')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">report</span>
             </button>
-            <button class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
+            <button
+                onclick="window.__deleteRow(document.querySelector('[data-secret=&quot;1&quot;]')); document.getElementById('secret-email-modal').classList.add('hidden')"
+                class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">delete</span>
             </button>
-            <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+            <button onclick="window.__toast('Marcado como no leído')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">mark_email_unread</span>
             </button>
-            <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+            <button onclick="window.__toast('Correo pospuesto')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">schedule</span>
             </button>
-            <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+            <button onclick="window.__toast('Mover a no disponible en esta demo')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">drive_file_move</span>
             </button>
-            <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+            <button onclick="window.__toast('Etiquetas no disponibles en esta demo')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">label</span>
             </button>
-            <button class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
+            <button onclick="window.__toast('Más opciones no disponibles en esta demo')"
+                class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">more_vert</span>
             </button>
             <div class="flex-1"></div>
             <span class="text-xs text-gray-500 mr-2 hidden md:inline">1 de 1</span>
-            <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+            <button onclick="window.__toast('No hay más correos para mostrar')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">chevron_left</span>
             </button>
-            <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+            <button onclick="window.__toast('No hay más correos para mostrar')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">chevron_right</span>
             </button>
         </div>
@@ -1061,14 +1148,17 @@
                         <span
                             class="inline-flex items-center gap-1 bg-[#e8f0fe] text-[#1a73e8] text-xs font-medium pl-2.5 pr-1.5 py-1 rounded">
                             Recibidos
-                            <span class="material-symbols-outlined cursor-pointer" style="font-size: 16px;">close</span>
+                            <span onclick="window.__toast('Etiqueta no se puede quitar')"
+                                class="material-symbols-outlined cursor-pointer" style="font-size: 16px;">close</span>
                         </span>
                     </h1>
                     <div class="flex items-center gap-1 text-gray-500 shrink-0">
-                        <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                        <button onclick="window.__toast('Impresión no disponible en esta demo')"
+                            class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                             <span class="material-symbols-outlined" style="font-size: 20px;">print</span>
                         </button>
-                        <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                        <button onclick="window.__toast('Abrir en nueva ventana no disponible en esta demo')"
+                            class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                             <span class="material-symbols-outlined" style="font-size: 20px;">open_in_new</span>
                         </button>
                     </div>
@@ -1094,10 +1184,13 @@
                     </div>
                     <div class="flex items-center gap-2 md:gap-3 text-gray-500 shrink-0">
                         <span class="text-xs whitespace-nowrap">28 mar</span>
-                        <span class="material-symbols-outlined cursor-pointer" style="font-size: 20px;">star_border</span>
-                        <span class="material-symbols-outlined cursor-pointer hidden md:inline"
+                        <span onclick="window.__toggleStar(this)" class="material-symbols-outlined cursor-pointer"
+                            style="font-size: 20px;">star_border</span>
+                        <span onclick="window.__toggleReplyBox('secret-reply-box')"
+                            class="material-symbols-outlined cursor-pointer hidden md:inline"
                             style="font-size: 20px;">reply</span>
-                        <span class="material-symbols-outlined cursor-pointer hidden md:inline"
+                        <span onclick="window.__toast('Más opciones no disponibles en esta demo')"
+                            class="material-symbols-outlined cursor-pointer hidden md:inline"
                             style="font-size: 20px;">more_vert</span>
                     </div>
                 </div>
@@ -1117,32 +1210,249 @@
                     Registro Académico
                 </p>
 
-                <div class="flex flex-wrap items-center gap-3 mb-10">
-                    <button
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <button onclick="window.__toggleReplyBox('secret-reply-box')"
                         class="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                         <span class="material-symbols-outlined" style="font-size: 18px;">reply</span> Responder
                     </button>
-                    <button
+                    <button onclick="window.__toggleReplyBox('secret-reply-box')"
                         class="hidden md:flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                         <span class="material-symbols-outlined" style="font-size: 18px;">reply_all</span> Responder a
                         todos
                     </button>
-                    <button
+                    <button onclick="window.__toggleReplyBox('secret-reply-box')"
                         class="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                         <span class="material-symbols-outlined" style="font-size: 18px;">forward</span> Reenviar
                     </button>
-                    <button
+                    <button onclick="window.__toast('Selector de emoji no disponible en esta demo')"
                         class="p-2 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-100 transition-colors hidden md:flex items-center justify-center">
                         <span class="material-symbols-outlined" style="font-size: 18px;">mood</span>
                     </button>
-                    <button
+                    <button onclick="window.__toast('Compartir en chat no disponible en esta demo')"
                         class="hidden md:flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                         <span class="material-symbols-outlined" style="font-size: 18px;">forum</span> Compartir en chat
                         <span class="bg-brand-blue text-white text-[10px] font-medium px-1.5 py-0.5 rounded">Nuevo</span>
                     </button>
                 </div>
+
+                <div id="secret-reply-box" class="hidden border border-gray-300 rounded-2xl p-3 mb-10">
+                    <textarea rows="4" placeholder="Escribe tu respuesta..."
+                        class="w-full outline-none text-sm resize-none mb-2"></textarea>
+                    <div class="flex items-center gap-2">
+                        <button onclick="window.__sendReply('secret-reply-box')"
+                            class="bg-brand-blue hover:bg-blue-700 text-white font-medium rounded-full px-5 py-2 text-sm transition-colors">Enviar</button>
+                        <button onclick="document.getElementById('secret-reply-box').classList.add('hidden')"
+                            class="p-2 hover:bg-gray-100 rounded-full text-gray-500">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+
+    <!-- Vista de correo generica: se llena dinamicamente al abrir cualquier correo de la bandeja -->
+    <div id="generic-email-modal" class="hidden fixed inset-0 z-[190] bg-white flex flex-col">
+        <div class="flex items-center gap-0.5 px-2 md:px-4 h-14 border-b border-gray-200 shrink-0">
+            <button onclick="window.__closeGenericMail()"
+                class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <div class="w-px h-6 bg-gray-300 mx-1 hidden md:block"></div>
+            <button onclick="window.__archiveOpenRow()"
+                class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined">archive</span>
+            </button>
+            <button onclick="window.__toast('Correo marcado como spam')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                <span class="material-symbols-outlined">report</span>
+            </button>
+            <button onclick="window.__deleteOpenRow()"
+                class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+            <button onclick="window.__toast('Marcado como no leído')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                <span class="material-symbols-outlined">mark_email_unread</span>
+            </button>
+            <button onclick="window.__toast('Correo pospuesto')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                <span class="material-symbols-outlined">schedule</span>
+            </button>
+            <button onclick="window.__toast('Mover a no disponible en esta demo')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                <span class="material-symbols-outlined">drive_file_move</span>
+            </button>
+            <button onclick="window.__toast('Etiquetas no disponibles en esta demo')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                <span class="material-symbols-outlined">label</span>
+            </button>
+            <button onclick="window.__toast('Más opciones no disponibles en esta demo')"
+                class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined">more_vert</span>
+            </button>
+            <div class="flex-1"></div>
+            <button onclick="window.__toast('No hay más correos para mostrar')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <button onclick="window.__toast('No hay más correos para mostrar')"
+                class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto">
+            <div class="max-w-3xl mx-auto w-full px-4 md:px-8 py-6">
+                <h1 id="gm-subject" class="text-[22px] font-normal text-gray-900 mb-5"></h1>
+
+                <div class="flex items-start justify-between mb-6 gap-2">
+                    <div class="flex items-start gap-3 min-w-0">
+                        <div id="gm-avatar"
+                            class="w-10 h-10 rounded-full font-medium flex items-center justify-center shrink-0">
+                        </div>
+                        <div class="flex flex-col min-w-0">
+                            <div class="flex items-center gap-1 flex-wrap">
+                                <span id="gm-sender" class="font-medium text-gray-900 text-sm"></span>
+                                <span id="gm-email" class="text-gray-500 text-sm truncate"></span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-gray-500">para mí</span>
+                                <span class="material-symbols-outlined text-gray-400"
+                                    style="font-size: 16px;">expand_more</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 md:gap-3 text-gray-500 shrink-0">
+                        <span id="gm-date" class="text-xs whitespace-nowrap"></span>
+                        <span onclick="window.__toggleStar(this)" class="material-symbols-outlined cursor-pointer"
+                            style="font-size: 20px;">star_border</span>
+                        <span onclick="window.__toggleReplyBox('gm-reply-box')"
+                            class="material-symbols-outlined cursor-pointer hidden md:inline"
+                            style="font-size: 20px;">reply</span>
+                        <span onclick="window.__toast('Más opciones no disponibles en esta demo')"
+                            class="material-symbols-outlined cursor-pointer hidden md:inline"
+                            style="font-size: 20px;">more_vert</span>
+                    </div>
+                </div>
+
+                <p id="gm-body" class="text-sm text-gray-800 leading-relaxed mb-8 whitespace-pre-line"></p>
+
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <button onclick="window.__toggleReplyBox('gm-reply-box')"
+                        class="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">reply</span> Responder
+                    </button>
+                    <button onclick="window.__toggleReplyBox('gm-reply-box')"
+                        class="hidden md:flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">reply_all</span> Responder a
+                        todos
+                    </button>
+                    <button onclick="window.__toggleReplyBox('gm-reply-box')"
+                        class="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">forward</span> Reenviar
+                    </button>
+                    <button onclick="window.__toast('Selector de emoji no disponible en esta demo')"
+                        class="p-2 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-100 transition-colors hidden md:flex items-center justify-center">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">mood</span>
+                    </button>
+                    <button onclick="window.__toast('Compartir en chat no disponible en esta demo')"
+                        class="hidden md:flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">forum</span> Compartir en chat
+                        <span class="bg-brand-blue text-white text-[10px] font-medium px-1.5 py-0.5 rounded">Nuevo</span>
+                    </button>
+                </div>
+
+                <div id="gm-reply-box" class="hidden border border-gray-300 rounded-2xl p-3 mb-10">
+                    <textarea rows="4" placeholder="Escribe tu respuesta..."
+                        class="w-full outline-none text-sm resize-none mb-2"></textarea>
+                    <div class="flex items-center gap-2">
+                        <button onclick="window.__sendReply('gm-reply-box')"
+                            class="bg-brand-blue hover:bg-blue-700 text-white font-medium rounded-full px-5 py-2 text-sm transition-colors">Enviar</button>
+                        <button onclick="document.getElementById('gm-reply-box').classList.add('hidden')"
+                            class="p-2 hover:bg-gray-100 rounded-full text-gray-500">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de redactar (estilo Gmail) -->
+    <div id="compose-modal" class="hidden fixed bottom-0 right-0 md:right-6 z-[195] w-full md:w-[500px]">
+        <div class="bg-white w-full md:rounded-t-xl shadow-2xl border border-gray-300 flex flex-col max-h-[80vh]">
+            <div class="flex items-center justify-between bg-[#404040] text-white px-4 py-2.5 md:rounded-t-xl">
+                <span class="text-sm font-medium">Mensaje nuevo</span>
+                <div class="flex items-center gap-1">
+                    <span onclick="window.__toast('Minimizar no disponible en esta demo')"
+                        class="material-symbols-outlined cursor-pointer" style="font-size: 18px;">minimize</span>
+                    <span onclick="window.__toast('Pantalla completa no disponible en esta demo')"
+                        class="material-symbols-outlined cursor-pointer" style="font-size: 18px;">crop_square</span>
+                    <span onclick="window.__closeCompose()" class="material-symbols-outlined cursor-pointer"
+                        style="font-size: 18px;">close</span>
+                </div>
+            </div>
+            <div class="flex flex-col flex-1 overflow-y-auto">
+                <input id="compose-to" type="text" placeholder="Para"
+                    class="border-b border-gray-200 px-4 py-2 text-sm outline-none" />
+                <input id="compose-subject" type="text" placeholder="Asunto"
+                    class="border-b border-gray-200 px-4 py-2 text-sm outline-none" />
+                <textarea id="compose-body" placeholder="Redactar correo electrónico"
+                    class="flex-1 px-4 py-2 text-sm outline-none resize-none min-h-[160px]"></textarea>
+            </div>
+            <div class="flex items-center justify-between px-4 py-2 border-t border-gray-100">
+                <button onclick="window.__sendCompose()"
+                    class="bg-brand-blue hover:bg-blue-700 text-white font-medium rounded-full px-6 py-2 text-sm transition-colors">Enviar</button>
+                <span onclick="window.__discardCompose()"
+                    class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5">delete</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cajon lateral movil (hamburguesa) -->
+    <div id="mobile-drawer" class="hidden fixed inset-0 z-[195] md:hidden">
+        <div onclick="window.__toggleMobileDrawer()" class="absolute inset-0 bg-[#000000cc]"></div>
+        <div class="absolute left-0 top-0 bottom-0 w-[80%] max-w-[300px] bg-[#202124] p-2 overflow-y-auto">
+            <div class="flex items-center gap-6 px-3 py-4">
+                <span onclick="window.__toggleMobileDrawer()"
+                    class="material-symbols-outlined text-[#e8eaed] cursor-pointer">menu</span>
+                <span class="text-[#e8eaed] font-medium">Gmail</span>
+            </div>
+            <a href="#"
+                onclick="event.preventDefault(); window.__switchFolder('recibidos', document.querySelector('#folder-nav a')); window.__toggleMobileDrawer()"
+                class="flex items-center gap-4 px-4 py-3 rounded-r-full bg-[#3c4043] text-[#e8eaed] font-medium">
+                <span class="material-symbols-outlined icon-fill">inbox</span> Recibidos
+            </a>
+            <a href="#"
+                onclick="event.preventDefault(); window.__switchFolder('destacados', document.querySelectorAll('#folder-nav a')[1]); window.__toggleMobileDrawer()"
+                class="flex items-center gap-4 px-4 py-3 rounded-r-full text-[#9aa0a6]">
+                <span class="material-symbols-outlined">star</span> Destacados
+            </a>
+            <a href="#"
+                onclick="event.preventDefault(); window.__switchFolder('pospuestos', document.querySelectorAll('#folder-nav a')[2]); window.__toggleMobileDrawer()"
+                class="flex items-center gap-4 px-4 py-3 rounded-r-full text-[#9aa0a6]">
+                <span class="material-symbols-outlined">schedule</span> Pospuestos
+            </a>
+            <a href="#"
+                onclick="event.preventDefault(); window.__switchFolder('enviados', document.querySelectorAll('#folder-nav a')[3]); window.__toggleMobileDrawer()"
+                class="flex items-center gap-4 px-4 py-3 rounded-r-full text-[#9aa0a6]">
+                <span class="material-symbols-outlined">send</span> Enviados
+            </a>
+            <a href="#"
+                onclick="event.preventDefault(); window.__switchFolder('borradores', document.querySelectorAll('#folder-nav a')[4]); window.__toggleMobileDrawer()"
+                class="flex items-center gap-4 px-4 py-3 rounded-r-full text-[#9aa0a6]">
+                <span class="material-symbols-outlined">draft</span> Borradores
+            </a>
+            <a href="#" onclick="event.preventDefault(); window.__toast('Configuración no disponible en esta demo')"
+                class="flex items-center gap-4 px-4 py-3 rounded-r-full text-[#9aa0a6]">
+                <span class="material-symbols-outlined">settings</span> Configuración
+            </a>
+        </div>
+    </div>
+
+    <!-- Contenedor de notificaciones (toast) -->
+    <div id="toast-container" class="fixed bottom-4 left-1/2 -translate-x-1/2 md:left-4 md:translate-x-0 z-[300]">
     </div>
 
     <!-- Panel de configuración oculto (se abre desde un correo específico) -->
@@ -1227,6 +1537,295 @@
             } else {
                 apply();
             }
+        })();
+    </script>
+
+    <!-- Interactividad general: menu, busqueda, redactar, abrir correos, estrellas, archivar/eliminar, carpetas -->
+    <script>
+        (function () {
+            // ---- Notificaciones (toast) ----
+            window.__toast = function (msg, undoFn) {
+                var container = document.getElementById('toast-container');
+                var el = document.createElement('div');
+                el.className = 'bg-[#323232] text-white text-sm rounded px-4 py-3 shadow-lg mb-2 flex items-center gap-4 min-w-[260px] max-w-[90vw]';
+                var span = document.createElement('span');
+                span.className = 'flex-1';
+                span.textContent = msg;
+                el.appendChild(span);
+                if (undoFn) {
+                    var undoBtn = document.createElement('button');
+                    undoBtn.className = 'text-[#8ab4f8] font-medium uppercase text-xs shrink-0';
+                    undoBtn.textContent = 'Deshacer';
+                    undoBtn.onclick = function () { undoFn(); el.remove(); };
+                    el.appendChild(undoBtn);
+                }
+                container.appendChild(el);
+                setTimeout(function () { el.remove(); }, 4000);
+            };
+
+            // ---- Menu lateral (hamburguesa) ----
+            window.__toggleSidebar = function () {
+                var nav = document.getElementById('folder-nav');
+                nav.style.display = (nav.style.display === 'none') ? '' : 'none';
+            };
+            window.__toggleMobileDrawer = function () {
+                document.getElementById('mobile-drawer').classList.toggle('hidden');
+            };
+
+            // ---- Estado Activo/Ausente ----
+            window.__toggleStatus = function () {
+                var dot = document.getElementById('status-dot');
+                var text = document.getElementById('status-text');
+                var isActive = text.textContent.trim() === 'Activo';
+                text.textContent = isActive ? 'Ausente' : 'Activo';
+                dot.classList.toggle('bg-green-600', !isActive);
+                dot.classList.toggle('bg-gray-400', isActive);
+            };
+
+            // ---- Banner "Empieza a utilizar Gmail" ----
+            window.__dismissBanner = function () {
+                var banner = document.getElementById('tips-banner');
+                if (banner) banner.style.display = 'none';
+            };
+            window.__enableNotifications = function () {
+                if ('Notification' in window && Notification.requestPermission) {
+                    Notification.requestPermission().then(function (perm) {
+                        window.__toast(perm === 'granted' ? 'Notificaciones activadas' : 'Permiso de notificaciones no concedido');
+                    }).catch(function () { window.__toast('No se pudieron activar las notificaciones'); });
+                } else {
+                    window.__toast('Notificaciones no disponibles en este navegador');
+                }
+            };
+
+            // ---- Buscador (filtra la bandeja en tiempo real) ----
+            window.__filterMail = function (query) {
+                var q = query.trim().toLowerCase();
+                document.querySelectorAll('#email-list > .email-row-hover').forEach(function (row) {
+                    if (row.dataset.hidden === '1') { row.style.display = 'none'; return; }
+                    var text = row.textContent.toLowerCase();
+                    row.style.display = (!q || text.indexOf(q) !== -1) ? '' : 'none';
+                });
+                var d = document.getElementById('search-desktop'); if (d && d.value !== query) d.value = query;
+                var m = document.getElementById('search-mobile'); if (m && m.value !== query) m.value = query;
+            };
+
+            // ---- Carpetas (Recibidos / Destacados / etc.) ----
+            window.__showEmptyState = function (msg) {
+                var existing = document.getElementById('folder-empty-state');
+                if (existing) existing.remove();
+                var div = document.createElement('div');
+                div.id = 'folder-empty-state';
+                div.className = 'flex flex-col items-center justify-center text-gray-400 py-20 text-sm';
+                div.textContent = msg;
+                document.getElementById('email-list').appendChild(div);
+            };
+            window.__switchFolder = function (name, linkEl) {
+                document.querySelectorAll('#folder-nav a').forEach(function (a) {
+                    a.classList.remove('bg-[#d3e3fd]', 'text-[#041e49]', 'font-medium');
+                    a.classList.add('text-gray-700');
+                });
+                if (linkEl) {
+                    linkEl.classList.remove('text-gray-700');
+                    linkEl.classList.add('bg-[#d3e3fd]', 'text-[#041e49]', 'font-medium');
+                }
+                var existingEmpty = document.getElementById('folder-empty-state');
+                if (existingEmpty) existingEmpty.remove();
+                var rows = document.querySelectorAll('#email-list > .email-row-hover');
+
+                if (name === 'recibidos') {
+                    rows.forEach(function (row) { row.style.display = row.dataset.hidden === '1' ? 'none' : ''; });
+                    var d = document.getElementById('search-desktop');
+                    window.__filterMail(d ? d.value : '');
+                    return;
+                }
+                if (name === 'destacados') {
+                    var anyStarred = false;
+                    rows.forEach(function (row) {
+                        var show = row.dataset.starred === '1' && row.dataset.hidden !== '1';
+                        row.style.display = show ? '' : 'none';
+                        if (show) anyStarred = true;
+                    });
+                    if (!anyStarred) window.__showEmptyState('No tienes correos destacados');
+                    return;
+                }
+                rows.forEach(function (row) { row.style.display = 'none'; });
+                var labelMap = { pospuestos: 'No tienes correos pospuestos', enviados: 'No tienes correos enviados', borradores: 'No tienes borradores' };
+                window.__showEmptyState(labelMap[name] || 'No tienes correos aquí');
+            };
+            window.__refreshInbox = function () {
+                var d = document.getElementById('search-desktop'); if (d) d.value = '';
+                var m = document.getElementById('search-mobile'); if (m) m.value = '';
+                window.__switchFolder('recibidos', document.querySelector('#folder-nav a'));
+                window.__toast('Bandeja actualizada');
+            };
+
+            // ---- Seleccionar todos ----
+            window.__toggleSelectAll = function () {
+                var icon = document.getElementById('select-all-icon');
+                var checked = icon.textContent.trim() === 'check_box';
+                icon.textContent = checked ? 'check_box_outline_blank' : 'check_box';
+                document.querySelectorAll('#email-list > .email-row-hover').forEach(function (row) {
+                    if (row.style.display === 'none') return;
+                    row.classList.toggle('bg-blue-50', !checked);
+                    row.querySelectorAll('.material-symbols-outlined').forEach(function (ic) {
+                        var t = ic.textContent.trim();
+                        if (t === 'check_box_outline_blank' || t === 'check_box') ic.textContent = checked ? 'check_box_outline_blank' : 'check_box';
+                    });
+                });
+            };
+
+            // ---- Acciones sobre una fila (estrella, archivar, eliminar, leido) ----
+            window.__toggleStar = function (icon) {
+                var row = icon.closest('.email-row-hover');
+                var starred = icon.textContent.trim() === 'star';
+                var newState = starred ? '' : '1';
+                if (row) {
+                    row.dataset.starred = newState;
+                    row.querySelectorAll('.material-symbols-outlined').forEach(function (ic) {
+                        var t = ic.textContent.trim();
+                        if (t === 'star' || t === 'star_border') {
+                            ic.textContent = starred ? 'star_border' : 'star';
+                            ic.style.color = starred ? '' : '#fbbc04';
+                        }
+                    });
+                } else {
+                    icon.textContent = starred ? 'star_border' : 'star';
+                    icon.style.color = starred ? '' : '#fbbc04';
+                }
+            };
+            window.__toggleReadRow = function (row, icon) {
+                var willMarkUnread = icon.textContent.trim() === 'mark_email_read';
+                icon.textContent = willMarkUnread ? 'mark_email_unread' : 'mark_email_read';
+                var senderEl = row.querySelector('[class*="w-[180px]"]');
+                if (senderEl) senderEl.classList.toggle('font-bold', willMarkUnread);
+                window.__toast(willMarkUnread ? 'Marcado como no leído' : 'Marcado como leído');
+            };
+            window.__archiveRow = function (row) {
+                if (!row) return;
+                row.dataset.hidden = '1';
+                row.style.display = 'none';
+                window.__toast('Correo archivado', function () { delete row.dataset.hidden; row.style.display = ''; });
+            };
+            window.__deleteRow = function (row) {
+                if (!row) return;
+                row.dataset.hidden = '1';
+                row.style.display = 'none';
+                window.__toast('Correo eliminado', function () { delete row.dataset.hidden; row.style.display = ''; });
+            };
+
+            // ---- Abrir cualquier correo de la bandeja (vista generica estilo Gmail) ----
+            window.__currentOpenRow = null;
+            window.__openMail = function (row) {
+                if (row.dataset.secret === '1') {
+                    document.getElementById('secret-email-modal').classList.remove('hidden');
+                    return;
+                }
+                window.__currentOpenRow = row;
+                var senderEl = row.querySelector('[class*="w-[180px]"]');
+                var sender = senderEl ? senderEl.textContent.trim() : 'Desconocido';
+                var contentDiv = senderEl ? senderEl.nextElementSibling : null;
+                var innerFlex = contentDiv ? contentDiv.querySelector('div') : null;
+                var spans = innerFlex ? innerFlex.querySelectorAll('span') : [];
+                var subject = spans[0] ? spans[0].textContent.trim() : '(sin asunto)';
+                var preview = spans[1] ? spans[1].textContent.trim().replace(/^-\s*/, '') : '';
+                var dateEl = row.querySelector('[class*="md:text-right"]');
+                var date = dateEl ? dateEl.textContent.trim() : '';
+                var avatarSourceEl = row.querySelector('.rounded-full');
+                var letter = avatarSourceEl ? avatarSourceEl.textContent.trim() : (sender.charAt(0) || '?').toUpperCase();
+                var avatarClasses = avatarSourceEl ? avatarSourceEl.className : '';
+                var bgMatch = avatarClasses.match(/bg-\S+/);
+                var textMatch = avatarClasses.match(/text-\S+/);
+                var slug = sender.toLowerCase()
+                    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+                    .replace(/[^a-z0-9]+/g, '.').replace(/(^\.+|\.+$)/g, '');
+
+                document.getElementById('gm-subject').textContent = subject;
+                document.getElementById('gm-sender').textContent = sender;
+                document.getElementById('gm-email').textContent = '<' + (slug || 'contacto') + '@universidad.edu>';
+                document.getElementById('gm-date').textContent = date;
+                var avatarEl = document.getElementById('gm-avatar');
+                avatarEl.textContent = letter;
+                avatarEl.className = 'w-10 h-10 rounded-full font-medium flex items-center justify-center shrink-0 ' +
+                    (bgMatch ? bgMatch[0] : 'bg-gray-500') + ' ' + (textMatch ? textMatch[0] : 'text-white');
+                document.getElementById('gm-body').textContent = 'Estimado/a estudiante,\n\n' + preview + '\n\nSaludos cordiales,\n' + sender;
+                document.getElementById('gm-reply-box').classList.add('hidden');
+                document.getElementById('generic-email-modal').classList.remove('hidden');
+            };
+            window.__closeGenericMail = function () {
+                document.getElementById('generic-email-modal').classList.add('hidden');
+            };
+            window.__archiveOpenRow = function () {
+                window.__archiveRow(window.__currentOpenRow);
+                window.__closeGenericMail();
+            };
+            window.__deleteOpenRow = function () {
+                window.__deleteRow(window.__currentOpenRow);
+                window.__closeGenericMail();
+            };
+
+            // ---- Delegacion de clics dentro de la lista de correos ----
+            document.getElementById('email-list').addEventListener('click', function (e) {
+                var row = e.target.closest('.email-row-hover');
+                if (!row) return;
+                var icon = e.target.closest('.material-symbols-outlined');
+                if (icon) {
+                    var label = icon.textContent.trim();
+                    if (label === 'star' || label === 'star_border') { window.__toggleStar(icon); return; }
+                    if (label === 'check_box_outline_blank' || label === 'check_box') { window.__toggleCheck(icon, row); return; }
+                    if (label === 'archive') { window.__archiveRow(row); return; }
+                    if (label === 'delete') { window.__deleteRow(row); return; }
+                    if (label === 'mark_email_read' || label === 'mark_email_unread') { window.__toggleReadRow(row, icon); return; }
+                    if (label === 'schedule') { window.__toast('Correo pospuesto'); return; }
+                    if (label === 'description') { window.__toast('Vista previa de archivo no disponible en esta demo'); return; }
+                    return;
+                }
+                window.__openMail(row);
+            });
+            window.__toggleCheck = function (icon, row) {
+                var checked = icon.textContent.trim() === 'check_box';
+                icon.textContent = checked ? 'check_box_outline_blank' : 'check_box';
+                if (row) row.classList.toggle('bg-blue-50', !checked);
+            };
+
+            // ---- Redactar (compose) ----
+            window.__openCompose = function () {
+                document.getElementById('compose-modal').classList.remove('hidden');
+            };
+            window.__closeCompose = function () {
+                document.getElementById('compose-modal').classList.add('hidden');
+            };
+            window.__discardCompose = function () {
+                document.getElementById('compose-to').value = '';
+                document.getElementById('compose-subject').value = '';
+                document.getElementById('compose-body').value = '';
+                window.__closeCompose();
+                window.__toast('Borrador descartado');
+            };
+            window.__sendCompose = function () {
+                var to = document.getElementById('compose-to').value.trim();
+                document.getElementById('compose-to').value = '';
+                document.getElementById('compose-subject').value = '';
+                document.getElementById('compose-body').value = '';
+                window.__closeCompose();
+                window.__toast(to ? ('Mensaje enviado a ' + to) : 'Mensaje enviado');
+            };
+
+            // ---- Responder / Reenviar (dentro de un correo abierto) ----
+            window.__toggleReplyBox = function (id) {
+                var box = document.getElementById(id);
+                box.classList.toggle('hidden');
+                if (!box.classList.contains('hidden')) {
+                    var ta = box.querySelector('textarea');
+                    if (ta) ta.focus();
+                }
+            };
+            window.__sendReply = function (id) {
+                var box = document.getElementById(id);
+                var ta = box.querySelector('textarea');
+                if (ta) ta.value = '';
+                box.classList.add('hidden');
+                window.__toast('Respuesta enviada');
+            };
         })();
     </script>
 
