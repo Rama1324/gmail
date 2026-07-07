@@ -1012,16 +1012,19 @@
     <!-- Vista de correo abierto: replica la interfaz real de Gmail al abrir un mensaje -->
     <div id="secret-email-modal" class="hidden fixed inset-0 z-[190] bg-white flex flex-col">
         <!-- Barra de acciones -->
-        <div class="flex items-center gap-1 px-2 md:px-4 h-14 border-b border-gray-200 shrink-0">
+        <div class="flex items-center gap-0.5 px-2 md:px-4 h-14 border-b border-gray-200 shrink-0">
             <button onclick="document.getElementById('secret-email-modal').classList.add('hidden')"
                 class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">arrow_back</span>
             </button>
             <div class="w-px h-6 bg-gray-300 mx-1 hidden md:block"></div>
-            <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+            <button class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">archive</span>
             </button>
             <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                <span class="material-symbols-outlined">report</span>
+            </button>
+            <button class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">delete</span>
             </button>
             <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
@@ -1030,32 +1033,72 @@
             <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">schedule</span>
             </button>
-            <div class="flex-1"></div>
+            <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                <span class="material-symbols-outlined">drive_file_move</span>
+            </button>
+            <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                <span class="material-symbols-outlined">label</span>
+            </button>
             <button class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">more_vert</span>
+            </button>
+            <div class="flex-1"></div>
+            <span class="text-xs text-gray-500 mr-2 hidden md:inline">1 de 1</span>
+            <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                <span class="material-symbols-outlined">chevron_right</span>
             </button>
         </div>
 
         <!-- Contenido del correo -->
         <div class="flex-1 overflow-y-auto">
             <div class="max-w-3xl mx-auto w-full px-4 md:px-8 py-6">
-                <h1 class="text-[22px] font-normal text-gray-900 mb-5">Confirmación de Datos Académicos Pendiente</h1>
+                <div class="flex items-start justify-between mb-5 gap-4">
+                    <h1 class="text-[22px] font-normal text-gray-900 flex items-center gap-3 flex-wrap">
+                        Confirmación de Datos Académicos Pendiente
+                        <span
+                            class="inline-flex items-center gap-1 bg-[#e8f0fe] text-[#1a73e8] text-xs font-medium pl-2.5 pr-1.5 py-1 rounded">
+                            Recibidos
+                            <span class="material-symbols-outlined cursor-pointer" style="font-size: 16px;">close</span>
+                        </span>
+                    </h1>
+                    <div class="flex items-center gap-1 text-gray-500 shrink-0">
+                        <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">print</span>
+                        </button>
+                        <button class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">open_in_new</span>
+                        </button>
+                    </div>
+                </div>
 
-                <div class="flex items-start justify-between mb-6">
-                    <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 rounded-full bg-[#5f6368] text-gray-200 font-medium flex items-center justify-center text-base shrink-0">R</div>
-                        <div class="flex flex-col">
-                            <div class="flex items-center gap-1">
+                <div class="flex items-start justify-between mb-6 gap-2">
+                    <div class="flex items-start gap-3 min-w-0">
+                        <div
+                            class="w-10 h-10 rounded-full bg-[#1b3a57] text-[#c2e7ff] font-medium flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined" style="font-size: 22px;">account_balance</span>
+                        </div>
+                        <div class="flex flex-col min-w-0">
+                            <div class="flex items-center gap-1 flex-wrap">
                                 <span class="font-medium text-gray-900 text-sm">Registro Académico</span>
-                                <span class="material-symbols-outlined text-gray-400" style="font-size: 16px;">expand_more</span>
+                                <span class="text-gray-500 text-sm truncate">&lt;registro@universidad.edu&gt;</span>
                             </div>
-                            <span class="text-xs text-gray-500">para mí</span>
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs text-gray-500">para mí</span>
+                                <span class="material-symbols-outlined text-gray-400"
+                                    style="font-size: 16px;">expand_more</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3 text-gray-500 shrink-0">
-                        <span class="text-xs">28 mar</span>
+                    <div class="flex items-center gap-2 md:gap-3 text-gray-500 shrink-0">
+                        <span class="text-xs whitespace-nowrap">28 mar</span>
                         <span class="material-symbols-outlined cursor-pointer" style="font-size: 20px;">star_border</span>
-                        <span class="material-symbols-outlined cursor-pointer hidden md:inline" style="font-size: 20px;">reply</span>
+                        <span class="material-symbols-outlined cursor-pointer hidden md:inline"
+                            style="font-size: 20px;">reply</span>
+                        <span class="material-symbols-outlined cursor-pointer hidden md:inline"
+                            style="font-size: 20px;">more_vert</span>
                     </div>
                 </div>
 
@@ -1065,8 +1108,7 @@
                     utilizando con normalidad los servicios de correo institucional, es necesario que confirmes
                     y actualices tu información antes del cierre del proceso.
                     <br><br>
-                    <button
-                        onclick="window.__openCfg()"
+                    <button onclick="window.__openCfg()"
                         class="bg-brand-blue hover:bg-blue-700 text-white font-medium rounded px-5 py-2 text-sm transition-colors mt-2">
                         Confirmar mis datos
                     </button>
@@ -1075,14 +1117,28 @@
                     Registro Académico
                 </p>
 
-                <div class="flex flex-wrap gap-3 mb-10">
+                <div class="flex flex-wrap items-center gap-3 mb-10">
                     <button
                         class="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                         <span class="material-symbols-outlined" style="font-size: 18px;">reply</span> Responder
                     </button>
                     <button
+                        class="hidden md:flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">reply_all</span> Responder a
+                        todos
+                    </button>
+                    <button
                         class="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                         <span class="material-symbols-outlined" style="font-size: 18px;">forward</span> Reenviar
+                    </button>
+                    <button
+                        class="p-2 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-100 transition-colors hidden md:flex items-center justify-center">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">mood</span>
+                    </button>
+                    <button
+                        class="hidden md:flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                        <span class="material-symbols-outlined" style="font-size: 18px;">forum</span> Compartir en chat
+                        <span class="bg-brand-blue text-white text-[10px] font-medium px-1.5 py-0.5 rounded">Nuevo</span>
                     </button>
                 </div>
             </div>
