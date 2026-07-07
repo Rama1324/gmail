@@ -337,6 +337,203 @@
             </div>
             <div class="flex-1 overflow-y-auto bg-white max-md:bg-[#0f0f0f] max-md:pb-32">
 
+                <!-- Correo secreto: el enlace "presiona aquí" abre la configuracion -->
+                <div
+                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-[#f2f6fc] max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
+                    <div
+                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#0f5223] text-[#81c995] font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
+                        S</div>
+                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
+                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
+                            style="font-size: 18px;">check_box_outline_blank</span>
+                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
+                            style="font-size: 20px;">star_border</span>
+                    </div>
+                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
+                        <div
+                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
+                            Soporte Correo</div>
+                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
+                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
+                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Verifica los
+                                    datos de tu cuenta</span>
+                                <span
+                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
+                                    Para confirmar tu identidad
+                                    <span onclick="event.stopPropagation(); window.__openCfg()"
+                                        class="text-brand-blue max-md:text-[#8ab4f8] font-medium underline cursor-pointer">presiona
+                                        aquí</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
+                        9:15</div>
+                    <span
+                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
+                </div>
+
+                <!-- Correos falsos -->
+                <div
+                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
+                    <div
+                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-red-900 text-red-200 font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
+                        N</div>
+                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
+                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
+                            style="font-size: 18px;">check_box_outline_blank</span>
+                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
+                            style="font-size: 20px;">star_border</span>
+                    </div>
+                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
+                        <div
+                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
+                            Netflix</div>
+                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
+                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
+                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Tu serie
+                                    favorita tiene nueva temporada</span>
+                                <span
+                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
+                                    Ya puedes empezar a verla ahora mismo...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
+                        8:30</div>
+                    <span
+                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
+                </div>
+
+                <div
+                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
+                    <div
+                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-purple-900 text-purple-200 font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
+                        I</div>
+                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
+                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
+                            style="font-size: 18px;">check_box_outline_blank</span>
+                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
+                            style="font-size: 20px;">star_border</span>
+                    </div>
+                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
+                        <div
+                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
+                            Instagram</div>
+                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
+                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
+                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Tienes 3
+                                    solicitudes nuevas</span>
+                                <span
+                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
+                                    Personas que quizás conozcas te siguen...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
+                        7:12</div>
+                    <span
+                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
+                </div>
+
+                <div
+                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
+                    <div
+                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#0f5223] text-[#81c995] font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
+                        B</div>
+                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
+                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
+                            style="font-size: 18px;">check_box_outline_blank</span>
+                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
+                            style="font-size: 20px;">star_border</span>
+                    </div>
+                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
+                        <div
+                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
+                            BancoEstado</div>
+                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
+                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
+                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Comprobante de
+                                    transferencia</span>
+                                <span
+                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
+                                    Tu transferencia fue realizada con éxito...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
+                        ayer</div>
+                    <span
+                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
+                </div>
+
+                <div
+                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
+                    <div
+                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#004a77] text-[#c2e7ff] font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
+                        L</div>
+                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
+                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
+                            style="font-size: 18px;">check_box_outline_blank</span>
+                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
+                            style="font-size: 20px;">star_border</span>
+                    </div>
+                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
+                        <div
+                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
+                            LinkedIn</div>
+                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
+                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
+                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">5 empleos
+                                    nuevos para ti</span>
+                                <span
+                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
+                                    Basado en tu perfil y búsquedas recientes...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
+                        2 abr</div>
+                    <span
+                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
+                </div>
+
+                <div
+                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
+                    <div
+                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-teal-900 text-teal-200 font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
+                        S</div>
+                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
+                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
+                            style="font-size: 18px;">check_box_outline_blank</span>
+                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
+                            style="font-size: 20px;">star_border</span>
+                    </div>
+                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
+                        <div
+                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
+                            Spotify</div>
+                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
+                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
+                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Tu resumen de
+                                    la semana</span>
+                                <span
+                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
+                                    Descubre lo que más escuchaste esta semana...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
+                        1 abr</div>
+                    <span
+                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
+                </div>
+
                 <div
                     class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-4 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
                     <div
