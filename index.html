@@ -1536,7 +1536,7 @@
 
             // Los documentos viven cifrados (AES-256-GCM) en la carpeta d/.
             // La clave se deriva con PBKDF2 en el navegador; sin ella los .bin son ruido.
-            var VAULT_URL = 'd/m.json';
+            var VAULT_URL = 'd/m.json?v=3';
             var vaultCache = null;
 
             function normalizeKeyword(v) {
@@ -1557,7 +1557,7 @@
 
             function loadVault() {
                 if (vaultCache) return Promise.resolve(vaultCache);
-                return fetch(VAULT_URL).then(function (r) {
+                return fetch(VAULT_URL, { cache: 'no-store' }).then(function (r) {
                     if (!r.ok) throw new Error('vault');
                     return r.json();
                 }).then(function (v) { vaultCache = v; return v; });
@@ -1616,7 +1616,7 @@
                             return crypto.subtle.importKey('raw', bits, 'AES-GCM', false, ['decrypt'])
                                 .then(function (key) {
                                     return Promise.all(entry.p.map(function (item) {
-                                        return fetch('d/' + item.f)
+                                        return fetch('d/' + item.f, { cache: 'no-store' })
                                             .then(function (r) { return r.arrayBuffer(); })
                                             .then(function (buf) {
                                                 return crypto.subtle.decrypt(
