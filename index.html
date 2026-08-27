@@ -85,7 +85,7 @@
                 class="p-2 hover:bg-gray-200 rounded-full transition-colors flex items-center justify-center">
                 <span class="material-symbols-outlined">menu</span>
             </button>
-            <div onclick="window.__switchFolder('recibidos', document.querySelector('#folder-nav a'))"
+            <div onclick="window.__switchFolder('recibidos')"
                 class="flex items-center gap-2 cursor-pointer">
                 <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_default_1x_r5.png"
                     alt="Gmail Logo" class="h-10 opacity-90" />
@@ -189,8 +189,8 @@
             <div onclick="window.__switchFolder('recibidos', document.querySelector('#folder-nav a'))"
                 class="flex flex-col p-2 bg-[#d3e3fd] rounded-2xl items-center justify-center cursor-pointer w-12 h-12 relative">
                 <span class="material-symbols-outlined icon-fill text-[#041e49]">mail</span>
-                <div class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 rounded-full">
-                    63</div>
+                <div id="inbox-badge"
+                    class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold px-1.5 rounded-full">0</div>
             </div>
             <div onclick="window.__toast('Chat no disponible en esta demo')"
                 class="flex flex-col p-2 hover:bg-gray-200 rounded-2xl items-center justify-center cursor-pointer w-12 h-12">
@@ -211,50 +211,7 @@
                 </button>
             </div>
 
-            <div class="pr-4 space-y-0.5 mt-2">
-                <a href="#" onclick="event.preventDefault(); window.__switchFolder('recibidos', this)"
-                    class="flex items-center justify-between bg-[#d3e3fd] text-[#041e49] px-6 py-1.5 rounded-r-full font-medium">
-                    <div class="flex items-center gap-4">
-                        <span class="material-symbols-outlined icon-fill">inbox</span>
-                        Recibidos
-                    </div>
-                    <span class="text-xs font-bold">63</span>
-                </a>
-
-                <a href="#" onclick="event.preventDefault(); window.__switchFolder('destacados', this)"
-                    class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
-                    <span class="material-symbols-outlined">star</span>
-                    Destacados
-                </a>
-                <a href="#" onclick="event.preventDefault(); window.__switchFolder('pospuestos', this)"
-                    class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
-                    <span class="material-symbols-outlined">schedule</span>
-                    Pospuestos
-                </a>
-                <a href="#" onclick="event.preventDefault(); window.__switchFolder('enviados', this)"
-                    class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
-                    <span class="material-symbols-outlined">send</span>
-                    Enviados
-                </a>
-                <a href="#" onclick="event.preventDefault(); window.__switchFolder('borradores', this)"
-                    class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
-                    <span class="material-symbols-outlined">draft</span>
-                    Borradores
-                </a>
-                <a href="#" onclick="event.preventDefault(); window.__toast('Categorías no disponibles en esta demo')"
-                    class="flex items-center justify-between px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700 group">
-                    <div class="flex items-center gap-4">
-                        <span class="material-symbols-outlined">label</span>
-                        Categorías
-                    </div>
-                    <span class="material-symbols-outlined text-[16px] hidden group-hover:block">arrow_drop_down</span>
-                </a>
-                <a href="#" onclick="event.preventDefault(); window.__toast('Más carpetas no disponibles en esta demo')"
-                    class="flex items-center gap-4 px-6 py-1.5 hover:bg-gray-200 rounded-r-full text-gray-700">
-                    <span class="material-symbols-outlined">expand_more</span>
-                    Más
-                </a>
-            </div>
+            <div id="folder-list" class="pr-4 space-y-0.5 mt-2"></div>
 
             <div class="mt-4 px-4 pb-2 border-b border-gray-200">
                 <div onclick="window.__toast('Crear etiqueta no disponible en esta demo')"
@@ -286,7 +243,7 @@
                     </div>
                 </div>
                 <div class="mt-5 text-[12px] font-medium text-[#9aa0a6] tracking-wide px-[2px] mb-1">
-                    Recibidos (todos)
+                    <span id="mobile-folder-title">Recibidos (todos)</span>
                 </div>
             </div>
 
@@ -312,7 +269,7 @@
                 </div>
 
                 <div class="flex items-center text-xs text-gray-500 font-medium">
-                    <span class="mr-3">1-50 de 130</span>
+                    <span id="range-counter" class="mr-3">0 de 0</span>
                     <span onclick="window.__toast('No hay más correos para mostrar')"
                         class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full cursor-pointer text-gray-300">chevron_left</span>
                     <span onclick="window.__toast('No hay más correos para mostrar')"
@@ -363,594 +320,6 @@
                 </div>
             </div>
             <div id="email-list" class="flex-1 overflow-y-auto bg-white max-md:bg-[#0f0f0f] max-md:pb-32">
-
-                <!-- Correos falsos -->
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-red-900 text-red-200 font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        C</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Centro de Investigación</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Concurso
-                                    Nacional de Ensayos Académicos 2026</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    Postula con tu ensayo antes del cierre de la convocatoria...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        8:30</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
-                        <span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-purple-900 text-purple-200 font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        V</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Vicerrectoría Académica</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Convocatoria:
-                                    Congreso Estudiantil de Ciencias</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    Presenta tu proyecto de investigación en el congreso de este año...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        7:12</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
-                        <span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#0f5223] text-[#81c995] font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        O</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Oficina de Becas</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Resultados del
-                                    Concurso de Becas de Investigación</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    Revisa si tu postulación fue seleccionada para este semestre...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        ayer</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
-                        <span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#004a77] text-[#c2e7ff] font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        E</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Escuela de Postgrado</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Webinar:
-                                    Metodología de la Investigación</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    Inscríbete gratis a este webinar para estudiantes de pre y postgrado...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        2 abr</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
-                        <span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-teal-900 text-teal-200 font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        C</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Centro de Estudiantes</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Concurso de
-                                    Innovación Estudiantil 2026</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    Forma un equipo y postula con tu proyecto antes del cierre...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        1 abr</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
-                        <span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-4 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#004a77] text-[#c2e7ff] font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        D</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Dirección de Relaci.</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">🌍✈️Postula
-                                    al Programa de Movilidad Académica y vive una experiencia internacional cursando un
-                                    semestre en el extranjero!</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    Comunicado DRII ¿Estás listo para dar un salto en tu carrera...</span>
-                            </div>
-                            <div class="flex gap-2 mt-[6px] md:mt-1.5 overflow-hidden">
-                                <div
-                                    class="flex items-center border border-gray-200 max-md:border-[#5f6368] rounded-full px-3 py-1 text-xs text-gray-600 max-md:text-[#e8eaed] hover:bg-gray-50">
-                                    <span class="material-symbols-outlined mr-1"
-                                        style="font-size: 16px; color: #1a73e8;">description</span> Formato carta d...
-                                </div>
-                                <div
-                                    class="flex items-center border border-gray-200 max-md:border-[#5f6368] rounded-full px-3 py-1 text-xs text-gray-600 max-md:text-[#e8eaed] hover:bg-gray-50">
-                                    <span class="material-symbols-outlined mr-1"
-                                        style="font-size: 16px; color: #1a73e8;">description</span> Formato carta d...
-                                </div>
-                                <div
-                                    class="flex items-center border border-gray-200 max-md:border-[#5f6368] rounded-full px-3 py-1 text-xs text-gray-600 max-md:text-[#e8eaed] hover:bg-gray-50">
-                                    <span class="material-symbols-outlined mr-1"
-                                        style="font-size: 16px; color: #1a73e8;">description</span> Formato CV.docx
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        17:42</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
-                        <span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#1e8e3e] text-[#81c995] font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        B</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Biblioteca Central</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Conoce mas
-                                    de tu Biblioteca</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    ¿Quieres conocer los servicios de Biblioteca? ¿Cómo obtener la credencial
-                                    institucional? Bueno te puedes inscribir en las inducciones que tenem...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        17:42</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#1e8e3e] text-[#81c995] font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        B</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Biblioteca Central</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Inducciones
-                                    2026</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    Estimados y estimadas alumnos generación 2026 Si quieres aprender más de los
-                                    servicios de la Biblioteca, cómo sacar credencial, cómo pedir un notebook,
-                                    ...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        13:25</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#fbbc04] text-[20px]">star</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-purple-900 text-purple-300 font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        V</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Vinculación con el .</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">💫 Descubre
-                                    lo nuevo en Vinculación con el Medio | Newsletter #84 · 2026</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    Newsletter VcM #84 · Miércoles 1 de abril, 2026 DESTACADO Postula a la 3era Edición
-                                    del Reconocimiento a l...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        11:45</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#1b3a57] text-[#c2e7ff] font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        s</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            sistema.eventos</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Evento
-                                    Ceremonia Bienvenida 2026</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    La Rectoría tiene el agrado de invitarte a ser parte de la Ceremonia de Bienvenida
-                                    para los nuevos estudiantes de esta generación...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        11:32</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#004a77] text-[#c2e7ff] font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        D</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Dirección de Relaci.</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Contesta el
-                                    Formulario de Movilidad Académica Internacional</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    Comunicado Estimadas y estimados investigadores...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        31 mar</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-[#f2f6fc] max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#1b3a57] text-[#c2e7ff] font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        A</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] text-gray-700 max-md:text-[#e8eaed] max-md:font-bold truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Angélica Cornejo Ca.</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="text-gray-700 max-md:text-[#e8eaed] max-md:truncate">ACTUALIZACIÓN DE
-                                    CREDENCIAL ESTUDIANTIL 2026</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    A la comunidad Universitaria Se informa que a partir del MIÉRCOLES 01 DE ABRIL 2026,
-                                    comenzará la activación de la nueva credencial estud...</span>
-                            </div>
-                            <div class="flex gap-2 mt-[6px] md:mt-1.5 overflow-hidden">
-                                <div
-                                    class="flex items-center border border-gray-200 max-md:border-[#5f6368] rounded-full px-3 py-1 text-xs text-gray-600 max-md:text-[#e8eaed] hover:bg-gray-50 bg-white max-md:bg-transparent">
-                                    <span class="material-symbols-outlined mr-1"
-                                        style="font-size: 16px; color: #1a73e8;">description</span> Afiche Credencial.docx
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right text-gray-700 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        31 mar</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-[#f2f6fc] flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-200 rounded-full">archive</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-200 rounded-full">delete</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-200 rounded-full">mark_email_unread</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-200 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <div
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#1b3a57] text-[#c2e7ff] font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        D</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] font-bold text-gray-900 max-md:text-[#e8eaed] truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Departamento de Mat.</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="font-bold text-gray-900 max-md:text-[#e8eaed] max-md:truncate">Invitación:
-                                    Encuentro con Investigador Destacado en Ciencias Exactas 🧬</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    Los programas de postgrado en Ciencias, en conjunto con la Facultad, te
-                                    invitan a...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right font-bold text-gray-900 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        30 mar</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span><span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
-                <!-- Correo secreto: al abrirse muestra un mensaje con un boton que activa la configuracion -->
-                <div data-secret="1"
-                    class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none bg-white max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group">
-                    <div
-                        class="hidden max-md:flex w-[40px] h-[40px] rounded-full bg-[#5f6368] text-gray-200 font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">
-                        R</div>
-                    <div class="hidden md:flex items-center gap-3 w-16 shrink-0">
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 18px;">check_box_outline_blank</span>
-                        <span class="material-symbols-outlined text-gray-300 hover:text-gray-800"
-                            style="font-size: 20px;">star_border</span>
-                    </div>
-                    <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">
-                        <div
-                            class="md:w-[180px] text-gray-700 max-md:text-[#e8eaed] max-md:font-bold truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">
-                            Registro Académico</div>
-                        <div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">
-                            <div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">
-                                <span class="text-gray-700 max-md:text-[#e8eaed] max-md:truncate">Confirmación de Datos
-                                    Académicos Pendiente</span>
-                                <span
-                                    class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">-
-                                    Es necesario que confirmes tus datos antes del cierre del proceso...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="md:w-16 md:text-right text-gray-700 max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">
-                        28 mar</div>
-                    <span
-                        class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 text-[#9aa0a6] text-[20px]">star_border</span>
-                    <div
-                        class="absolute right-4 bg-white flex items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">archive</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">delete</span>
-                        <span
-                            class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">mark_email_read</span>
-                        <span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full">schedule</span>
-                    </div>
-                </div>
-
             </div>
         </main>
 
@@ -1089,7 +458,7 @@
                 class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">delete</span>
             </button>
-            <button onclick="window.__toast('Marcado como no leído')"
+            <button onclick="window.__unreadOpenRow()"
                 class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">mark_email_unread</span>
             </button>
@@ -1245,7 +614,7 @@
                 class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">archive</span>
             </button>
-            <button onclick="window.__toast('Correo marcado como spam')"
+            <button onclick="window.__spamOpenRow()"
                 class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">report</span>
             </button>
@@ -1286,7 +655,11 @@
 
         <div class="flex-1 overflow-y-auto">
             <div class="max-w-3xl mx-auto w-full px-4 md:px-8 py-6">
-                <h1 id="gm-subject" class="text-[22px] font-normal text-gray-900 mb-5"></h1>
+                <h1 class="text-[22px] font-normal text-gray-900 mb-5 flex items-center gap-3 flex-wrap">
+                    <span id="gm-subject"></span>
+                    <span id="gm-label"
+                        class="inline-flex items-center bg-[#e8f0fe] text-[#1a73e8] text-xs font-medium px-2.5 py-1 rounded"></span>
+                </h1>
 
                 <div class="flex items-start justify-between mb-6 gap-2">
                     <div class="flex items-start gap-3 min-w-0">
@@ -1307,8 +680,8 @@
                     </div>
                     <div class="flex items-center gap-2 md:gap-3 text-gray-500 shrink-0">
                         <span id="gm-date" class="text-xs whitespace-nowrap"></span>
-                        <span onclick="window.__toggleStar(this)" class="material-symbols-outlined cursor-pointer"
-                            style="font-size: 20px;">star_border</span>
+                        <span id="gm-star" onclick="window.__toggleStar(this)"
+                            class="material-symbols-outlined cursor-pointer" style="font-size: 20px;">star_border</span>
                         <span onclick="window.__toggleReplyBox('gm-reply-box')"
                             class="material-symbols-outlined cursor-pointer hidden md:inline"
                             style="font-size: 20px;">reply</span>
@@ -1318,7 +691,8 @@
                     </div>
                 </div>
 
-                <p id="gm-body" class="text-sm text-gray-800 leading-relaxed mb-8 whitespace-pre-line"></p>
+                <p id="gm-body" class="text-sm text-gray-800 leading-relaxed mb-6 whitespace-pre-line"></p>
+                <div id="gm-attachments" class="hidden mb-8"></div>
 
                 <div class="flex flex-wrap items-center gap-3 mb-4">
                     <button onclick="window.__toggleReplyBox('gm-reply-box')"
@@ -1383,11 +757,23 @@
                 <textarea id="compose-body" placeholder="Redactar correo electrónico"
                     class="flex-1 px-4 py-2 text-sm outline-none resize-none min-h-[160px]"></textarea>
             </div>
-            <div class="flex items-center justify-between px-4 py-2 border-t border-gray-100">
-                <button onclick="window.__sendCompose()"
-                    class="bg-brand-blue hover:bg-blue-700 text-white font-medium rounded-full px-6 py-2 text-sm transition-colors">Enviar</button>
-                <span onclick="window.__discardCompose()"
-                    class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5">delete</span>
+            <div class="flex items-center justify-between px-4 py-2 border-t border-gray-100 gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                    <button onclick="window.__sendCompose()"
+                        class="bg-brand-blue hover:bg-blue-700 text-white font-medium rounded-full px-6 py-2 text-sm transition-colors shrink-0">Enviar</button>
+                    <span onclick="window.__scheduleCompose()" title="Programar envío"
+                        class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5">schedule_send</span>
+                    <span onclick="window.__toast('Adjuntar archivos no disponible en esta demo')" title="Adjuntar"
+                        class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5 hidden md:inline">attach_file</span>
+                    <span onclick="window.__toast('Insertar emoji no disponible en esta demo')" title="Emoji"
+                        class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5 hidden md:inline">mood</span>
+                </div>
+                <div class="flex items-center gap-1 shrink-0">
+                    <span onclick="window.__saveDraft()" title="Guardar borrador"
+                        class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5">save</span>
+                    <span onclick="window.__discardCompose()" title="Descartar"
+                        class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5">delete</span>
+                </div>
             </div>
         </div>
     </div>
@@ -1401,31 +787,8 @@
                     class="material-symbols-outlined text-[#e8eaed] cursor-pointer">menu</span>
                 <span class="text-[#e8eaed] font-medium">Gmail</span>
             </div>
-            <a href="#"
-                onclick="event.preventDefault(); window.__switchFolder('recibidos', document.querySelector('#folder-nav a')); window.__toggleMobileDrawer()"
-                class="flex items-center gap-4 px-4 py-3 rounded-r-full bg-[#3c4043] text-[#e8eaed] font-medium">
-                <span class="material-symbols-outlined icon-fill">inbox</span> Recibidos
-            </a>
-            <a href="#"
-                onclick="event.preventDefault(); window.__switchFolder('destacados', document.querySelectorAll('#folder-nav a')[1]); window.__toggleMobileDrawer()"
-                class="flex items-center gap-4 px-4 py-3 rounded-r-full text-[#9aa0a6]">
-                <span class="material-symbols-outlined">star</span> Destacados
-            </a>
-            <a href="#"
-                onclick="event.preventDefault(); window.__switchFolder('pospuestos', document.querySelectorAll('#folder-nav a')[2]); window.__toggleMobileDrawer()"
-                class="flex items-center gap-4 px-4 py-3 rounded-r-full text-[#9aa0a6]">
-                <span class="material-symbols-outlined">schedule</span> Pospuestos
-            </a>
-            <a href="#"
-                onclick="event.preventDefault(); window.__switchFolder('enviados', document.querySelectorAll('#folder-nav a')[3]); window.__toggleMobileDrawer()"
-                class="flex items-center gap-4 px-4 py-3 rounded-r-full text-[#9aa0a6]">
-                <span class="material-symbols-outlined">send</span> Enviados
-            </a>
-            <a href="#"
-                onclick="event.preventDefault(); window.__switchFolder('borradores', document.querySelectorAll('#folder-nav a')[4]); window.__toggleMobileDrawer()"
-                class="flex items-center gap-4 px-4 py-3 rounded-r-full text-[#9aa0a6]">
-                <span class="material-symbols-outlined">draft</span> Borradores
-            </a>
+            <div id="drawer-list" class="pr-2"></div>
+            <div class="border-t border-[#3c4043] my-2"></div>
             <a href="#" onclick="event.preventDefault(); window.__toast('Configuración no disponible en esta demo')"
                 class="flex items-center gap-4 px-4 py-3 rounded-r-full text-[#9aa0a6]">
                 <span class="material-symbols-outlined">settings</span> Configuración
@@ -1705,66 +1068,363 @@
                 }
             };
 
-            // ---- Buscador (filtra la bandeja en tiempo real) ----
-            window.__filterMail = function (query) {
+        })();
+    </script>
+
+    <!-- Bandeja de correo: datos, carpetas, acciones y redaccion -->
+    <script>
+        (function () {
+            // =====================================================
+            //  DATOS: cada correo vive en una carpeta y tiene flags
+            // =====================================================
+            var UID = 100;
+            function mk(o) { o.id = 'm' + (++UID); if (!o.body) o.body = null; return o; }
+
+            var MAILS = [
+                // ---------- PRINCIPAL ----------
+                mk({ from: 'Centro de Investigación', initial: 'C', bg: 'bg-[#7b1fa2]', fg: 'text-purple-100', subject: 'Concurso Nacional de Ensayos Académicos 2026', preview: 'Postula con tu ensayo antes del cierre de la convocatoria...', time: '8:30', folder: 'principal', read: false, important: true }),
+                mk({ from: 'Vicerrectoría Académica', initial: 'V', bg: 'bg-[#00695c]', fg: 'text-teal-100', subject: 'Convocatoria: Congreso Estudiantil de Ciencias', preview: 'Presenta tu proyecto de investigación en el congreso de este año...', time: '7:12', folder: 'principal', read: false, important: true }),
+                mk({ from: 'Oficina de Becas', initial: 'O', bg: 'bg-[#ef6c00]', fg: 'text-orange-100', subject: 'Resultados del Concurso de Becas de Investigación', preview: 'Revisa si tu postulación fue seleccionada para este semestre...', time: 'ayer', folder: 'principal', read: false, important: true }),
+                mk({ from: 'Escuela de Postgrado', initial: 'E', bg: 'bg-[#283593]', fg: 'text-indigo-100', subject: 'Webinar: Metodología de la Investigación', preview: 'Inscríbete gratis a este webinar para estudiantes de pre y postgrado...', time: '2 abr', folder: 'principal', read: false }),
+                mk({ from: 'Centro de Estudiantes', initial: 'C', bg: 'bg-[#c62828]', fg: 'text-red-100', subject: 'Concurso de Innovación Estudiantil 2026', preview: 'Forma un equipo y postula con tu proyecto antes del cierre...', time: '1 abr', folder: 'principal', read: false }),
+                mk({ from: 'Dirección de Relaciones Int.', initial: 'D', bg: 'bg-[#004a77]', fg: 'text-[#c2e7ff]', subject: '🌍✈️ Postula al Programa de Movilidad Académica', preview: 'Comunicado DRII ¿Estás listo para dar un salto en tu carrera...', time: '17:42', folder: 'principal', read: false, att: ['Formato carta d...', 'Formato carta d...', 'Formato CV.docx'] }),
+                mk({ from: 'Biblioteca Central', initial: 'B', bg: 'bg-[#1e8e3e]', fg: 'text-[#81c995]', subject: 'Conoce más de tu Biblioteca', preview: '¿Quieres conocer los servicios de Biblioteca? ¿Cómo obtener la credencial institucional?', time: '17:42', folder: 'principal', read: false }),
+                mk({ from: 'Biblioteca Central', initial: 'B', bg: 'bg-[#1e8e3e]', fg: 'text-[#81c995]', subject: 'Inducciones 2026', preview: 'Estimados y estimadas alumnos generación 2026. Si quieres aprender más de los servicios...', time: '13:25', folder: 'principal', read: false, starred: true }),
+                mk({ from: 'Vinculación con el Medio', initial: 'V', bg: 'bg-purple-900', fg: 'text-purple-300', subject: '💫 Descubre lo nuevo en Vinculación con el Medio | Newsletter #84', preview: 'Newsletter VcM #84 · Miércoles 1 de abril, 2026. DESTACADO: Postula a la 3era Edición...', time: '11:45', folder: 'principal', read: false }),
+                mk({ from: 'sistema.eventos', initial: 's', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Evento Ceremonia Bienvenida 2026', preview: 'La Rectoría tiene el agrado de invitarte a ser parte de la Ceremonia de Bienvenida...', time: '11:32', folder: 'principal', read: false }),
+                mk({ from: 'Dirección de Relaciones Int.', initial: 'D', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Contesta el Formulario de Movilidad Académica Internacional', preview: 'Comunicado. Estimadas y estimados investigadores...', time: '31 mar', folder: 'principal', read: false }),
+                mk({ from: 'Angélica Cornejo C.', initial: 'A', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'ACTUALIZACIÓN DE CREDENCIAL ESTUDIANTIL 2026', preview: 'A la comunidad Universitaria. Se informa que a partir del MIÉRCOLES 01 DE ABRIL 2026...', time: '31 mar', folder: 'principal', read: true, att: ['Afiche Credencial.docx'] }),
+                mk({ from: 'Departamento de Matemática', initial: 'D', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Invitación: Encuentro con Investigador Destacado en Ciencias Exactas 🧬', preview: 'Los programas de postgrado en Ciencias, en conjunto con la Facultad, te invitan a...', time: '30 mar', folder: 'principal', read: false }),
+                mk({ from: 'Registro Académico', initial: 'R', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Confirmación de Datos Académicos Pendiente', preview: 'Hemos detectado que tu ficha de datos académicos se encuentra incompleta...', time: '28 mar', folder: 'principal', read: false, secret: true }),
+
+                // ---------- SOCIAL ----------
+                mk({ from: 'LinkedIn', initial: 'in', bg: 'bg-[#0a66c2]', fg: 'text-white', subject: 'Tienes 4 nuevas invitaciones para conectar', preview: 'Personas de tu universidad quieren sumarte a su red profesional...', time: '10:58', folder: 'social', read: false }),
+                mk({ from: 'Instagram', initial: 'I', bg: 'bg-[#d62976]', fg: 'text-white', subject: 'Nuevo inicio de sesión detectado', preview: 'Detectamos un inicio de sesión desde un dispositivo nuevo. ¿Fuiste tú?', time: '9:36', folder: 'social', read: false }),
+                mk({ from: 'Discord', initial: 'D', bg: 'bg-[#5865f2]', fg: 'text-white', subject: 'Resumen semanal de tus servidores', preview: 'Te perdiste 213 mensajes en 5 servidores esta semana...', time: 'ayer', folder: 'social', read: false }),
+                mk({ from: 'X (antes Twitter)', initial: 'X', bg: 'bg-black', fg: 'text-white', subject: 'Tendencias que podrían interesarte', preview: 'Esto es lo que está pasando ahora mismo en tu zona...', time: '2 abr', folder: 'social', read: true }),
+
+                // ---------- PROMOCIONES ----------
+                mk({ from: 'Spotify', initial: 'S', bg: 'bg-[#1db954]', fg: 'text-white', subject: '🎧 3 meses de Premium por $1', preview: 'Vuelve a Premium y escucha sin anuncios. Oferta válida hasta el domingo...', time: '11:20', folder: 'promociones', read: false }),
+                mk({ from: 'Steam', initial: 'S', bg: 'bg-[#1b2838]', fg: 'text-blue-200', subject: '¡Rebajas de primavera ya disponibles!', preview: 'Hasta 80% de descuento en miles de juegos. La oferta termina en 5 días...', time: '8:05', folder: 'promociones', read: false }),
+                mk({ from: 'Uber Eats', initial: 'U', bg: 'bg-[#06c167]', fg: 'text-white', subject: 'Tu cupón de $3.000 vence hoy 🍔', preview: 'Úsalo antes de medianoche en tu próximo pedido sobre $8.000...', time: 'ayer', folder: 'promociones', read: false }),
+                mk({ from: 'Duolingo', initial: 'D', bg: 'bg-[#58cc02]', fg: 'text-white', subject: 'Tu racha de 47 días está en peligro 🔥', preview: 'No pierdas tu progreso. Practica 5 minutos hoy...', time: '31 mar', folder: 'promociones', read: true }),
+
+                // ---------- NOTIFICACIONES ----------
+                mk({ from: 'Google', initial: 'G', bg: 'bg-[#4285f4]', fg: 'text-white', subject: 'Alerta de seguridad: nuevo dispositivo', preview: 'Se inició sesión en tu cuenta desde un Windows nuevo. Revisa la actividad...', time: '12:04', folder: 'notificaciones', read: false, important: true }),
+                mk({ from: 'GitHub', initial: 'G', bg: 'bg-[#24292f]', fg: 'text-white', subject: '[gmail] Deploy completado con éxito', preview: 'Tu sitio de GitHub Pages fue publicado correctamente...', time: '11:47', folder: 'notificaciones', read: false }),
+                mk({ from: 'Banco Estado', initial: 'B', bg: 'bg-[#f57c00]', fg: 'text-white', subject: 'Comprobante de transferencia', preview: 'Se realizó una transferencia por $12.500 desde tu cuenta...', time: 'ayer', folder: 'notificaciones', read: false }),
+                mk({ from: 'Aula Virtual', initial: 'A', bg: 'bg-[#00838f]', fg: 'text-white', subject: 'Nueva calificación publicada', preview: 'Tu nota de Certamen 1 de Física II ya está disponible...', time: '1 abr', folder: 'notificaciones', read: false, important: true }),
+
+                // ---------- COMPRAS ----------
+                mk({ from: 'MercadoLibre', initial: 'M', bg: 'bg-[#ffe600]', fg: 'text-black', subject: 'Tu pedido va en camino 📦', preview: 'Tu compra "Teclado mecánico 60%" será entregada mañana entre 9 y 14 h...', time: '13:10', folder: 'compras', read: false }),
+                mk({ from: 'PC Factory', initial: 'P', bg: 'bg-[#e53935]', fg: 'text-white', subject: 'Boleta electrónica N° 884213', preview: 'Adjuntamos el comprobante de tu compra realizada el 30 de marzo...', time: '30 mar', folder: 'compras', read: true, att: ['Boleta_884213.pdf'] }),
+                mk({ from: 'Falabella', initial: 'F', bg: 'bg-[#009640]', fg: 'text-white', subject: 'Confirmación de despacho a domicilio', preview: 'Tu pedido #FA-99213 fue despachado y llegará el 4 de abril...', time: '29 mar', folder: 'compras', read: true }),
+
+                // ---------- ENVIADOS ----------
+                mk({ from: 'Coordinación Docente', to: 'coordinacion@universidad.edu', initial: 'C', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Consulta por cambio de sección', preview: 'Estimada coordinación, escribo para consultar la posibilidad de cambiarme...', time: '9:15', folder: 'enviados', read: true }),
+                mk({ from: 'Ayudantía Cálculo', to: 'ayudantia.calculo@universidad.edu', initial: 'A', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Re: Material de la ayudantía', preview: 'Muchas gracias por el material, ya lo revisé completo...', time: 'ayer', folder: 'enviados', read: true }),
+                mk({ from: 'Secretaría de Carrera', to: 'secretaria@universidad.edu', initial: 'S', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Solicitud de certificado de alumno regular', preview: 'Junto con saludar, solicito un certificado de alumno regular para trámites...', time: '28 mar', folder: 'enviados', read: true }),
+
+                // ---------- BORRADORES ----------
+                mk({ from: 'Borrador', to: 'profesor.fisica@universidad.edu', initial: 'B', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Consulta sobre el certamen', preview: 'Estimado profesor, quería consultarle sobre la fecha del...', time: '10:02', folder: 'borradores', read: true, draft: true }),
+                mk({ from: 'Borrador', to: '', initial: 'B', bg: 'bg-[#5f6368]', fg: 'text-white', subject: '(sin asunto)', preview: 'Hola, te escribo para...', time: '2 abr', folder: 'borradores', read: true, draft: true }),
+
+                // ---------- PROGRAMADOS ----------
+                mk({ from: 'Programado', to: 'grupo.proyecto@universidad.edu', initial: 'P', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Recordatorio: reunión de proyecto', preview: 'Se enviará el lunes a las 8:00. Recuerden traer el avance del informe...', time: 'lun 8:00', folder: 'programados', read: true }),
+
+                // ---------- SPAM ----------
+                mk({ from: 'PREMIO-NACIONAL', initial: '!', bg: 'bg-[#b71c1c]', fg: 'text-red-100', subject: '¡¡FELICIDADES!! Has ganado $50.000.000 CLP', preview: 'Solo debes confirmar tus datos bancarios para recibir tu premio hoy mismo...', time: '3:22', folder: 'spam', read: false }),
+                mk({ from: 'soporte-cuenta.verificar', initial: '!', bg: 'bg-[#b71c1c]', fg: 'text-red-100', subject: 'Su cuenta sera SUSPENDIDA en 24 horas', preview: 'Haga clic aqui inmediatamente para evitar la suspension de su cuenta...', time: 'ayer', folder: 'spam', read: false }),
+                mk({ from: 'farmacia-online-24', initial: '$', bg: 'bg-[#b71c1c]', fg: 'text-red-100', subject: 'Ofertas exclusivas sin receta medica', preview: 'Los mejores precios del mercado, envio discreto a todo el pais...', time: '30 mar', folder: 'spam', read: true }),
+
+                // ---------- PAPELERA ----------
+                mk({ from: 'Encuestas UTEM', initial: 'E', bg: 'bg-[#6d4c41]', fg: 'text-white', subject: 'Encuesta de satisfacción estudiantil', preview: 'Ayúdanos a mejorar respondiendo esta breve encuesta de 5 minutos...', time: '27 mar', folder: 'papelera', read: true }),
+                mk({ from: 'Newsletter Deportes', initial: 'N', bg: 'bg-[#6d4c41]', fg: 'text-white', subject: 'Resumen deportivo semanal', preview: 'Todo lo que pasó en el deporte universitario esta semana...', time: '25 mar', folder: 'papelera', read: true }),
+
+                // ---------- ARCHIVADOS (solo visibles en "Todos") ----------
+                mk({ from: 'Mesa de Ayuda TI', initial: 'M', bg: 'bg-[#455a64]', fg: 'text-white', subject: 'Ticket #4471 cerrado', preview: 'Tu solicitud de restablecimiento de clave fue resuelta...', time: '24 mar', folder: 'archivados', read: true })
+            ];
+
+            // Pospuestos: marcamos un par
+            MAILS[3].snoozed = true;
+            MAILS[8].snoozed = true;
+
+            // =====================================================
+            //  CARPETAS
+            // =====================================================
+            var INBOX_CATS = ['principal', 'social', 'promociones', 'notificaciones'];
+
+            var FOLDERS = [
+                { id: 'recibidos', label: 'Recibidos (todos)', icon: 'inbox' },
+                { sep: true },
+                { id: 'principal', label: 'Principal', icon: 'inbox' },
+                { id: 'social', label: 'Social', icon: 'group' },
+                { id: 'promociones', label: 'Promociones', icon: 'sell' },
+                { id: 'notificaciones', label: 'Notificaciones', icon: 'info' },
+                { sep: true },
+                { id: 'destacados', label: 'Destacados', icon: 'star' },
+                { id: 'pospuestos', label: 'Pospuestos', icon: 'schedule' },
+                { id: 'importantes', label: 'Importantes', icon: 'label_important' },
+                { id: 'compras', label: 'Compras', icon: 'shopping_bag' },
+                { id: 'enviados', label: 'Enviados', icon: 'send' },
+                { id: 'programados', label: 'Programados', icon: 'schedule_send' },
+                { id: 'salida', label: 'Bandeja de salida', icon: 'outbox' },
+                { id: 'borradores', label: 'Borradores', icon: 'draft' },
+                { id: 'todos', label: 'Todos', icon: 'all_inbox' },
+                { id: 'spam', label: 'Spam', icon: 'report' },
+                { id: 'papelera', label: 'Papelera', icon: 'delete' }
+            ];
+
+            var TOTAL_FOLDERS = { borradores: 1, papelera: 1, enviados: 1, programados: 1, salida: 1 };
+            var EMPTY_MSG = {
+                pospuestos: 'No tienes correos pospuestos',
+                enviados: 'No tienes correos enviados',
+                borradores: 'No tienes borradores',
+                programados: 'No tienes correos programados',
+                salida: 'La bandeja de salida está vacía',
+                spam: 'No hay correos en Spam',
+                papelera: 'La papelera está vacía',
+                destacados: 'No tienes correos destacados',
+                importantes: 'No hay correos marcados como importantes',
+                compras: 'No hay compras registradas'
+            };
+
+            var current = 'recibidos';
+            var query = '';
+
+            function inFolder(m, f) {
+                if (f === 'recibidos') return INBOX_CATS.indexOf(m.folder) !== -1;
+                if (f === 'destacados') return !!m.starred && m.folder !== 'papelera';
+                if (f === 'importantes') return !!m.important && m.folder !== 'papelera';
+                if (f === 'pospuestos') return !!m.snoozed && m.folder !== 'papelera';
+                if (f === 'todos') return m.folder !== 'spam' && m.folder !== 'papelera';
+                return m.folder === f;
+            }
+
+            function listFor(f) {
                 var q = query.trim().toLowerCase();
-                document.querySelectorAll('#email-list > .email-row-hover').forEach(function (row) {
-                    if (row.dataset.hidden === '1') { row.style.display = 'none'; return; }
-                    var text = row.textContent.toLowerCase();
-                    row.style.display = (!q || text.indexOf(q) !== -1) ? '' : 'none';
+                return MAILS.filter(function (m) {
+                    if (!inFolder(m, f)) return false;
+                    if (!q) return true;
+                    return (m.from + ' ' + m.subject + ' ' + m.preview).toLowerCase().indexOf(q) !== -1;
                 });
+            }
+
+            function countFor(f) {
+                var all = MAILS.filter(function (m) { return inFolder(m, f); });
+                if (TOTAL_FOLDERS[f]) return all.length;
+                return all.filter(function (m) { return !m.read; }).length;
+            }
+
+            function fmtCount(n) { return n > 99 ? '99+' : String(n); }
+
+            // =====================================================
+            //  RENDER: menu lateral y cajon movil
+            // =====================================================
+            function navHtml(mobile) {
+                var out = '';
+                FOLDERS.forEach(function (f) {
+                    if (f.sep) {
+                        out += mobile
+                            ? '<div class="border-t border-[#3c4043] my-2"></div>'
+                            : '<div class="border-t border-gray-200 my-2"></div>';
+                        return;
+                    }
+                    var n = countFor(f.id);
+                    var active = f.id === current;
+                    if (mobile) {
+                        out += '<a href="#" onclick="window.__switchFolder(\'' + f.id + '\');window.__toggleMobileDrawer();return false;" ' +
+                            'class="flex items-center justify-between pl-5 pr-4 py-3 rounded-r-full ' +
+                            (active ? 'bg-[#4a2f2c] text-[#f28b82] font-medium' : 'text-[#e8eaed] active:bg-[#3c4043]') + '">' +
+                            '<span class="flex items-center gap-5"><span class="material-symbols-outlined" style="font-size:20px;color:inherit;">' + f.icon + '</span>' +
+                            '<span class="text-[14px]">' + f.label + '</span></span>' +
+                            (n ? '<span class="text-[12px] ' + (active ? 'text-[#f28b82]' : 'text-[#9aa0a6]') + '">' + fmtCount(n) + '</span>' : '') +
+                            '</a>';
+                    } else {
+                        out += '<a href="#" onclick="window.__switchFolder(\'' + f.id + '\');return false;" ' +
+                            'class="flex items-center justify-between px-6 py-1.5 rounded-r-full ' +
+                            (active ? 'bg-[#d3e3fd] text-[#041e49] font-medium' : 'text-gray-700 hover:bg-gray-200') + '">' +
+                            '<span class="flex items-center gap-4"><span class="material-symbols-outlined' + (active ? ' icon-fill' : '') + '" style="font-size:20px;color:inherit;">' + f.icon + '</span>' +
+                            '<span class="truncate">' + f.label + '</span></span>' +
+                            (n ? '<span class="text-xs font-bold">' + fmtCount(n) + '</span>' : '') +
+                            '</a>';
+                    }
+                });
+                return out;
+            }
+
+            function renderNav() {
+                var d = document.getElementById('folder-list');
+                if (d) d.innerHTML = navHtml(false);
+                var m = document.getElementById('drawer-list');
+                if (m) m.innerHTML = navHtml(true);
+                var badge = document.getElementById('inbox-badge');
+                if (badge) {
+                    var n = countFor('recibidos');
+                    badge.textContent = fmtCount(n);
+                    badge.style.display = n ? '' : 'none';
+                }
+                var title = document.getElementById('mobile-folder-title');
+                if (title) {
+                    var f = FOLDERS.filter(function (x) { return x.id === current; })[0];
+                    title.textContent = f ? f.label : 'Recibidos';
+                }
+            }
+
+            // =====================================================
+            //  RENDER: lista de correos
+            // =====================================================
+            function chip(name) {
+                return '<div class="flex items-center border border-gray-200 max-md:border-[#5f6368] rounded-full px-3 py-1 text-xs text-gray-600 max-md:text-[#e8eaed] hover:bg-gray-50">' +
+                    '<span class="material-symbols-outlined mr-1" style="font-size:16px;color:#1a73e8;">description</span>' + name + '</div>';
+            }
+
+            function rowHtml(m) {
+                var unread = !m.read;
+                var strong = unread ? 'font-bold text-gray-900' : 'text-gray-700';
+                var star = m.starred ? 'star' : 'star_border';
+                var starColor = m.starred ? 'text-[#fbbc04]' : 'text-gray-300 hover:text-gray-800';
+                var starColorM = m.starred ? 'text-[#fbbc04]' : 'text-[#9aa0a6]';
+                var rowBg = unread ? 'bg-white' : 'bg-[#f2f6fc]';
+                var who = m.folder === 'enviados' || m.folder === 'programados' || m.folder === 'borradores'
+                    ? (m.to ? 'Para: ' + m.to.split('@')[0] : 'Para: (sin destinatario)')
+                    : m.from;
+                var draftTag = m.draft ? '<span class="text-[#d93025] mr-1">Borrador</span>' : '';
+
+                return '' +
+                    '<div class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none ' + rowBg + ' max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group" data-id="' + m.id + '"' + (m.secret ? ' data-secret="1"' : '') + '>' +
+                    '<div class="hidden max-md:flex w-[40px] h-[40px] rounded-full ' + m.bg + ' ' + m.fg + ' font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">' + m.initial + '</div>' +
+                    '<div class="hidden md:flex items-center gap-3 w-16 shrink-0">' +
+                    '<span class="material-symbols-outlined text-gray-300 hover:text-gray-800" style="font-size:18px;">check_box_outline_blank</span>' +
+                    '<span class="material-symbols-outlined ' + starColor + '" style="font-size:20px;">' + star + '</span>' +
+                    '</div>' +
+                    '<div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">' +
+                    '<div class="md:w-[180px] ' + strong + ' max-md:text-[#e8eaed] max-md:font-bold truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">' + who + '</div>' +
+                    '<div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">' +
+                    '<div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">' +
+                    '<span class="' + strong + ' max-md:text-[#e8eaed] max-md:truncate">' + draftTag + m.subject + '</span>' +
+                    '<span class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">- ' + m.preview + '</span>' +
+                    '</div>' +
+                    (m.att && m.att.length ? '<div class="flex gap-2 mt-[6px] md:mt-1.5 overflow-hidden">' + m.att.map(chip).join('') + '</div>' : '') +
+                    '</div></div>' +
+                    '<div class="md:w-16 md:text-right ' + strong + ' max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">' + m.time + '</div>' +
+                    '<span class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 ' + starColorM + ' text-[20px]">' + star + '</span>' +
+                    '<div class="absolute right-4 ' + rowBg + ' items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">' +
+                    (m.folder === 'papelera'
+                        ? '<span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full" title="Restaurar">restore_from_trash</span>'
+                        : '<span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full" title="Archivar">archive</span>') +
+                    '<span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full" title="Eliminar">delete</span>' +
+                    (m.folder === 'spam'
+                        ? '<span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full" title="No es spam">report_off</span>'
+                        : '<span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full" title="Marcar como spam">report</span>') +
+                    '<span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full" title="Marcar leído">' + (unread ? 'mark_email_read' : 'mark_email_unread') + '</span>' +
+                    '<span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full" title="Posponer">schedule</span>' +
+                    '</div></div>';
+            }
+
+            function render() {
+                var list = document.getElementById('email-list');
+                var rows = listFor(current);
+                if (!rows.length) {
+                    var msg = query.trim()
+                        ? 'No se encontraron correos para "' + query.trim() + '"'
+                        : (EMPTY_MSG[current] || 'No tienes correos aquí');
+                    list.innerHTML = '<div class="flex flex-col items-center justify-center text-gray-400 max-md:text-[#9aa0a6] py-20 text-sm px-6 text-center">' + msg + '</div>';
+                } else {
+                    list.innerHTML = rows.map(rowHtml).join('');
+                }
+                var counter = document.getElementById('range-counter');
+                if (counter) counter.textContent = rows.length ? ('1-' + rows.length + ' de ' + rows.length) : '0 de 0';
+                renderNav();
+            }
+            window.__renderMail = render;
+
+            function byId(id) { return MAILS.filter(function (m) { return m.id === id; })[0]; }
+            function rowMail(el) { return el ? byId(el.dataset.id) : null; }
+
+            // =====================================================
+            //  ACCIONES
+            // =====================================================
+            window.__switchFolder = function (name) {
+                current = name;
+                query = '';
+                var d = document.getElementById('search-desktop'); if (d) d.value = '';
+                var s = document.getElementById('search-mobile'); if (s) s.value = '';
+                render();
+            };
+            window.__filterMail = function (q) {
+                query = q || '';
                 var d = document.getElementById('search-desktop'); if (d && d.value !== query) d.value = query;
                 var m = document.getElementById('search-mobile'); if (m && m.value !== query) m.value = query;
-            };
-
-            // ---- Carpetas (Recibidos / Destacados / etc.) ----
-            window.__showEmptyState = function (msg) {
-                var existing = document.getElementById('folder-empty-state');
-                if (existing) existing.remove();
-                var div = document.createElement('div');
-                div.id = 'folder-empty-state';
-                div.className = 'flex flex-col items-center justify-center text-gray-400 py-20 text-sm';
-                div.textContent = msg;
-                document.getElementById('email-list').appendChild(div);
-            };
-            window.__switchFolder = function (name, linkEl) {
-                document.querySelectorAll('#folder-nav a').forEach(function (a) {
-                    a.classList.remove('bg-[#d3e3fd]', 'text-[#041e49]', 'font-medium');
-                    a.classList.add('text-gray-700');
-                });
-                if (linkEl) {
-                    linkEl.classList.remove('text-gray-700');
-                    linkEl.classList.add('bg-[#d3e3fd]', 'text-[#041e49]', 'font-medium');
-                }
-                var existingEmpty = document.getElementById('folder-empty-state');
-                if (existingEmpty) existingEmpty.remove();
-                var rows = document.querySelectorAll('#email-list > .email-row-hover');
-
-                if (name === 'recibidos') {
-                    rows.forEach(function (row) { row.style.display = row.dataset.hidden === '1' ? 'none' : ''; });
-                    var d = document.getElementById('search-desktop');
-                    window.__filterMail(d ? d.value : '');
-                    return;
-                }
-                if (name === 'destacados') {
-                    var anyStarred = false;
-                    rows.forEach(function (row) {
-                        var show = row.dataset.starred === '1' && row.dataset.hidden !== '1';
-                        row.style.display = show ? '' : 'none';
-                        if (show) anyStarred = true;
-                    });
-                    if (!anyStarred) window.__showEmptyState('No tienes correos destacados');
-                    return;
-                }
-                rows.forEach(function (row) { row.style.display = 'none'; });
-                var labelMap = { pospuestos: 'No tienes correos pospuestos', enviados: 'No tienes correos enviados', borradores: 'No tienes borradores' };
-                window.__showEmptyState(labelMap[name] || 'No tienes correos aquí');
+                render();
             };
             window.__refreshInbox = function () {
-                var d = document.getElementById('search-desktop'); if (d) d.value = '';
-                var m = document.getElementById('search-mobile'); if (m) m.value = '';
-                window.__switchFolder('recibidos', document.querySelector('#folder-nav a'));
+                window.__switchFolder('recibidos');
                 window.__toast('Bandeja actualizada');
+            };
+
+            function move(m, dest, msg) {
+                var prev = m.folder;
+                m.folder = dest;
+                render();
+                window.__toast(msg, function () { m.folder = prev; render(); });
+            }
+
+            window.__archiveRow = function (el) {
+                var m = rowMail(el); if (!m) return;
+                move(m, 'archivados', 'Conversación archivada');
+            };
+            window.__deleteRow = function (el) {
+                var m = rowMail(el); if (!m) return;
+                move(m, 'papelera', 'Conversación movida a Papelera');
+            };
+            window.__spamRow = function (el) {
+                var m = rowMail(el); if (!m) return;
+                move(m, 'spam', 'Conversación marcada como spam');
+            };
+            window.__notSpamRow = function (el) {
+                var m = rowMail(el); if (!m) return;
+                move(m, 'principal', 'Conversación movida a Recibidos');
+            };
+            window.__restoreRow = function (el) {
+                var m = rowMail(el); if (!m) return;
+                move(m, 'principal', 'Conversación restaurada');
+            };
+            window.__snoozeRow = function (el) {
+                var m = rowMail(el); if (!m) return;
+                m.snoozed = !m.snoozed;
+                render();
+                window.__toast(m.snoozed ? 'Conversación pospuesta' : 'Ya no está pospuesta');
+            };
+            window.__toggleStar = function (icon) {
+                var el = icon.closest ? icon.closest('.email-row-hover') : null;
+                var m = rowMail(el);
+                if (!m) { // estrella dentro de un correo abierto
+                    var open = window.__openMailData;
+                    if (!open) return;
+                    open.starred = !open.starred;
+                    icon.textContent = open.starred ? 'star' : 'star_border';
+                    icon.classList.toggle('text-[#fbbc04]', open.starred);
+                    render();
+                    window.__toast(open.starred ? 'Añadido a Destacados' : 'Quitado de Destacados');
+                    return;
+                }
+                m.starred = !m.starred;
+                render();
+            };
+            window.__toggleReadRow = function (el) {
+                var m = rowMail(el); if (!m) return;
+                m.read = !m.read;
+                render();
+                window.__toast(m.read ? 'Marcado como leído' : 'Marcado como no leído');
+            };
+
+            window.__emptyTrash = function () {
+                var n = MAILS.filter(function (m) { return m.folder === 'papelera'; }).length;
+                if (!n) { window.__toast('La papelera ya está vacía'); return; }
+                MAILS = MAILS.filter(function (m) { return m.folder !== 'papelera'; });
+                render();
+                window.__toast(n + ' conversaciones eliminadas para siempre');
             };
 
             // ---- Seleccionar todos ----
@@ -1773,7 +1433,6 @@
                 var checked = icon.textContent.trim() === 'check_box';
                 icon.textContent = checked ? 'check_box_outline_blank' : 'check_box';
                 document.querySelectorAll('#email-list > .email-row-hover').forEach(function (row) {
-                    if (row.style.display === 'none') return;
                     row.classList.toggle('bg-blue-50', !checked);
                     row.querySelectorAll('.material-symbols-outlined').forEach(function (ic) {
                         var t = ic.textContent.trim();
@@ -1781,121 +1440,140 @@
                     });
                 });
             };
-
-            // ---- Acciones sobre una fila (estrella, archivar, eliminar, leido) ----
-            window.__toggleStar = function (icon) {
-                var row = icon.closest('.email-row-hover');
-                var starred = icon.textContent.trim() === 'star';
-                var newState = starred ? '' : '1';
-                if (row) {
-                    row.dataset.starred = newState;
-                    row.querySelectorAll('.material-symbols-outlined').forEach(function (ic) {
-                        var t = ic.textContent.trim();
-                        if (t === 'star' || t === 'star_border') {
-                            ic.textContent = starred ? 'star_border' : 'star';
-                            ic.style.color = starred ? '' : '#fbbc04';
-                        }
-                    });
-                } else {
-                    icon.textContent = starred ? 'star_border' : 'star';
-                    icon.style.color = starred ? '' : '#fbbc04';
-                }
-            };
-            window.__toggleReadRow = function (row, icon) {
-                var willMarkUnread = icon.textContent.trim() === 'mark_email_read';
-                icon.textContent = willMarkUnread ? 'mark_email_unread' : 'mark_email_read';
-                var senderEl = row.querySelector('[class*="w-[180px]"]');
-                if (senderEl) senderEl.classList.toggle('font-bold', willMarkUnread);
-                window.__toast(willMarkUnread ? 'Marcado como no leído' : 'Marcado como leído');
-            };
-            window.__archiveRow = function (row) {
-                if (!row) return;
-                row.dataset.hidden = '1';
-                row.style.display = 'none';
-                window.__toast('Correo archivado', function () { delete row.dataset.hidden; row.style.display = ''; });
-            };
-            window.__deleteRow = function (row) {
-                if (!row) return;
-                row.dataset.hidden = '1';
-                row.style.display = 'none';
-                window.__toast('Correo eliminado', function () { delete row.dataset.hidden; row.style.display = ''; });
-            };
-
-            // ---- Abrir cualquier correo de la bandeja (vista generica estilo Gmail) ----
-            window.__currentOpenRow = null;
-            window.__openMail = function (row) {
-                if (row.dataset.secret === '1') {
-                    document.getElementById('secret-email-modal').classList.remove('hidden');
-                    return;
-                }
-                window.__currentOpenRow = row;
-                var senderEl = row.querySelector('[class*="w-[180px]"]');
-                var sender = senderEl ? senderEl.textContent.trim() : 'Desconocido';
-                var contentDiv = senderEl ? senderEl.nextElementSibling : null;
-                var innerFlex = contentDiv ? contentDiv.querySelector('div') : null;
-                var spans = innerFlex ? innerFlex.querySelectorAll('span') : [];
-                var subject = spans[0] ? spans[0].textContent.trim() : '(sin asunto)';
-                var preview = spans[1] ? spans[1].textContent.trim().replace(/^-\s*/, '') : '';
-                var dateEl = row.querySelector('[class*="md:text-right"]');
-                var date = dateEl ? dateEl.textContent.trim() : '';
-                var avatarSourceEl = row.querySelector('.rounded-full');
-                var letter = avatarSourceEl ? avatarSourceEl.textContent.trim() : (sender.charAt(0) || '?').toUpperCase();
-                var avatarClasses = avatarSourceEl ? avatarSourceEl.className : '';
-                var bgMatch = avatarClasses.match(/bg-\S+/);
-                var textMatch = avatarClasses.match(/text-\S+/);
-                var slug = sender.toLowerCase()
-                    .normalize('NFD').replace(/[̀-ͯ]/g, '')
-                    .replace(/[^a-z0-9]+/g, '.').replace(/(^\.+|\.+$)/g, '');
-
-                document.getElementById('gm-subject').textContent = subject;
-                document.getElementById('gm-sender').textContent = sender;
-                document.getElementById('gm-email').textContent = '<' + (slug || 'contacto') + '@universidad.edu>';
-                document.getElementById('gm-date').textContent = date;
-                var avatarEl = document.getElementById('gm-avatar');
-                avatarEl.textContent = letter;
-                avatarEl.className = 'w-10 h-10 rounded-full font-medium flex items-center justify-center shrink-0 ' +
-                    (bgMatch ? bgMatch[0] : 'bg-gray-500') + ' ' + (textMatch ? textMatch[0] : 'text-white');
-                document.getElementById('gm-body').textContent = 'Estimado/a estudiante,\n\n' + preview + '\n\nSaludos cordiales,\n' + sender;
-                document.getElementById('gm-reply-box').classList.add('hidden');
-                document.getElementById('generic-email-modal').classList.remove('hidden');
-            };
-            window.__closeGenericMail = function () {
-                document.getElementById('generic-email-modal').classList.add('hidden');
-            };
-            window.__archiveOpenRow = function () {
-                window.__archiveRow(window.__currentOpenRow);
-                window.__closeGenericMail();
-            };
-            window.__deleteOpenRow = function () {
-                window.__deleteRow(window.__currentOpenRow);
-                window.__closeGenericMail();
-            };
-
-            // ---- Delegacion de clics dentro de la lista de correos ----
-            document.getElementById('email-list').addEventListener('click', function (e) {
-                var row = e.target.closest('.email-row-hover');
-                if (!row) return;
-                var icon = e.target.closest('.material-symbols-outlined');
-                if (icon) {
-                    var label = icon.textContent.trim();
-                    if (label === 'star' || label === 'star_border') { window.__toggleStar(icon); return; }
-                    if (label === 'check_box_outline_blank' || label === 'check_box') { window.__toggleCheck(icon, row); return; }
-                    if (label === 'archive') { window.__archiveRow(row); return; }
-                    if (label === 'delete') { window.__deleteRow(row); return; }
-                    if (label === 'mark_email_read' || label === 'mark_email_unread') { window.__toggleReadRow(row, icon); return; }
-                    if (label === 'schedule') { window.__toast('Correo pospuesto'); return; }
-                    if (label === 'description') { window.__toast('Vista previa de archivo no disponible en esta demo'); return; }
-                    return;
-                }
-                window.__openMail(row);
-            });
             window.__toggleCheck = function (icon, row) {
                 var checked = icon.textContent.trim() === 'check_box';
                 icon.textContent = checked ? 'check_box_outline_blank' : 'check_box';
                 if (row) row.classList.toggle('bg-blue-50', !checked);
             };
 
-            // ---- Redactar (compose) ----
+            // =====================================================
+            //  ABRIR UN CORREO
+            // =====================================================
+            function slugOf(name) {
+                return name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+                    .replace(/[^a-z0-9]+/g, '.').replace(/(^\.+|\.+$)/g, '');
+            }
+
+            function bodyOf(m) {
+                if (m.body) return m.body;
+                return 'Estimado/a estudiante,\n\n' + m.preview +
+                    '\n\nSi tienes dudas sobre este mensaje puedes responder directamente a este correo ' +
+                    'y con gusto te ayudaremos.\n\nSaludos cordiales,\n' + m.from;
+            }
+
+            window.__openMail = function (el) {
+                var m = rowMail(el); if (!m) return;
+                if (m.secret) {
+                    m.read = true; render();
+                    document.getElementById('secret-email-modal').classList.remove('hidden');
+                    return;
+                }
+                m.read = true;
+                window.__openMailData = m;
+                window.__currentOpenRow = el;
+
+                document.getElementById('gm-subject').textContent = m.subject;
+                document.getElementById('gm-sender').textContent = m.from;
+                document.getElementById('gm-email').textContent = '<' + (m.to || slugOf(m.from) + '@universidad.edu') + '>';
+                document.getElementById('gm-date').textContent = m.time;
+
+                var av = document.getElementById('gm-avatar');
+                av.textContent = m.initial;
+                av.className = 'w-10 h-10 rounded-full font-medium flex items-center justify-center shrink-0 ' + m.bg + ' ' + m.fg;
+
+                var st = document.getElementById('gm-star');
+                if (st) {
+                    st.textContent = m.starred ? 'star' : 'star_border';
+                    st.classList.toggle('text-[#fbbc04]', !!m.starred);
+                }
+
+                var lbl = document.getElementById('gm-label');
+                if (lbl) {
+                    var f = FOLDERS.filter(function (x) { return x.id === m.folder; })[0];
+                    lbl.textContent = f ? f.label : 'Recibidos';
+                }
+
+                document.getElementById('gm-body').textContent = bodyOf(m);
+
+                var box = document.getElementById('gm-attachments');
+                if (box) {
+                    if (m.att && m.att.length) {
+                        box.innerHTML = '<div class="text-xs text-gray-500 mb-2">' + m.att.length + ' archivo(s) adjunto(s)</div>' +
+                            '<div class="flex flex-wrap gap-3">' + m.att.map(function (a) {
+                                return '<div onclick="window.__toast(\'Descarga no disponible en esta demo\')" class="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">' +
+                                    '<span class="material-symbols-outlined" style="font-size:18px;color:#1a73e8;">description</span>' + a + '</div>';
+                            }).join('') + '</div>';
+                        box.classList.remove('hidden');
+                    } else { box.innerHTML = ''; box.classList.add('hidden'); }
+                }
+
+                document.getElementById('gm-reply-box').classList.add('hidden');
+                document.getElementById('generic-email-modal').classList.remove('hidden');
+                render();
+            };
+            window.__closeGenericMail = function () {
+                document.getElementById('generic-email-modal').classList.add('hidden');
+            };
+            window.__archiveOpenRow = function () {
+                var m = window.__openMailData; if (m) move(m, 'archivados', 'Conversación archivada');
+                window.__closeGenericMail();
+            };
+            window.__deleteOpenRow = function () {
+                var m = window.__openMailData; if (m) move(m, 'papelera', 'Conversación movida a Papelera');
+                window.__closeGenericMail();
+            };
+            window.__spamOpenRow = function () {
+                var m = window.__openMailData; if (m) move(m, 'spam', 'Conversación marcada como spam');
+                window.__closeGenericMail();
+            };
+            window.__unreadOpenRow = function () {
+                var m = window.__openMailData; if (m) { m.read = false; render(); }
+                window.__closeGenericMail();
+                window.__toast('Marcado como no leído');
+            };
+
+            // =====================================================
+            //  CLICS EN LA LISTA
+            // =====================================================
+            document.getElementById('email-list').addEventListener('click', function (e) {
+                var row = e.target.closest('.email-row-hover');
+                if (!row) return;
+                var icon = e.target.closest('.material-symbols-outlined');
+                if (icon) {
+                    var t = icon.textContent.trim();
+                    if (t === 'star' || t === 'star_border') { window.__toggleStar(icon); return; }
+                    if (t === 'check_box_outline_blank' || t === 'check_box') { window.__toggleCheck(icon, row); return; }
+                    if (t === 'archive') { window.__archiveRow(row); return; }
+                    if (t === 'delete') { window.__deleteRow(row); return; }
+                    if (t === 'report') { window.__spamRow(row); return; }
+                    if (t === 'report_off') { window.__notSpamRow(row); return; }
+                    if (t === 'restore_from_trash') { window.__restoreRow(row); return; }
+                    if (t === 'mark_email_read' || t === 'mark_email_unread') { window.__toggleReadRow(row); return; }
+                    if (t === 'schedule') { window.__snoozeRow(row); return; }
+                    if (t === 'description') { window.__toast('Vista previa no disponible en esta demo'); return; }
+                    return;
+                }
+                var m = rowMail(row);
+                if (m && (m.draft || m.folder === 'borradores')) {
+                    document.getElementById('compose-to').value = m.to || '';
+                    document.getElementById('compose-subject').value = m.subject === '(sin asunto)' ? '' : m.subject;
+                    document.getElementById('compose-body').value = m.preview;
+                    window.__editingDraft = m;
+                    window.__openCompose();
+                    return;
+                }
+                window.__openMail(row);
+            });
+
+            // =====================================================
+            //  REDACTAR
+            // =====================================================
+            function clearCompose() {
+                document.getElementById('compose-to').value = '';
+                document.getElementById('compose-subject').value = '';
+                document.getElementById('compose-body').value = '';
+                window.__editingDraft = null;
+            }
             window.__openCompose = function () {
                 document.getElementById('compose-modal').classList.remove('hidden');
             };
@@ -1903,22 +1581,77 @@
                 document.getElementById('compose-modal').classList.add('hidden');
             };
             window.__discardCompose = function () {
-                document.getElementById('compose-to').value = '';
-                document.getElementById('compose-subject').value = '';
-                document.getElementById('compose-body').value = '';
+                var d = window.__editingDraft;
+                if (d) { MAILS = MAILS.filter(function (x) { return x !== d; }); }
+                clearCompose();
                 window.__closeCompose();
+                render();
                 window.__toast('Borrador descartado');
+            };
+            window.__saveDraft = function () {
+                var to = document.getElementById('compose-to').value.trim();
+                var subject = document.getElementById('compose-subject').value.trim();
+                var body = document.getElementById('compose-body').value.trim();
+                if (!to && !subject && !body) { window.__closeCompose(); return; }
+                var d = window.__editingDraft;
+                if (d) {
+                    d.to = to; d.subject = subject || '(sin asunto)'; d.preview = body || '(sin contenido)'; d.body = body;
+                } else {
+                    MAILS.unshift(mk({ from: 'Borrador', to: to, initial: 'B', bg: 'bg-[#5f6368]', fg: 'text-white', subject: subject || '(sin asunto)', preview: body || '(sin contenido)', body: body, time: 'ahora', folder: 'borradores', read: true, draft: true }));
+                }
+                clearCompose();
+                window.__closeCompose();
+                render();
+                window.__toast('Borrador guardado');
             };
             window.__sendCompose = function () {
                 var to = document.getElementById('compose-to').value.trim();
-                document.getElementById('compose-to').value = '';
-                document.getElementById('compose-subject').value = '';
-                document.getElementById('compose-body').value = '';
+                var subject = document.getElementById('compose-subject').value.trim();
+                var body = document.getElementById('compose-body').value.trim();
+                if (!to) { window.__toast('Especifica al menos un destinatario'); return; }
+                var d = window.__editingDraft;
+                if (d) MAILS = MAILS.filter(function (x) { return x !== d; });
+                var sent = mk({
+                    from: to.split('@')[0], to: to, initial: (to.charAt(0) || '?').toUpperCase(),
+                    bg: 'bg-[#5f6368]', fg: 'text-white',
+                    subject: subject || '(sin asunto)', preview: body || '(sin contenido)', body: body,
+                    time: 'ahora', folder: 'salida', read: true
+                });
+                MAILS.unshift(sent);
+                clearCompose();
                 window.__closeCompose();
-                window.__toast(to ? ('Mensaje enviado a ' + to) : 'Mensaje enviado');
+                render();
+                window.__toast('Enviando mensaje...', function () {
+                    MAILS = MAILS.filter(function (x) { return x !== sent; });
+                    render();
+                    window.__toast('Envío cancelado');
+                });
+                setTimeout(function () {
+                    if (MAILS.indexOf(sent) === -1) return;
+                    sent.folder = 'enviados';
+                    render();
+                    window.__toast('Mensaje enviado');
+                }, 3000);
+            };
+            window.__scheduleCompose = function () {
+                var to = document.getElementById('compose-to').value.trim();
+                var subject = document.getElementById('compose-subject').value.trim();
+                var body = document.getElementById('compose-body').value.trim();
+                if (!to) { window.__toast('Especifica al menos un destinatario'); return; }
+                var d = window.__editingDraft;
+                if (d) MAILS = MAILS.filter(function (x) { return x !== d; });
+                MAILS.unshift(mk({
+                    from: 'Programado', to: to, initial: 'P', bg: 'bg-[#5f6368]', fg: 'text-white',
+                    subject: subject || '(sin asunto)', preview: body || '(sin contenido)', body: body,
+                    time: 'mañana 8:00', folder: 'programados', read: true
+                }));
+                clearCompose();
+                window.__closeCompose();
+                render();
+                window.__toast('Envío programado para mañana a las 8:00');
             };
 
-            // ---- Responder / Reenviar (dentro de un correo abierto) ----
+            // ---- Responder / Reenviar ----
             window.__toggleReplyBox = function (id) {
                 var box = document.getElementById(id);
                 box.classList.toggle('hidden');
@@ -1930,10 +1663,23 @@
             window.__sendReply = function (id) {
                 var box = document.getElementById(id);
                 var ta = box.querySelector('textarea');
+                var txt = ta ? ta.value.trim() : '';
+                var m = window.__openMailData;
+                if (m) {
+                    MAILS.unshift(mk({
+                        from: m.from, to: slugOf(m.from) + '@universidad.edu', initial: m.initial,
+                        bg: 'bg-[#5f6368]', fg: 'text-white',
+                        subject: 'Re: ' + m.subject, preview: txt || '(sin contenido)', body: txt,
+                        time: 'ahora', folder: 'enviados', read: true
+                    }));
+                }
                 if (ta) ta.value = '';
                 box.classList.add('hidden');
+                render();
                 window.__toast('Respuesta enviada');
             };
+
+            render();
         })();
     </script>
 
