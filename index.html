@@ -287,6 +287,14 @@
             #gm-reply-box textarea::placeholder,
             #secret-reply-box textarea::placeholder { color: #9aa0a6; }
 
+            /* --- Mensajes anteriores del hilo --- */
+            #gm-anteriores .bg-gray-100 { background-color: #303134 !important; }
+            #gm-anteriores .text-gray-600 { color: #9aa0a6 !important; }
+            #gm-anteriores .text-gray-900 { color: #e8eaed !important; }
+            #gm-anteriores .text-gray-800 { color: #e8eaed !important; }
+            #gm-anteriores .text-gray-500 { color: #9aa0a6 !important; }
+            #gm-anteriores .border-gray-200 { border-color: #3c4043 !important; }
+
             /* --- Adjuntos --- */
             #gm-attachments .border-gray-300 { border-color: #5f6368 !important; }
             #gm-attachments .text-gray-700 { color: #e8eaed !important; }
@@ -1099,9 +1107,13 @@
             <div class="max-w-3xl mx-auto w-full px-4 md:px-8 py-6">
                 <h1 class="text-[22px] font-normal text-gray-900 mb-5 flex items-center gap-3 flex-wrap">
                     <span id="gm-subject"></span>
+                    <span id="gm-conteo" class="hidden text-gray-500 text-[20px] font-normal"></span>
                     <span id="gm-label"
                         class="inline-flex items-center bg-[#e8f0fe] text-[#1a73e8] text-xs font-medium px-2.5 py-1 rounded"></span>
                 </h1>
+
+                <!-- Mensajes anteriores de la conversacion -->
+                <div id="gm-anteriores" class="hidden mb-4"></div>
 
                 <div class="flex items-start justify-between mb-6 gap-2">
                     <div class="flex items-start gap-3 min-w-0">
@@ -2097,18 +2109,23 @@
                 // ---------- PRINCIPAL ----------
                 mk({ from: 'Centro de Investigación', initial: 'C', bg: 'bg-[#7b1fa2]', fg: 'text-purple-100', subject: 'Concurso Nacional de Ensayos Académicos 2026', preview: 'Postula con tu ensayo antes del cierre de la convocatoria...', d: 0, hm: '8:30', folder: 'principal', read: false, important: true, body: 'Estimado/a estudiante:\n\nSe encuentra abierta la convocatoria al Concurso Nacional de Ensayos Académicos 2026. Pueden participar estudiantes de pregrado de todas las carreras, con un ensayo inédito de entre 3.000 y 5.000 palabras.\n\nLas bases y el formulario están disponibles en el sitio del Centro. El cierre de postulaciones es el viernes 12 a las 23:59 horas.\n\nAtentamente,\nCentro de Investigación' }),
                 mk({ from: 'Vicerrectoría Académica', initial: 'V', bg: 'bg-[#00695c]', fg: 'text-teal-100', subject: 'Convocatoria: Congreso Estudiantil de Ciencias', preview: 'Presenta tu proyecto de investigación en el congreso de este año...', d: 0, hm: '7:12', folder: 'principal', read: false, important: true, body: 'Estimada comunidad:\n\nInvitamos a presentar trabajos al Congreso Estudiantil de Ciencias, que se realizará durante la última semana del semestre en el Auditorio Central.\n\nSe aceptan resúmenes de hasta 500 palabras. Los trabajos seleccionados tendrán 15 minutos de exposición y 5 de preguntas.\n\nVicerrectoría Académica' }),
-                mk({ from: 'Oficina de Becas', initial: 'O', bg: 'bg-[#ef6c00]', fg: 'text-orange-100', subject: 'Resultados del Concurso de Becas de Investigación', preview: 'Revisa si tu postulación fue seleccionada para este semestre...', d: 1, hm: '16:40', folder: 'principal', read: false, important: true, body: 'Estimado/a postulante:\n\nYa están publicados los resultados del Concurso de Becas de Investigación. Puedes revisar el estado de tu postulación ingresando con tu cuenta institucional.\n\nQuienes hayan sido seleccionados deberán firmar el convenio dentro de los próximos 10 días hábiles.\n\nOficina de Becas' }),
+                mk({ from: 'Oficina de Becas', initial: 'O', bg: 'bg-[#ef6c00]', fg: 'text-orange-100', subject: 'Resultados del Concurso de Becas de Investigación', preview: 'Revisa si tu postulación fue seleccionada para este semestre...', d: 1, hm: '16:40', folder: 'principal', read: true, important: true, hilo: 'h-becas', body: 'Estimado/a postulante:\n\nYa están publicados los resultados del Concurso de Becas de Investigación. Puedes revisar el estado de tu postulación ingresando con tu cuenta institucional.\n\nQuienes hayan sido seleccionados deberán firmar el convenio dentro de los próximos 10 días hábiles.\n\nOficina de Becas' }),
                 mk({ from: 'Escuela de Postgrado', initial: 'E', bg: 'bg-[#283593]', fg: 'text-indigo-100', subject: 'Webinar: Metodología de la Investigación', preview: 'Inscríbete gratis a este webinar para estudiantes de pre y postgrado...', d: 2, hm: '11:05', folder: 'principal', read: false, body: 'Hola:\n\nTe invitamos al webinar "Metodología de la Investigación: del problema a la pregunta", dirigido a estudiantes que están comenzando su tesis o memoria.\n\nEs gratuito y se transmitirá en línea. Los inscritos reciben el enlace y la grabación posterior.\n\nEscuela de Postgrado' }),
                 mk({ from: 'Centro de Estudiantes', initial: 'C', bg: 'bg-[#c62828]', fg: 'text-red-100', subject: 'Concurso de Innovación Estudiantil 2026', preview: 'Forma un equipo y postula con tu proyecto antes del cierre...', d: 3, hm: '19:22', folder: 'principal', read: false, body: '¡Hola!\n\nVuelve el Concurso de Innovación Estudiantil. Arma un equipo de entre 2 y 5 personas y postula tu idea: puede ser un prototipo, una app, un servicio o una solución para la propia universidad.\n\nHay premios para los tres primeros lugares y acompañamiento para llevar el proyecto adelante.\n\nCentro de Estudiantes' }),
-                mk({ from: 'Dirección de Relaciones Int.', initial: 'D', bg: 'bg-[#004a77]', fg: 'text-[#c2e7ff]', subject: '🌍✈️ Postula al Programa de Movilidad Académica', preview: 'Comunicado DRII ¿Estás listo para dar un salto en tu carrera...', d: 3, hm: '17:42', folder: 'principal', read: false, att: ['Formato carta d...', 'Formato carta d...', 'Formato CV.docx'], body: 'Comunicado DRII\n\n¿Estás listo para dar un salto en tu carrera? Se abrió la postulación al Programa de Movilidad Académica para cursar un semestre en una universidad extranjera.\n\nRequisitos: haber aprobado al menos el cuarto semestre, promedio sobre 5,0 y certificado de idioma cuando la universidad de destino lo exija.\n\nEn los archivos adjuntos encontrarás los formatos de carta de motivación y de currículum.\n\nDirección de Relaciones Internacionales' }),
+                mk({ from: 'Dirección de Relaciones Int.', initial: 'D', bg: 'bg-[#004a77]', fg: 'text-[#c2e7ff]', subject: '🌍✈️ Postula al Programa de Movilidad Académica', preview: 'Comunicado DRII ¿Estás listo para dar un salto en tu carrera...', d: 3, hm: '17:42', folder: 'principal', read: true, hilo: 'h-movilidad', att: ['Formato carta d...', 'Formato carta d...', 'Formato CV.docx'], body: 'Comunicado DRII\n\n¿Estás listo para dar un salto en tu carrera? Se abrió la postulación al Programa de Movilidad Académica para cursar un semestre en una universidad extranjera.\n\nRequisitos: haber aprobado al menos el cuarto semestre, promedio sobre 5,0 y certificado de idioma cuando la universidad de destino lo exija.\n\nEn los archivos adjuntos encontrarás los formatos de carta de motivación y de currículum.\n\nDirección de Relaciones Internacionales' }),
                 mk({ from: 'Biblioteca Central', initial: 'B', bg: 'bg-[#1e8e3e]', fg: 'text-[#81c995]', subject: 'Conoce más de tu Biblioteca', preview: '¿Quieres conocer los servicios de Biblioteca? ¿Cómo obtener la credencial institucional?', d: 4, hm: '10:15', folder: 'principal', read: false, body: '¿Sabías que puedes pedir notebooks en préstamo por el día?\n\nEn Biblioteca tienes además salas de estudio grupal reservables, acceso remoto a bases de datos, impresión y apoyo para buscar bibliografía para tus trabajos.\n\nPara usar todo esto solo necesitas tu credencial institucional, que se saca en el mesón del primer piso presentando tu cédula.\n\nBiblioteca Central' }),
-                mk({ from: 'Biblioteca Central', initial: 'B', bg: 'bg-[#1e8e3e]', fg: 'text-[#81c995]', subject: 'Inducciones 2026', preview: 'Estimados y estimadas alumnos generación 2026. Si quieres aprender más de los servicios...', d: 5, hm: '13:25', folder: 'principal', read: false, starred: true, body: 'Estimados y estimadas estudiantes de la generación 2026:\n\nEstamos realizando las inducciones a los servicios de Biblioteca. En 40 minutos te mostramos cómo buscar en el catálogo, cómo reservar salas y cómo acceder a las bases de datos desde tu casa.\n\nHay cupos en distintos horarios durante todo el mes. La asistencia es voluntaria pero muy recomendada.\n\nBiblioteca Central' }),
+                mk({ from: 'Biblioteca Central', initial: 'B', bg: 'bg-[#1e8e3e]', fg: 'text-[#81c995]', subject: 'Inducciones 2026', preview: 'Estimados y estimadas alumnos generación 2026. Si quieres aprender más de los servicios...', d: 5, hm: '13:25', folder: 'principal', read: true, starred: true, hilo: 'h-induccion', body: 'Estimados y estimadas estudiantes de la generación 2026:\n\nEstamos realizando las inducciones a los servicios de Biblioteca. En 40 minutos te mostramos cómo buscar en el catálogo, cómo reservar salas y cómo acceder a las bases de datos desde tu casa.\n\nHay cupos en distintos horarios durante todo el mes. La asistencia es voluntaria pero muy recomendada.\n\nBiblioteca Central' }),
                 mk({ from: 'Vinculación con el Medio', initial: 'V', bg: 'bg-purple-900', fg: 'text-purple-300', subject: '💫 Descubre lo nuevo en Vinculación con el Medio | Newsletter #84', preview: 'Newsletter VcM #84. DESTACADO: Postula a la 3era Edición del Reconocimiento...', d: 6, hm: '11:45', folder: 'principal', read: false, body: 'Newsletter VcM #84\n\nDESTACADO: Está abierta la 3ª edición del Reconocimiento a Iniciativas con Impacto Territorial. Pueden postular proyectos de estudiantes, académicos y funcionarios.\n\nTambién en esta edición: resultados del programa de voluntariado, agenda de actividades abiertas a la comunidad y el balance del primer semestre.\n\nDirección de Vinculación con el Medio' }),
                 mk({ from: 'sistema.eventos', initial: 's', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Evento Ceremonia Bienvenida 2026', preview: 'La Rectoría tiene el agrado de invitarte a ser parte de la Ceremonia de Bienvenida...', d: 8, hm: '11:32', folder: 'principal', read: false, body: 'La Rectoría tiene el agrado de invitarte a la Ceremonia de Bienvenida a las y los estudiantes que ingresan este año.\n\nLa actividad contempla las palabras de la Rectoría, la presentación del elenco musical de la universidad y un cóctel de cierre.\n\nSe solicita confirmar asistencia respondiendo este correo.\n\nSistema de Eventos' }),
                 mk({ from: 'Dirección de Relaciones Int.', initial: 'D', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Contesta el Formulario de Movilidad Académica Internacional', preview: 'Comunicado. Estimadas y estimados investigadores...', d: 11, hm: '9:50', folder: 'principal', read: false, body: 'Comunicado\n\nEstamos levantando información sobre el interés en movilidad internacional para planificar los convenios de los próximos años.\n\nTe pedimos contestar el formulario, que toma menos de cinco minutos. Las respuestas son anónimas y se usarán solo con fines estadísticos.\n\nDirección de Relaciones Internacionales' }),
                 mk({ from: 'Angélica Cornejo C.', initial: 'A', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'ACTUALIZACIÓN DE CREDENCIAL ESTUDIANTIL 2026', preview: 'A la comunidad Universitaria. Se informa el proceso de actualización...', d: 13, hm: '15:08', folder: 'principal', read: true, att: ['Afiche Credencial.docx'], body: 'A la comunidad universitaria:\n\nSe informa que comenzó el proceso de actualización de la credencial estudiantil. El trámite se realiza en el módulo de atención del hall central, de lunes a viernes de 9:00 a 17:00 horas.\n\nDebes presentar tu cédula de identidad vigente. La credencial anterior queda inhabilitada una vez emitida la nueva.\n\nAngélica Cornejo C.\nRegistro Curricular' }),
                 mk({ from: 'Departamento de Matemática', initial: 'D', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Invitación: Encuentro con Investigador Destacado en Ciencias Exactas 🧬', preview: 'Los programas de postgrado en Ciencias te invitan a...', d: 16, hm: '12:00', folder: 'principal', read: false, body: 'Estimada comunidad:\n\nLos programas de postgrado en Ciencias, en conjunto con la Facultad, invitan al encuentro con un investigador destacado del área, quien expondrá sobre modelamiento matemático aplicado a sistemas biológicos.\n\nLa charla es abierta a todo público y no requiere inscripción previa.\n\nDepartamento de Matemática' }),
                 mk({ from: 'Registro Académico', initial: 'R', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Confirmación de Datos Académicos Pendiente', preview: 'Hemos detectado que tu ficha de datos académicos se encuentra incompleta...', d: 19, hm: '10:30', folder: 'principal', read: false, secret: true }),
+
+                // Respuestas que forman conversacion con los mensajes de arriba
+                mk({ from: 'Dirección de Relaciones Int.', initial: 'D', bg: 'bg-[#004a77]', fg: 'text-[#c2e7ff]', subject: 'Re: Postula al Programa de Movilidad Académica', preview: 'Recordamos que el plazo se extendió una semana...', d: 1, hm: '9:40', folder: 'principal', read: false, hilo: 'h-movilidad', body: 'Estimados y estimadas:\n\nPor consultas recibidas, informamos que el plazo de postulación al Programa de Movilidad Académica se extendió una semana.\n\nQuienes ya enviaron sus documentos no necesitan hacer nada. El resto puede completar su postulación hasta el nuevo plazo.\n\nDirección de Relaciones Internacionales' }),
+                mk({ from: 'Oficina de Becas', initial: 'O', bg: 'bg-[#ef6c00]', fg: 'text-orange-100', subject: 'Re: Resultados del Concurso de Becas de Investigación', preview: 'Falta tu firma del convenio para completar el proceso...', d: 0, hm: '9:05', folder: 'principal', read: false, important: true, hilo: 'h-becas', body: 'Estimado/a:\n\nRevisando los expedientes notamos que aún no has firmado el convenio de la beca.\n\nPuedes hacerlo de forma presencial en nuestra oficina o enviando el documento firmado por este mismo medio. Si no lo recibimos dentro del plazo, el beneficio queda sin efecto.\n\nOficina de Becas' }),
+                mk({ from: 'Biblioteca Central', initial: 'B', bg: 'bg-[#1e8e3e]', fg: 'text-[#81c995]', subject: 'Re: Inducciones 2026', preview: 'Quedan pocos cupos para los últimos horarios...', d: 2, hm: '15:12', folder: 'principal', read: false, hilo: 'h-induccion', body: 'Hola de nuevo:\n\nQuedan pocos cupos en los últimos horarios de inducción de este mes. Si todavía no participas, te recomendamos inscribirte pronto.\n\nTambién dejamos disponible una versión grabada para quienes no puedan asistir.\n\nBiblioteca Central' }),
 
                 // ---------- SOCIAL ----------
                 mk({ from: 'LinkedIn', initial: 'in', bg: 'bg-[#0a66c2]', fg: 'text-white', subject: 'Tienes 4 nuevas invitaciones para conectar', preview: 'Personas de tu universidad quieren sumarte a su red profesional...', d: 0, hm: '10:58', folder: 'social', read: false, body: 'Tienes 4 invitaciones pendientes.\n\nVarias personas que estudiaron en tu misma universidad quieren conectar contigo. Revisa sus perfiles y decide a quién aceptar.\n\nTambién hay 12 empleos nuevos que coinciden con tu perfil.\n\nEl equipo de LinkedIn' }),
@@ -2257,6 +2274,35 @@
                 });
             }
 
+            // Agrupa los correos en conversaciones, como hace Gmail
+            function agrupar(lista) {
+                var mapa = {}, orden = [];
+                lista.forEach(function (m) {
+                    var h = m.hilo || m.id;
+                    if (!mapa[h]) { mapa[h] = []; orden.push(h); }
+                    mapa[h].push(m);
+                });
+                return orden.map(function (h) {
+                    var ms = mapa[h].slice().sort(function (a, b) { return (a.d || 0) - (b.d || 0); });
+                    var jefe = ms[0];
+                    return {
+                        jefe: jefe,
+                        mensajes: ms,
+                        n: ms.length,
+                        sinLeer: ms.some(function (x) { return !x.read; }),
+                        destacado: ms.some(function (x) { return x.starred; })
+                    };
+                });
+            }
+
+            // Todos los mensajes de la conversacion a la que pertenece un correo
+            function hiloDe(m) {
+                if (!m.hilo) return [m];
+                return MAILS.filter(function (x) { return x.hilo === m.hilo; })
+                    .sort(function (a, b) { return (a.d || 0) - (b.d || 0); });
+            }
+            window.__hiloDe = hiloDe;
+
             function countFor(f) {
                 var all = MAILS.filter(function (m) { return inFolder(m, f); });
                 if (TOTAL_FOLDERS[f]) return all.length;
@@ -2329,17 +2375,20 @@
                     '<span class="material-symbols-outlined mr-1" style="font-size:16px;color:#1a73e8;">description</span>' + name + '</div>';
             }
 
-            function rowHtml(m) {
-                var unread = !m.read;
+            function rowHtml(conv) {
+                var m = conv.jefe;
+                var unread = conv.sinLeer;
                 var strong = unread ? 'font-bold text-gray-900' : 'text-gray-700';
-                var star = m.starred ? 'star' : 'star_border';
-                var starColor = m.starred ? 'text-[#fbbc04]' : 'text-gray-300 hover:text-gray-800';
-                var starColorM = m.starred ? 'text-[#fbbc04]' : 'text-[#9aa0a6]';
+                var star = conv.destacado ? 'star' : 'star_border';
+                var starColor = conv.destacado ? 'text-[#fbbc04]' : 'text-gray-300 hover:text-gray-800';
+                var starColorM = conv.destacado ? 'text-[#fbbc04]' : 'text-[#9aa0a6]';
                 var rowBg = unread ? 'bg-white' : 'bg-[#f2f6fc]';
                 var who = m.folder === 'enviados' || m.folder === 'programados' || m.folder === 'borradores'
                     ? (m.to ? 'Para: ' + m.to.split('@')[0] : 'Para: (sin destinatario)')
                     : m.from;
                 var draftTag = m.draft ? '<span class="text-[#d93025] mr-1">Borrador</span>' : '';
+                // Gmail agrega el numero de mensajes al lado del remitente
+                var cuenta = conv.n > 1 ? '<span class="text-gray-500 max-md:text-[#9aa0a6] font-normal ml-1">' + conv.n + '</span>' : '';
 
                 return '' +
                     '<div class="gm-swipe-wrap" data-wrap="' + m.id + '">' +
@@ -2353,7 +2402,7 @@
                     '<span class="material-symbols-outlined ' + starColor + '" style="font-size:20px;">' + star + '</span>' +
                     '</div>' +
                     '<div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0">' +
-                    '<div class="md:w-[180px] ' + strong + ' max-md:text-[#e8eaed] max-md:font-bold truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">' + who + '</div>' +
+                    '<div class="md:w-[180px] ' + strong + ' max-md:text-[#e8eaed] max-md:font-bold truncate shrink-0 max-md:text-[15px] max-md:mb-[2px]">' + who + cuenta + '</div>' +
                     '<div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">' +
                     '<div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">' +
                     '<span class="' + strong + ' max-md:text-[#e8eaed] max-md:truncate">' + draftTag + m.subject + '</span>' +
@@ -2379,7 +2428,7 @@
             function render() {
                 var list = document.getElementById('email-list');
                 var indicador = document.getElementById('gm-refresh');
-                var rows = listFor(current);
+                var rows = agrupar(listFor(current));
                 if (!rows.length) {
                     var msg = query.trim()
                         ? 'No se encontraron correos para "' + query.trim() + '"'
@@ -2428,11 +2477,16 @@
                 window.__toast('Bandeja actualizada');
             };
 
+            // Mover afecta a toda la conversacion, como en Gmail
             function move(m, dest, msg) {
-                var prev = m.folder;
-                m.folder = dest;
+                var ms = hiloDe(m);
+                var previos = ms.map(function (x) { return { m: x, f: x.folder }; });
+                ms.forEach(function (x) { x.folder = dest; });
                 render();
-                window.__toast(msg, function () { m.folder = prev; render(); });
+                window.__toast(msg, function () {
+                    previos.forEach(function (p) { p.m.folder = p.f; });
+                    render();
+                });
             }
 
             window.__archiveRow = function (el) {
@@ -2474,14 +2528,17 @@
                     window.__toast(open.starred ? 'Añadido a Destacados' : 'Quitado de Destacados');
                     return;
                 }
-                m.starred = !m.starred;
+                var nuevo = !m.starred;
+                hiloDe(m).forEach(function (x) { x.starred = nuevo; });
                 render();
             };
             window.__toggleReadRow = function (el) {
                 var m = rowMail(el); if (!m) return;
-                m.read = !m.read;
+                var ms = hiloDe(m);
+                var nuevo = !ms.every(function (x) { return x.read; });
+                ms.forEach(function (x) { x.read = nuevo; });
                 render();
-                window.__toast(m.read ? 'Marcado como leído' : 'Marcado como no leído');
+                window.__toast(nuevo ? 'Marcado como leído' : 'Marcado como no leído');
             };
 
             window.__emptyTrash = function () {
@@ -2533,7 +2590,7 @@
                     document.getElementById('secret-email-modal').classList.remove('hidden');
                     return;
                 }
-                m.read = true;
+                hiloDe(m).forEach(function (x) { x.read = true; });
                 window.__openMailData = m;
                 window.__currentOpenRow = el;
 
@@ -2552,6 +2609,13 @@
                     st.classList.toggle('text-[#fbbc04]', !!m.starred);
                 }
 
+                var cnt = document.getElementById('gm-conteo');
+                if (cnt) {
+                    var total = hiloDe(m).length;
+                    cnt.textContent = total > 1 ? total : '';
+                    cnt.classList.toggle('hidden', total <= 1);
+                }
+
                 var lbl = document.getElementById('gm-label');
                 if (lbl) {
                     var f = FOLDERS.filter(function (x) { return x.id === m.folder; })[0];
@@ -2559,6 +2623,7 @@
                 }
 
                 document.getElementById('gm-body').textContent = bodyOf(m);
+                pintarAnteriores(m);
 
                 var box = document.getElementById('gm-attachments');
                 if (box) {
@@ -2576,6 +2641,49 @@
                 document.getElementById('generic-email-modal').classList.remove('hidden');
                 render();
             };
+            // Los mensajes anteriores llegan colapsados, como en Gmail
+            function pintarAnteriores(m) {
+                var caja = document.getElementById('gm-anteriores');
+                if (!caja) return;
+                var todos = hiloDe(m);
+                var previos = todos.filter(function (x) { return x !== m; });
+                if (!previos.length) { caja.innerHTML = ''; caja.classList.add('hidden'); return; }
+
+                caja.classList.remove('hidden');
+                caja.innerHTML =
+                    '<div onclick="window.__toggleAnteriores()" ' +
+                    'class="flex items-center gap-3 cursor-pointer py-2 group/ant">' +
+                    '<div class="flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 ' +
+                    'text-gray-600 text-sm font-medium shrink-0">' + previos.length + '</div>' +
+                    '<span class="text-sm text-gray-600">' +
+                    (previos.length === 1 ? '1 mensaje anterior' : previos.length + ' mensajes anteriores') +
+                    '</span>' +
+                    '<span id="gm-ant-flecha" class="material-symbols-outlined text-gray-500 transition-transform" ' +
+                    'style="font-size:20px;">expand_more</span></div>' +
+                    '<div id="gm-ant-lista" class="hidden flex-col gap-4 pt-2 pb-1"></div>';
+
+                var lista = document.getElementById('gm-ant-lista');
+                lista.innerHTML = previos.map(function (p) {
+                    return '<div class="border-l-2 border-gray-200 pl-4">' +
+                        '<div class="flex items-center justify-between gap-2 mb-1">' +
+                        '<span class="text-sm font-medium text-gray-900">' + p.from + '</span>' +
+                        '<span class="text-xs text-gray-500 shrink-0">' + fmtFechaLarga(p) + '</span></div>' +
+                        '<div class="text-xs text-gray-500 mb-2">' + p.subject + '</div>' +
+                        '<p class="text-sm text-gray-800 leading-relaxed whitespace-pre-line">' +
+                        bodyOf(p).replace(/</g, '&lt;') + '</p></div>';
+                }).join('');
+            }
+
+            window.__toggleAnteriores = function () {
+                var l = document.getElementById('gm-ant-lista');
+                var f = document.getElementById('gm-ant-flecha');
+                if (!l) return;
+                var abierto = !l.classList.contains('hidden');
+                l.classList.toggle('hidden', abierto);
+                l.classList.toggle('flex', !abierto);
+                if (f) f.style.transform = abierto ? '' : 'rotate(180deg)';
+            };
+
             window.__closeGenericMail = function () {
                 window.__closeAnim('generic-email-modal');
             };
