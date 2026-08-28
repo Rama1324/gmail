@@ -330,7 +330,7 @@
             </button>
             <input id="search-desktop" type="text" placeholder="Buscar correo" oninput="window.__filterMail(this.value)"
                 class="bg-transparent border-none focus:ring-0 w-full px-2 outline-none text-base" />
-            <button onclick="window.__toast('Filtros de búsqueda no disponibles en esta demo')"
+            <button onclick="window.__abrirBusqueda()"
                 class="p-2 rounded-full hover:bg-gray-100 flex items-center justify-center">
                 <span class="material-symbols-outlined">tune</span>
             </button>
@@ -348,7 +348,7 @@
                 class="p-2 hover:bg-gray-200 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">help</span>
             </button>
-            <button onclick="window.__toast('Configuración no disponible en esta demo')"
+            <button onclick="window.__abrirConfig()"
                 class="p-2 hover:bg-gray-200 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">settings</span>
             </button>
@@ -464,7 +464,8 @@
                 <div class="bg-[#202124] rounded-full h-[52px] flex items-center px-4 gap-4 mt-1 border border-[#333]">
                     <span onclick="window.__toggleMobileDrawer()"
                         class="material-symbols-outlined text-[#e8eaed] text-[24px] cursor-pointer">menu</span>
-                    <input id="search-mobile" type="text" placeholder="Buscar en el correo"
+                    <input id="search-mobile" type="text" placeholder="Buscar en el correo" readonly
+                onclick="window.__abrirBusqueda()"
                         oninput="window.__filterMail(this.value)"
                         class="bg-transparent border-none focus:ring-0 w-full outline-none text-[16px] text-[#e8eaed] placeholder-[#9aa0a6] mt-0.5" />
                     <div data-avatar onclick="document.getElementById('mobile-profile-modal').classList.remove('hidden')"
@@ -518,7 +519,7 @@
                 <div class="p-6 pb-4">
                     <h2 class="text-base font-medium text-gray-800 mb-6">Empieza a utilizar Gmail</h2>
                     <div class="grid grid-cols-3 gap-4">
-                        <div onclick="window.__toast('Configuración no disponible en esta demo')"
+                        <div onclick="window.__abrirConfig()"
                             class="flex items-center gap-3 border border-gray-200 rounded-xl p-3 cursor-pointer hover:bg-gray-50">
                             <div
                                 class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
@@ -761,6 +762,45 @@
                     del Servicio</span>
             </div>
         </div>
+    </div>
+
+    <!-- Pantalla de busqueda, como la de la app -->
+    <div id="busqueda-modal" class="hidden fixed inset-0 z-[192] bg-[#0f0f0f] md:bg-white flex flex-col">
+        <div class="flex items-center gap-2 px-2 h-16 shrink-0 border-b border-[#3c4043] md:border-gray-200">
+            <button onclick="window.__cerrarBusqueda()"
+                class="p-2 rounded-full active:bg-[#303134] md:hover:bg-gray-100 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[#e8eaed] md:text-gray-700">arrow_back</span>
+            </button>
+            <input id="busqueda-input" type="text" placeholder="Buscar en el correo" autocomplete="off"
+                oninput="window.__buscarEnVivo(this.value)"
+                class="flex-1 bg-transparent outline-none text-[16px] text-[#e8eaed] md:text-gray-800 placeholder-[#9aa0a6] min-w-0" />
+            <button onclick="window.__limpiarBusqueda()"
+                class="p-2 rounded-full active:bg-[#303134] md:hover:bg-gray-100 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[#9aa0a6]">close</span>
+            </button>
+        </div>
+
+        <!-- Filtros -->
+        <div id="busqueda-chips" class="flex gap-2 px-4 py-3 overflow-x-auto shrink-0 border-b border-[#3c4043] md:border-gray-200"></div>
+
+        <div class="flex-1 overflow-y-auto">
+            <!-- Busquedas recientes -->
+            <div id="busqueda-recientes" class="px-2 py-2"></div>
+            <!-- Resultados -->
+            <div id="busqueda-resultados"></div>
+        </div>
+    </div>
+
+    <!-- Pantalla de Configuracion -->
+    <div id="config-modal" class="hidden fixed inset-0 z-[196] bg-[#0f0f0f] md:bg-white flex flex-col">
+        <div class="flex items-center gap-3 px-2 h-16 shrink-0 border-b border-[#3c4043] md:border-gray-200">
+            <button onclick="window.__closeAnim('config-modal')"
+                class="p-2 rounded-full active:bg-[#303134] md:hover:bg-gray-100 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[#e8eaed] md:text-gray-700">arrow_back</span>
+            </button>
+            <span class="text-[20px] text-[#e8eaed] md:text-gray-800">Configuración</span>
+        </div>
+        <div id="config-cuerpo" class="flex-1 overflow-y-auto pb-10"></div>
     </div>
 
     <!-- Panel: agregar cuenta -->
@@ -1302,7 +1342,7 @@
             </div>
             <div id="drawer-list" class="pr-2"></div>
             <div class="border-t border-[#3c4043] my-2"></div>
-            <a href="#" onclick="event.preventDefault(); window.__toast('Configuración no disponible en esta demo')"
+            <a href="#" onclick="event.preventDefault(); window.__abrirConfig()"
                 class="flex items-center gap-4 px-4 py-3 rounded-r-full text-[#9aa0a6]">
                 <span class="material-symbols-outlined">settings</span> Configuración
             </a>
@@ -2375,6 +2415,11 @@
                     '<span class="material-symbols-outlined mr-1" style="font-size:16px;color:#1a73e8;">description</span>' + name + '</div>';
             }
 
+            function mostrarPrevia() {
+                var p = window.__getPrefs ? window.__getPrefs() : null;
+                return !p || p.vistaPrevia;
+            }
+
             function rowHtml(conv) {
                 var m = conv.jefe;
                 var unread = conv.sinLeer;
@@ -2406,7 +2451,7 @@
                     '<div class="flex-1 flex max-md:flex-col md:flex-row md:items-center min-w-0 md:pr-8">' +
                     '<div class="flex max-md:flex-col md:flex-row md:items-center text-sm md:truncate">' +
                     '<span class="' + strong + ' max-md:text-[#e8eaed] max-md:truncate">' + draftTag + m.subject + '</span>' +
-                    '<span class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">- ' + m.preview + '</span>' +
+                    (mostrarPrevia() ? '<span class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">- ' + m.preview + '</span>' : '') +
                     '</div>' +
                     (m.att && m.att.length ? '<div class="flex gap-2 mt-[6px] md:mt-1.5 overflow-hidden">' + m.att.map(chip).join('') + '</div>' : '') +
                     '</div></div>' +
@@ -2428,7 +2473,11 @@
             function render() {
                 var list = document.getElementById('email-list');
                 var indicador = document.getElementById('gm-refresh');
-                var rows = agrupar(listFor(current));
+                var prefs = window.__getPrefs ? window.__getPrefs() : { agrupar: true };
+                var sueltos = listFor(current);
+                var rows = prefs.agrupar ? agrupar(sueltos) : sueltos.map(function (m) {
+                    return { jefe: m, mensajes: [m], n: 1, sinLeer: !m.read, destacado: !!m.starred };
+                });
                 if (!rows.length) {
                     var msg = query.trim()
                         ? 'No se encontraron correos para "' + query.trim() + '"'
@@ -2866,7 +2915,9 @@
                             f.classList.add('gm-swipe-anim');
                             f.style.transform = 'translateX(' + (dx > 0 ? '110%' : '-110%') + ')';
                             setTimeout(function () {
+                                var pref = window.__getPrefs ? window.__getPrefs().deslizar : 'archivar';
                                 if (current === 'papelera') window.__restoreRow(f);
+                                else if (pref === 'eliminar') window.__deleteRow(f);
                                 else window.__archiveRow(f);
                             }, 200);
                             frente = null; wrap = null; arrastrando = false;
@@ -2914,6 +2965,220 @@
             });
 
             // =====================================================
+            //  BUSCADOR CON FILTROS
+            // =====================================================
+            var REC_KEY = 'gmailBusquedasRecientes';
+            var filtros = { sinLeer: false, conAdjunto: false, destacado: false, de: '' };
+
+            var CHIPS = [
+                { k: 'sinLeer', t: 'Sin leer', ic: 'mark_email_unread' },
+                { k: 'conAdjunto', t: 'Con archivo adjunto', ic: 'attach_file' },
+                { k: 'destacado', t: 'Destacados', ic: 'star' }
+            ];
+
+            function getRecientes() {
+                try { return JSON.parse(localStorage.getItem(REC_KEY) || '[]'); } catch (e) { return []; }
+            }
+            function addReciente(q) {
+                q = (q || '').trim();
+                if (!q) return;
+                var l = getRecientes().filter(function (x) { return x.toLowerCase() !== q.toLowerCase(); });
+                l.unshift(q);
+                localStorage.setItem(REC_KEY, JSON.stringify(l.slice(0, 8)));
+            }
+
+            function pintarChips() {
+                document.getElementById('busqueda-chips').innerHTML = CHIPS.map(function (c) {
+                    var on = filtros[c.k];
+                    return '<button onclick="window.__alternarFiltro(\'' + c.k + '\')" ' +
+                        'class="shrink-0 flex items-center gap-2 rounded-full px-4 py-2 text-[13px] border transition-colors ' +
+                        (on ? 'bg-[#c2e7ff] text-[#041e49] border-[#c2e7ff] font-medium'
+                            : 'border-[#5f6368] md:border-gray-300 text-[#e8eaed] md:text-gray-700') + '">' +
+                        '<span class="material-symbols-outlined" style="font-size:16px;color:inherit;">' +
+                        (on ? 'check' : c.ic) + '</span>' + c.t + '</button>';
+                }).join('');
+            }
+
+            window.__alternarFiltro = function (k) {
+                filtros[k] = !filtros[k];
+                pintarChips();
+                pintarResultados();
+            };
+
+            function coincide(m, q) {
+                if (filtros.sinLeer && m.read) return false;
+                if (filtros.conAdjunto && !(m.att && m.att.length)) return false;
+                if (filtros.destacado && !m.starred) return false;
+                if (!q) return true;
+                return (m.from + ' ' + m.subject + ' ' + m.preview + ' ' + (m.body || ''))
+                    .toLowerCase().indexOf(q) !== -1;
+            }
+
+            function pintarResultados() {
+                var q = document.getElementById('busqueda-input').value.trim().toLowerCase();
+                var hayFiltro = CHIPS.some(function (c) { return filtros[c.k]; });
+                var recientes = document.getElementById('busqueda-recientes');
+                var caja = document.getElementById('busqueda-resultados');
+
+                if (!q && !hayFiltro) {
+                    caja.innerHTML = '';
+                    var l = getRecientes();
+                    recientes.innerHTML = !l.length ? '' :
+                        '<div class="text-[#9aa0a6] md:text-gray-500 text-[13px] px-4 py-2">Búsquedas recientes</div>' +
+                        l.map(function (r) {
+                            return '<div onclick="window.__usarReciente(\'' + r.replace(/'/g, "\\'") + '\')" ' +
+                                'class="flex items-center gap-4 px-4 py-3 cursor-pointer active:bg-[#1c1c1f] md:hover:bg-gray-50">' +
+                                '<span class="material-symbols-outlined text-[#9aa0a6]" style="font-size:20px;">history</span>' +
+                                '<span class="text-[#e8eaed] md:text-gray-800 text-[15px]">' + r + '</span></div>';
+                        }).join('');
+                    return;
+                }
+
+                recientes.innerHTML = '';
+                var res = agrupar(MAILS.filter(function (m) {
+                    return m.folder !== 'papelera' && m.folder !== 'spam' && coincide(m, q);
+                }));
+
+                if (!res.length) {
+                    caja.innerHTML = '<div class="flex flex-col items-center justify-center py-20 px-6 text-center">' +
+                        '<span class="material-symbols-outlined text-[#5f6368]" style="font-size:56px;">search_off</span>' +
+                        '<p class="text-[#9aa0a6] md:text-gray-500 text-sm mt-4">No se encontraron mensajes</p></div>';
+                    return;
+                }
+                caja.innerHTML = '<div class="text-[#9aa0a6] md:text-gray-500 text-[13px] px-4 py-2">' +
+                    res.length + (res.length === 1 ? ' resultado' : ' resultados') + '</div>' +
+                    res.map(rowHtml).join('');
+            }
+
+            window.__buscarEnVivo = function () { pintarResultados(); };
+            window.__usarReciente = function (r) {
+                document.getElementById('busqueda-input').value = r;
+                pintarResultados();
+            };
+            window.__limpiarBusqueda = function () {
+                document.getElementById('busqueda-input').value = '';
+                CHIPS.forEach(function (c) { filtros[c.k] = false; });
+                pintarChips();
+                pintarResultados();
+            };
+            window.__abrirBusqueda = function () {
+                pintarChips();
+                document.getElementById('busqueda-input').value = '';
+                pintarResultados();
+                document.getElementById('busqueda-modal').classList.remove('hidden');
+                setTimeout(function () { document.getElementById('busqueda-input').focus(); }, 120);
+            };
+            window.__cerrarBusqueda = function () {
+                addReciente(document.getElementById('busqueda-input').value);
+                window.__closeAnim('busqueda-modal');
+            };
+
+            // Al tocar un resultado se abre el correo y se cierra la busqueda
+            document.getElementById('busqueda-resultados').addEventListener('click', function (e) {
+                var row = e.target.closest('.email-row-hover');
+                if (!row) return;
+                addReciente(document.getElementById('busqueda-input').value);
+                document.getElementById('busqueda-modal').classList.add('hidden');
+                window.__openMail(row);
+            });
+
+            // =====================================================
+            //  CONFIGURACION
+            // =====================================================
+            var CFG_KEY = 'gmailPreferencias';
+            var PREF_DEF = {
+                densidad: 'comoda', vistaPrevia: true, agrupar: true,
+                notificaciones: true, sonido: false, firmaOn: false,
+                firma: 'Enviado desde Gmail', respAuto: false, deslizar: 'archivar'
+            };
+            function getPrefs() {
+                try {
+                    var g = JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
+                    var o = {}; for (var k in PREF_DEF) o[k] = (k in g) ? g[k] : PREF_DEF[k];
+                    return o;
+                } catch (e) { return JSON.parse(JSON.stringify(PREF_DEF)); }
+            }
+            function setPref(k, v) {
+                var p = getPrefs(); p[k] = v;
+                localStorage.setItem(CFG_KEY, JSON.stringify(p));
+                pintarConfig();
+                if (k === 'agrupar' || k === 'vistaPrevia' || k === 'densidad') render();
+            }
+            window.__setPref = setPref;
+            window.__getPrefs = getPrefs;
+
+            function fila(titulo, sub2, control) {
+                return '<div class="flex items-center justify-between gap-4 px-5 py-4 active:bg-[#1c1c1f] md:hover:bg-gray-50">' +
+                    '<div class="min-w-0"><div class="text-[#e8eaed] md:text-gray-800 text-[15px]">' + titulo + '</div>' +
+                    (sub2 ? '<div class="text-[#9aa0a6] md:text-gray-500 text-[13px] mt-0.5">' + sub2 + '</div>' : '') +
+                    '</div>' + control + '</div>';
+            }
+            function interruptor(k, on) {
+                return '<button onclick="window.__setPref(\'' + k + '\',' + (!on) + ')" ' +
+                    'class="shrink-0 w-[52px] h-[32px] rounded-full transition-colors relative ' +
+                    (on ? 'bg-[#8ab4f8]' : 'bg-[#5f6368]') + '">' +
+                    '<span class="absolute top-[4px] w-[24px] h-[24px] rounded-full bg-white transition-all" ' +
+                    'style="left:' + (on ? '24px' : '4px') + '"></span></button>';
+            }
+            function seccion(t) {
+                return '<div class="text-[#8ab4f8] md:text-[#1a73e8] text-[13px] font-medium px-5 pt-6 pb-2">' + t + '</div>';
+            }
+
+            function pintarConfig() {
+                var p = getPrefs();
+                var cuerpo = document.getElementById('config-cuerpo');
+                if (!cuerpo) return;
+                var correo = document.querySelector('[data-email]');
+                cuerpo.innerHTML =
+                    seccion('Cuenta') +
+                    fila('Cuenta actual', correo ? correo.textContent : '', '') +
+                    fila('Firma', p.firmaOn ? p.firma : 'Sin firma', interruptor('firmaOn', p.firmaOn)) +
+                    (p.firmaOn ? '<div class="px-5 pb-4"><input id="cfg-firma" value="' +
+                        String(p.firma).replace(/"/g, '&quot;') + '" ' +
+                        'onchange="window.__setPref(\'firma\', this.value)" ' +
+                        'class="w-full bg-[#303134] md:bg-gray-100 text-[#e8eaed] md:text-gray-800 rounded-lg px-3 py-2 text-sm outline-none border border-[#444] md:border-gray-300" /></div>' : '') +
+                    fila('Respuesta automática', 'Contesta mientras no estás', interruptor('respAuto', p.respAuto)) +
+
+                    seccion('Bandeja de entrada') +
+                    fila('Agrupar en conversaciones', 'Reúne los mensajes del mismo hilo', interruptor('agrupar', p.agrupar)) +
+                    fila('Vista previa del texto', 'Muestra el inicio del mensaje', interruptor('vistaPrevia', p.vistaPrevia)) +
+                    fila('Densidad', p.densidad === 'comoda' ? 'Cómoda' : 'Compacta',
+                        '<button onclick="window.__setPref(\'densidad\', \'' +
+                        (p.densidad === 'comoda' ? 'compacta' : 'comoda') + '\')" ' +
+                        'class="shrink-0 text-[#8ab4f8] text-[13px] font-medium">Cambiar</button>') +
+                    fila('Acción al deslizar', p.deslizar === 'archivar' ? 'Archivar' : 'Eliminar',
+                        '<button onclick="window.__setPref(\'deslizar\', \'' +
+                        (p.deslizar === 'archivar' ? 'eliminar' : 'archivar') + '\')" ' +
+                        'class="shrink-0 text-[#8ab4f8] text-[13px] font-medium">Cambiar</button>') +
+
+                    seccion('Notificaciones') +
+                    fila('Notificaciones de correo', 'Avisar cuando llegue un mensaje', interruptor('notificaciones', p.notificaciones)) +
+                    fila('Sonido', 'Reproducir un sonido al recibir', interruptor('sonido', p.sonido)) +
+
+                    seccion('Acerca de') +
+                    fila('Versión', 'Demostración · sin conexión a servidores', '') +
+                    '<div class="px-5 py-4">' +
+                    '<button onclick="window.__restablecerTodo()" ' +
+                    'class="w-full border border-[#f28b82] text-[#f28b82] rounded-full py-2.5 text-sm active:bg-[#f28b82]/10">' +
+                    'Restablecer esta demostración</button></div>';
+            }
+
+            window.__abrirConfig = function () {
+                pintarConfig();
+                document.getElementById('config-modal').classList.remove('hidden');
+            };
+
+            window.__restablecerTodo = function () {
+                ['gmailPreferencias', 'gmailCuentas', 'gmailBusquedasRecientes',
+                    'gmailAlmacenamiento', 'gmailAlmacenamientoTotal', 'gmailApariencia'].forEach(function (k) {
+                        localStorage.removeItem(k);
+                    });
+                window.__closeAnim('config-modal');
+                window.__toast('Preferencias restablecidas');
+                setTimeout(function () { location.reload(); }, 800);
+            };
+
+            // =====================================================
             //  REDACTAR
             // =====================================================
             function clearCompose() {
@@ -2950,6 +3215,9 @@
 
             window.__openCompose = function () {
                 pintarSugerencias();
+                var p = window.__getPrefs ? window.__getPrefs() : null;
+                var cuerpo = document.getElementById('compose-body');
+                if (p && p.firmaOn && cuerpo && !cuerpo.value) cuerpo.value = '\n\n' + p.firma;
                 document.getElementById('compose-modal').classList.remove('hidden');
             };
 
