@@ -85,7 +85,7 @@
                 class="p-2 hover:bg-gray-200 rounded-full transition-colors flex items-center justify-center">
                 <span class="material-symbols-outlined">menu</span>
             </button>
-            <div onclick="window.__switchFolder('recibidos')"
+            <div onclick="window.__switchFolder('principal')"
                 class="flex items-center gap-2 cursor-pointer">
                 <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_default_1x_r5.png"
                     alt="Gmail Logo" class="h-10 opacity-90" />
@@ -1189,7 +1189,7 @@
                 compras: 'No hay compras registradas'
             };
 
-            var current = 'recibidos';
+            var current = 'principal';
             var query = '';
 
             function inFolder(m, f) {
@@ -1359,7 +1359,7 @@
                 render();
             };
             window.__refreshInbox = function () {
-                window.__switchFolder('recibidos');
+                window.__switchFolder('principal');
                 window.__toast('Bandeja actualizada');
             };
 
