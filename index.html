@@ -14,6 +14,7 @@
         rel="stylesheet" />
 
     <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#0f0f0f" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#EA4335" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -175,6 +176,97 @@
                 animation-delay: 0ms !important;
                 transition-duration: .01ms !important;
             }
+        }
+
+        /* ============ Modo oscuro en movil ============ */
+        /* En movil toda la app es oscura, incluidos los paneles que en
+           escritorio son claros (correo abierto y redactar).            */
+        @media (max-width: 767px) {
+
+            /* --- Fondos --- */
+            #generic-email-modal,
+            #secret-email-modal {
+                background-color: #0f0f0f !important;
+                color: #e8eaed;
+            }
+            #compose-modal > div { background-color: #1f1f21 !important; }
+
+            /* --- Textos --- */
+            #generic-email-modal .text-gray-900,
+            #generic-email-modal .text-gray-800,
+            #generic-email-modal .text-gray-700,
+            #secret-email-modal .text-gray-900,
+            #secret-email-modal .text-gray-800,
+            #secret-email-modal .text-gray-700 { color: #e8eaed !important; }
+
+            #generic-email-modal .text-gray-500,
+            #generic-email-modal .text-gray-400,
+            #generic-email-modal .text-gray-300,
+            #secret-email-modal .text-gray-500,
+            #secret-email-modal .text-gray-400,
+            #secret-email-modal .text-gray-300,
+            #compose-modal .text-gray-500 { color: #9aa0a6 !important; }
+
+            /* --- Iconos --- */
+            #generic-email-modal .material-symbols-outlined,
+            #secret-email-modal .material-symbols-outlined,
+            #compose-modal .material-symbols-outlined { color: #e8eaed; }
+
+            /* --- Bordes y separadores --- */
+            #generic-email-modal .border-gray-100,
+            #generic-email-modal .border-gray-200,
+            #generic-email-modal .border-gray-300,
+            #secret-email-modal .border-gray-100,
+            #secret-email-modal .border-gray-200,
+            #secret-email-modal .border-gray-300,
+            #compose-modal .border-gray-100,
+            #compose-modal .border-gray-200,
+            #compose-modal .border-gray-300 { border-color: #3c4043 !important; }
+
+            #generic-email-modal .bg-gray-300,
+            #secret-email-modal .bg-gray-300 { background-color: #3c4043 !important; }
+
+            /* --- Realce al tocar --- */
+            #generic-email-modal .hover\:bg-gray-100:hover,
+            #generic-email-modal .hover\:bg-gray-100:active,
+            #generic-email-modal .hover\:bg-gray-50:hover,
+            #generic-email-modal .hover\:bg-gray-50:active,
+            #secret-email-modal .hover\:bg-gray-100:hover,
+            #secret-email-modal .hover\:bg-gray-100:active,
+            #secret-email-modal .hover\:bg-gray-50:hover,
+            #secret-email-modal .hover\:bg-gray-50:active,
+            #compose-modal .hover\:bg-gray-100:hover,
+            #compose-modal .hover\:bg-gray-100:active { background-color: #2a2a2d !important; }
+
+            /* --- Etiqueta de carpeta --- */
+            #generic-email-modal .bg-\[\#e8f0fe\],
+            #secret-email-modal .bg-\[\#e8f0fe\] {
+                background-color: #1b3a57 !important;
+                color: #c2e7ff !important;
+            }
+            #generic-email-modal .bg-\[\#e8f0fe\] .material-symbols-outlined,
+            #secret-email-modal .bg-\[\#e8f0fe\] .material-symbols-outlined { color: #c2e7ff !important; }
+
+            /* --- Campos de texto --- */
+            #compose-modal input,
+            #compose-modal textarea,
+            #gm-reply-box textarea,
+            #secret-reply-box textarea {
+                background-color: transparent;
+                color: #e8eaed;
+            }
+            #compose-modal input::placeholder,
+            #compose-modal textarea::placeholder,
+            #gm-reply-box textarea::placeholder,
+            #secret-reply-box textarea::placeholder { color: #9aa0a6; }
+
+            /* --- Adjuntos --- */
+            #gm-attachments .border-gray-300 { border-color: #5f6368 !important; }
+            #gm-attachments .text-gray-700 { color: #e8eaed !important; }
+            #gm-attachments .text-gray-500 { color: #9aa0a6 !important; }
+
+            /* --- Barra de color del navegador --- */
+            body { background-color: #0f0f0f; }
         }
     </style>
 </head>
