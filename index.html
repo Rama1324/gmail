@@ -133,6 +133,13 @@
         #mobile-profile-modal.gm-closing > div { animation: gmOutDown 260ms var(--gm-out) forwards; }
 
         /* ---- Configuracion y fotos ---- */
+        #menu-modal:not(.hidden):not(.gm-closing) > div,
+        #emoji-modal:not(.hidden):not(.gm-closing) > div { animation: gmInUp 260ms var(--gm-in); }
+        #menu-modal.gm-closing > div,
+        #emoji-modal.gm-closing > div { animation: gmOutDown 200ms var(--gm-out) forwards; }
+        #apps-modal:not(.hidden):not(.gm-closing) > div { animation: gmPopIn 220ms var(--gm-in); }
+        #apps-modal.gm-closing > div { animation: gmPopOut 170ms var(--gm-out) forwards; }
+
         #secret-config-modal:not(.hidden):not(.gm-closing),
         #horario-photos-modal:not(.hidden):not(.gm-closing) { animation: gmFadeIn 180ms ease-out; }
         #secret-config-modal:not(.hidden):not(.gm-closing) > div,
@@ -352,7 +359,7 @@
                 class="p-2 hover:bg-gray-200 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">settings</span>
             </button>
-            <button onclick="window.__toast('Aplicaciones de Google no disponibles en esta demo')"
+            <button onclick="window.__abrirApps()"
                 class="p-2 hover:bg-gray-200 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">apps</span>
             </button>
@@ -444,7 +451,7 @@
             <div id="folder-list" class="pr-4 space-y-0.5 mt-2"></div>
 
             <div class="mt-4 px-4 pb-2 border-b border-gray-200">
-                <div onclick="window.__toast('Crear etiqueta no disponible en esta demo')"
+                <div onclick="window.__menuEtiquetas()"
                     class="flex items-center justify-between text-gray-800 font-medium py-1 px-2 hover:bg-gray-200 rounded cursor-pointer">
                     <span>Etiquetas</span>
                     <span class="material-symbols-outlined" style="font-size: 18px;">add</span>
@@ -493,7 +500,7 @@
                     </div>
                     <span onclick="window.__refreshInbox()"
                         class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full cursor-pointer">refresh</span>
-                    <span onclick="window.__toast('Más opciones no disponibles en esta demo')"
+                    <span onclick="window.__menuMas()"
                         class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full cursor-pointer">more_vert</span>
                 </div>
 
@@ -764,6 +771,42 @@
         </div>
     </div>
 
+    <!-- Menu emergente reutilizable (3 puntos, posponer, etc.) -->
+    <div id="menu-modal"
+        class="hidden fixed inset-0 z-[208] bg-[#000000cc] backdrop-blur-sm flex items-end md:items-center justify-center">
+        <div
+            class="bg-[#202124] w-full md:max-w-xs rounded-t-3xl md:rounded-2xl py-3 border-t md:border border-[#3c4043] max-h-[80vh] overflow-y-auto">
+            <div id="menu-titulo" class="text-[#9aa0a6] text-xs px-5 pt-1 pb-3"></div>
+            <div id="menu-opciones"></div>
+        </div>
+    </div>
+
+    <!-- Cuadricula de aplicaciones de Google -->
+    <div id="apps-modal"
+        class="hidden fixed inset-0 z-[208] bg-[#000000cc] backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#202124] w-full max-w-[320px] rounded-3xl p-5 border border-[#3c4043]">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-[#e8eaed] text-[15px] font-medium">Aplicaciones de Google</span>
+                <button onclick="window.__closeAnim('apps-modal')"
+                    class="material-symbols-outlined text-[#9aa0a6]">close</button>
+            </div>
+            <div id="apps-grid" class="grid grid-cols-3 gap-2"></div>
+        </div>
+    </div>
+
+    <!-- Selector de emoji -->
+    <div id="emoji-modal"
+        class="hidden fixed inset-0 z-[208] bg-[#000000cc] backdrop-blur-sm flex items-end md:items-center justify-center">
+        <div class="bg-[#202124] w-full md:max-w-sm rounded-t-3xl md:rounded-2xl p-5 border-t md:border border-[#3c4043]">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-[#e8eaed] text-[15px] font-medium">Insertar emoji</span>
+                <button onclick="window.__closeAnim('emoji-modal')"
+                    class="material-symbols-outlined text-[#9aa0a6]">close</button>
+            </div>
+            <div id="emoji-grid" class="grid grid-cols-8 gap-1 max-h-[240px] overflow-y-auto"></div>
+        </div>
+    </div>
+
     <!-- Pantalla de busqueda, como la de la app -->
     <div id="busqueda-modal" class="hidden fixed inset-0 z-[192] bg-[#0f0f0f] md:bg-white flex flex-col">
         <div class="flex items-center gap-2 px-2 h-16 shrink-0 border-b border-[#3c4043] md:border-gray-200">
@@ -952,19 +995,19 @@
                 class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">mark_email_unread</span>
             </button>
-            <button onclick="window.__toast('Correo pospuesto')"
+            <button onclick="window.__menuPosponer()"
                 class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">schedule</span>
             </button>
-            <button onclick="window.__toast('Mover a no disponible en esta demo')"
+            <button onclick="window.__menuMover()"
                 class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">drive_file_move</span>
             </button>
-            <button onclick="window.__toast('Etiquetas no disponibles en esta demo')"
+            <button onclick="window.__menuEtiquetas()"
                 class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">label</span>
             </button>
-            <button onclick="window.__toast('Más opciones no disponibles en esta demo')"
+            <button onclick="window.__menuMas()"
                 class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">more_vert</span>
             </button>
@@ -1030,7 +1073,7 @@
                         <span onclick="window.__toggleReplyBox('secret-reply-box')"
                             class="material-symbols-outlined cursor-pointer hidden md:inline"
                             style="font-size: 20px;">reply</span>
-                        <span onclick="window.__toast('Más opciones no disponibles en esta demo')"
+                        <span onclick="window.__menuMas()"
                             class="material-symbols-outlined cursor-pointer hidden md:inline"
                             style="font-size: 20px;">more_vert</span>
                     </div>
@@ -1065,7 +1108,7 @@
                         class="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                         <span class="material-symbols-outlined" style="font-size: 18px;">forward</span> Reenviar
                     </button>
-                    <button onclick="window.__toast('Selector de emoji no disponible en esta demo')"
+                    <button onclick="window.__abrirEmoji()"
                         class="p-2 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-100 transition-colors hidden md:flex items-center justify-center">
                         <span class="material-symbols-outlined" style="font-size: 18px;">mood</span>
                     </button>
@@ -1116,19 +1159,19 @@
                 class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">mark_email_unread</span>
             </button>
-            <button onclick="window.__toast('Correo pospuesto')"
+            <button onclick="window.__menuPosponer()"
                 class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">schedule</span>
             </button>
-            <button onclick="window.__toast('Mover a no disponible en esta demo')"
+            <button onclick="window.__menuMover()"
                 class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">drive_file_move</span>
             </button>
-            <button onclick="window.__toast('Etiquetas no disponibles en esta demo')"
+            <button onclick="window.__menuEtiquetas()"
                 class="p-2 hover:bg-gray-100 rounded-full hidden md:flex items-center justify-center">
                 <span class="material-symbols-outlined">label</span>
             </button>
-            <button onclick="window.__toast('Más opciones no disponibles en esta demo')"
+            <button onclick="window.__menuMas()"
                 class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">more_vert</span>
             </button>
@@ -1179,7 +1222,7 @@
                         <span onclick="window.__toggleReplyBox('gm-reply-box')"
                             class="material-symbols-outlined cursor-pointer hidden md:inline"
                             style="font-size: 20px;">reply</span>
-                        <span onclick="window.__toast('Más opciones no disponibles en esta demo')"
+                        <span onclick="window.__menuMas()"
                             class="material-symbols-outlined cursor-pointer hidden md:inline"
                             style="font-size: 20px;">more_vert</span>
                     </div>
@@ -1202,7 +1245,7 @@
                         class="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                         <span class="material-symbols-outlined" style="font-size: 18px;">forward</span> Reenviar
                     </button>
-                    <button onclick="window.__toast('Selector de emoji no disponible en esta demo')"
+                    <button onclick="window.__abrirEmoji()"
                         class="p-2 border border-gray-300 rounded-full text-gray-700 hover:bg-gray-100 transition-colors hidden md:flex items-center justify-center">
                         <span class="material-symbols-outlined" style="font-size: 18px;">mood</span>
                     </button>
@@ -1245,7 +1288,7 @@
                     <span onclick="window.__toast('Ayuda para escribir no disponible en esta demo')"
                         class="material-symbols-outlined text-[#e8eaed] gm-press"
                         style="font-size: 22px;">edit_note</span>
-                    <span onclick="window.__toast('Adjuntar archivos no disponible en esta demo')"
+                    <span onclick="document.getElementById('compose-file').click()"
                         class="material-symbols-outlined text-[#e8eaed] gm-press"
                         style="font-size: 22px;">attach_file</span>
                     <span onclick="window.__sendCompose()"
@@ -1270,15 +1313,26 @@
                 </div>
             </div>
 
+            <input id="compose-file" type="file" multiple class="hidden"
+                onchange="window.__adjuntarArchivos(this)" />
+
             <div class="flex flex-col flex-1 overflow-y-auto">
 
                 <!-- Para -->
                 <div class="flex items-center border-b border-[#3c4043] md:border-gray-200 px-4 md:px-0">
                     <input id="compose-to" type="text" placeholder="Para" autocomplete="off"
                         class="flex-1 bg-transparent py-3 md:px-4 md:py-2 text-[16px] md:text-sm outline-none min-w-0" />
-                    <span onclick="window.__toast('Cc y Cco no disponibles en esta demo')"
+                    <span onclick="window.__toggleCc()"
                         class="md:hidden material-symbols-outlined text-[#9aa0a6] shrink-0"
                         style="font-size: 22px;">expand_more</span>
+                </div>
+
+                <!-- Cc y Cco -->
+                <div id="compose-cc-fila" class="hidden flex-col">
+                    <input id="compose-cc" type="text" placeholder="Cc" autocomplete="off"
+                        class="bg-transparent border-b border-[#3c4043] md:border-gray-200 px-4 py-3 md:py-2 text-[16px] md:text-sm outline-none" />
+                    <input id="compose-cco" type="text" placeholder="Cco" autocomplete="off"
+                        class="bg-transparent border-b border-[#3c4043] md:border-gray-200 px-4 py-3 md:py-2 text-[16px] md:text-sm outline-none" />
                 </div>
 
                 <!-- Sugerencias de contacto (solo movil) -->
@@ -1304,6 +1358,9 @@
                 <input id="compose-subject" type="text" placeholder="Asunto"
                     class="bg-transparent border-b border-[#3c4043] md:border-gray-200 px-4 py-3 md:py-2 text-[16px] md:text-sm outline-none" />
 
+                <!-- Adjuntos elegidos -->
+                <div id="compose-adjuntos" class="hidden flex-wrap gap-2 px-4 py-3"></div>
+
                 <!-- Cuerpo -->
                 <textarea id="compose-body" placeholder="Redacta un correo"
                     class="flex-1 bg-transparent px-4 py-3 md:py-2 text-[16px] md:text-sm outline-none resize-none min-h-[160px]"></textarea>
@@ -1316,9 +1373,9 @@
                         class="bg-brand-blue hover:bg-blue-700 text-white font-medium rounded-full px-6 py-2 text-sm transition-colors shrink-0">Enviar</button>
                     <span onclick="window.__scheduleCompose()" title="Programar envío"
                         class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5">schedule_send</span>
-                    <span onclick="window.__toast('Adjuntar archivos no disponible en esta demo')" title="Adjuntar"
+                    <span onclick="document.getElementById('compose-file').click()" title="Adjuntar"
                         class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5">attach_file</span>
-                    <span onclick="window.__toast('Insertar emoji no disponible en esta demo')" title="Emoji"
+                    <span onclick="window.__abrirEmoji()" title="Emoji"
                         class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5">mood</span>
                 </div>
                 <div class="flex items-center gap-1 shrink-0">
@@ -2448,7 +2505,7 @@
 
                 return '' +
                     '<div class="gm-swipe-wrap" data-wrap="' + m.id + '">' +
-                    '<div class="gm-swipe-fondo" style="background-color:#1e8e3e">' +
+                    '<div class="gm-swipe-fondo">' +
                     '<span class="material-symbols-outlined">archive</span>' +
                     '<span class="material-symbols-outlined">archive</span></div>' +
                     '<div class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none ' + rowBg + ' max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group gm-swipe-front" data-id="' + m.id + '"' + (m.secret ? ' data-secret="1"' : '') + '>' +
@@ -2833,12 +2890,16 @@
             (function gestos() {
                 var lista = document.getElementById('email-list');
                 var x0 = 0, y0 = 0, frente = null, wrap = null, arrastrando = false;
-                var temporizador = null, movido = false;
+                var temporizador = null, movido = false, eje = null;
                 var tirando = false, y0Tirar = 0;
                 var indicador = document.getElementById('gm-refresh');
 
                 function limpiar() {
                     clearTimeout(temporizador);
+                    if (wrap) {
+                        var f0 = wrap.querySelector('.gm-swipe-fondo');
+                        if (f0) f0.style.backgroundColor = '';
+                    }
                     if (frente) {
                         frente.classList.add('gm-swipe-anim');
                         frente.style.transform = '';
@@ -2850,7 +2911,7 @@
                 lista.addEventListener('touchstart', function (e) {
                     if (!esMovil() || e.touches.length !== 1) return;
                     var t = e.touches[0];
-                    x0 = t.clientX; y0 = t.clientY; movido = false;
+                    x0 = t.clientX; y0 = t.clientY; movido = false; eje = null;
                     var f = e.target.closest ? e.target.closest('.gm-swipe-front') : null;
                     frente = f;
                     wrap = f ? f.closest('.gm-swipe-wrap') : null;
@@ -2886,7 +2947,11 @@
 
                     // Deslizar la fila
                     if (!frente || modoSel) return;
-                    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+                    // El eje se decide una sola vez por gesto: si empezo vertical, no se arrastra
+                    if (!eje && (Math.abs(dx) > 12 || Math.abs(dy) > 12)) {
+                        eje = Math.abs(dx) > Math.abs(dy) * 1.6 ? 'x' : 'y';
+                    }
+                    if (eje === 'x' && Math.abs(dx) > 12) {
                         arrastrando = true;
                         frente.style.transform = 'translateX(' + dx + 'px)';
                         if (wrap) {
@@ -2967,7 +3032,7 @@
                     if (t === 'report_off') { window.__notSpamRow(row); return; }
                     if (t === 'restore_from_trash') { window.__restoreRow(row); return; }
                     if (t === 'mark_email_read' || t === 'mark_email_unread') { window.__toggleReadRow(row); return; }
-                    if (t === 'schedule') { window.__snoozeRow(row); return; }
+                    if (t === 'schedule') { window.__menuPosponer(row); return; }
                     if (t === 'description') { window.__toast('Vista previa no disponible en esta demo'); return; }
                     return;
                 }
@@ -2982,6 +3047,189 @@
                 }
                 window.__openMail(row);
             });
+
+            // =====================================================
+            //  MENUS EMERGENTES
+            // =====================================================
+            function abrirMenu(titulo, opciones) {
+                document.getElementById('menu-titulo').textContent = titulo || '';
+                document.getElementById('menu-opciones').innerHTML = opciones.map(function (o, i) {
+                    if (o.sep) return '<div class="border-t border-[#3c4043] my-2"></div>';
+                    return '<div onclick="window.__menuElegir(' + i + ')" ' +
+                        'class="flex items-center gap-5 px-5 py-3.5 cursor-pointer active:bg-[#303134]">' +
+                        '<span class="material-symbols-outlined text-[#e8eaed]" style="font-size:20px;">' +
+                        (o.ic || 'circle') + '</span>' +
+                        '<span class="text-[#e8eaed] text-[15px]">' + o.t + '</span></div>';
+                }).join('');
+                window.__menuActual = opciones;
+                document.getElementById('menu-modal').classList.remove('hidden');
+            }
+            window.__menuElegir = function (i) {
+                var o = (window.__menuActual || [])[i];
+                window.__closeAnim('menu-modal');
+                if (o && o.fn) setTimeout(o.fn, 180);
+            };
+
+            window.__menuMas = function () {
+                var m = window.__openMailData;
+                abrirMenu('Más opciones', [
+                    { t: 'Marcar como importante', ic: 'label_important', fn: function () {
+                        if (m) { m.important = !m.important; render(); }
+                        window.__toast(m && m.important ? 'Marcado como importante' : 'Ya no es importante');
+                    } },
+                    { t: 'Silenciar conversación', ic: 'notifications_off', fn: function () {
+                        window.__toast('Conversación silenciada');
+                    } },
+                    { t: 'Imprimir', ic: 'print', fn: function () { window.print(); } },
+                    { sep: true },
+                    { t: 'Reportar phishing', ic: 'gpp_maybe', fn: function () {
+                        if (m) { move(m, 'spam', 'Reportado y movido a Spam'); window.__closeGenericMail(); }
+                        else window.__toast('Reporte enviado');
+                    } },
+                    { t: 'Bloquear remitente', ic: 'block', fn: function () {
+                        window.__toast('Se bloqueó a ' + (m ? m.from : 'este remitente'));
+                    } }
+                ]);
+            };
+
+            window.__menuMover = function () {
+                var m = window.__openMailData;
+                var destinos = [
+                    { id: 'principal', t: 'Principal', ic: 'inbox' },
+                    { id: 'social', t: 'Social', ic: 'group' },
+                    { id: 'promociones', t: 'Promociones', ic: 'sell' },
+                    { id: 'notificaciones', t: 'Notificaciones', ic: 'info' },
+                    { id: 'compras', t: 'Compras', ic: 'shopping_bag' },
+                    { id: 'archivados', t: 'Todos', ic: 'all_inbox' }
+                ];
+                abrirMenu('Mover a', destinos.map(function (d) {
+                    return { t: d.t, ic: d.ic, fn: function () {
+                        if (!m) return;
+                        move(m, d.id, 'Conversación movida a ' + d.t);
+                        window.__closeGenericMail();
+                    } };
+                }));
+            };
+
+            var ETIQUETAS = ['Universidad', 'Importante', 'Personal', 'Trabajo', 'Por leer'];
+            window.__menuEtiquetas = function () {
+                var m = window.__openMailData;
+                abrirMenu('Etiquetar como', ETIQUETAS.map(function (e) {
+                    return { t: e, ic: 'label', fn: function () {
+                        if (m) { m.etiqueta = e; render(); }
+                        window.__toast('Etiquetada como "' + e + '"');
+                    } };
+                }).concat([
+                    { sep: true },
+                    { t: 'Crear etiqueta nueva', ic: 'add', fn: function () {
+                        window.__toast('Puedes crear etiquetas desde Configuración');
+                    } }
+                ]));
+            };
+
+            window.__menuPosponer = function (row) {
+                var m = row ? rowMail(row) : window.__openMailData;
+                if (!m) return;
+                function posponer(texto, dias) {
+                    return function () {
+                        hiloDe(m).forEach(function (x) { x.snoozed = true; });
+                        var prev = m.folder;
+                        render();
+                        window.__toast('Pospuesto hasta ' + texto, function () {
+                            hiloDe(m).forEach(function (x) { x.snoozed = false; x.folder = prev; });
+                            render();
+                        });
+                        if (window.__openMailData === m) window.__closeGenericMail();
+                    };
+                }
+                abrirMenu('Posponer hasta', [
+                    { t: 'Más tarde hoy', ic: 'schedule', fn: posponer('más tarde hoy', 0) },
+                    { t: 'Mañana', ic: 'wb_sunny', fn: posponer('mañana', 1) },
+                    { t: 'Este fin de semana', ic: 'weekend', fn: posponer('el fin de semana', 3) },
+                    { t: 'La próxima semana', ic: 'event', fn: posponer('la próxima semana', 7) },
+                    { sep: true },
+                    { t: 'Elegir fecha y hora', ic: 'edit_calendar', fn: posponer('la fecha elegida', 5) }
+                ]);
+            };
+
+            // ---- Cuadricula de aplicaciones ----
+            var APPS = [
+                { t: 'Cuenta', ic: 'account_circle', c: '#4285f4' },
+                { t: 'Búsqueda', ic: 'search', c: '#ea4335' },
+                { t: 'Maps', ic: 'map', c: '#34a853' },
+                { t: 'YouTube', ic: 'smart_display', c: '#ff0000' },
+                { t: 'Drive', ic: 'add_to_drive', c: '#fbbc04' },
+                { t: 'Calendar', ic: 'calendar_month', c: '#4285f4' },
+                { t: 'Fotos', ic: 'photo_library', c: '#ea4335' },
+                { t: 'Meet', ic: 'videocam', c: '#00832d' },
+                { t: 'Docs', ic: 'description', c: '#4285f4' }
+            ];
+            window.__abrirApps = function () {
+                document.getElementById('apps-grid').innerHTML = APPS.map(function (a) {
+                    return '<div onclick="window.__toast(\'' + a.t + ' no está disponible en esta demostración\')" ' +
+                        'class="flex flex-col items-center gap-1.5 py-3 rounded-xl cursor-pointer active:bg-[#303134]">' +
+                        '<span class="material-symbols-outlined" style="font-size:26px;color:' + a.c + '">' + a.ic + '</span>' +
+                        '<span class="text-[#e8eaed] text-[11px]">' + a.t + '</span></div>';
+                }).join('');
+                document.getElementById('apps-modal').classList.remove('hidden');
+            };
+
+            // ---- Emoji ----
+            var EMOJIS = ('😀 😃 😄 😁 😆 😅 😂 🙂 😉 😊 😍 😘 🤔 🤗 😐 😴 😎 🤓 ' +
+                '👍 👎 👏 🙌 🙏 💪 ✌️ 👌 ❤️ 💙 💚 🔥 ⭐ ✨ 🎉 🎊 🎁 🍀 ' +
+                '📚 📝 📅 ⏰ ✅ ❌ ⚠️ 💡 🚀 ☕ 🍕 ⚽ 🎵 🌍 ☀️ 🌙').split(' ');
+            window.__abrirEmoji = function () {
+                document.getElementById('emoji-grid').innerHTML = EMOJIS.map(function (e) {
+                    return '<button onclick="window.__ponerEmoji(\'' + e + '\')" ' +
+                        'class="text-[22px] rounded-lg py-1.5 active:bg-[#303134]">' + e + '</button>';
+                }).join('');
+                document.getElementById('emoji-modal').classList.remove('hidden');
+            };
+            window.__ponerEmoji = function (e) {
+                var t = document.getElementById('compose-body');
+                var r = document.querySelector('#gm-reply-box textarea');
+                var destino = (document.getElementById('compose-modal').classList.contains('hidden') && r) ? r : t;
+                if (destino) destino.value += e;
+                window.__closeAnim('emoji-modal');
+            };
+
+            // ---- Cc / Cco ----
+            window.__toggleCc = function () {
+                var f = document.getElementById('compose-cc-fila');
+                var abierto = !f.classList.contains('hidden');
+                f.classList.toggle('hidden', abierto);
+                f.classList.toggle('flex', !abierto);
+                if (!abierto) document.getElementById('compose-cc').focus();
+            };
+
+            // ---- Adjuntar ----
+            var adjuntosCompose = [];
+            window.__adjuntarArchivos = function (input) {
+                var nuevos = Array.prototype.slice.call(input.files || []);
+                if (!nuevos.length) return;
+                nuevos.forEach(function (f) { adjuntosCompose.push(f.name); });
+                input.value = '';
+                pintarAdjuntosCompose();
+                window.__toast(nuevos.length === 1 ? 'Archivo adjuntado' : nuevos.length + ' archivos adjuntados');
+            };
+            function pintarAdjuntosCompose() {
+                var caja = document.getElementById('compose-adjuntos');
+                if (!caja) return;
+                caja.classList.toggle('hidden', !adjuntosCompose.length);
+                caja.classList.toggle('flex', !!adjuntosCompose.length);
+                caja.innerHTML = adjuntosCompose.map(function (n, i) {
+                    return '<div class="flex items-center gap-2 border border-[#5f6368] md:border-gray-300 rounded-lg px-3 py-1.5 text-xs text-[#e8eaed] md:text-gray-700">' +
+                        '<span class="material-symbols-outlined" style="font-size:15px;color:#1a73e8;">description</span>' +
+                        n + '<span onclick="window.__quitarAdjunto(' + i + ')" ' +
+                        'class="material-symbols-outlined cursor-pointer" style="font-size:15px;">close</span></div>';
+                }).join('');
+            }
+            window.__quitarAdjunto = function (i) {
+                adjuntosCompose.splice(i, 1);
+                pintarAdjuntosCompose();
+            };
+            window.__adjuntosCompose = function () { return adjuntosCompose; };
+            window.__limpiarAdjuntos = function () { adjuntosCompose = []; pintarAdjuntosCompose(); };
 
             // =====================================================
             //  BUSCADOR CON FILTROS
@@ -3201,6 +3449,11 @@
             //  REDACTAR
             // =====================================================
             function clearCompose() {
+                if (window.__limpiarAdjuntos) window.__limpiarAdjuntos();
+                var cc = document.getElementById('compose-cc'); if (cc) cc.value = '';
+                var cco = document.getElementById('compose-cco'); if (cco) cco.value = '';
+                var fcc = document.getElementById('compose-cc-fila');
+                if (fcc) { fcc.classList.add('hidden'); fcc.classList.remove('flex'); }
                 document.getElementById('compose-to').value = '';
                 document.getElementById('compose-subject').value = '';
                 document.getElementById('compose-body').value = '';
@@ -3290,7 +3543,8 @@
                     from: to.split('@')[0], to: to, initial: (to.charAt(0) || '?').toUpperCase(),
                     bg: 'bg-[#5f6368]', fg: 'text-white',
                     subject: subject || '(sin asunto)', preview: body || '(sin contenido)', body: body,
-                    d: 0, hm: ahoraHM(), folder: 'salida', read: true
+                    d: 0, hm: ahoraHM(), folder: 'salida', read: true,
+                    att: window.__adjuntosCompose ? window.__adjuntosCompose().slice() : []
                 });
                 MAILS.unshift(sent);
                 clearCompose();
