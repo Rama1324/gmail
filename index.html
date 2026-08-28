@@ -178,6 +178,33 @@
             }
         }
 
+        /* ============ Gestos tactiles ============ */
+        .gm-swipe-wrap { position: relative; overflow: hidden; }
+        .gm-swipe-fondo {
+            position: absolute; inset: 0; display: flex; align-items: center;
+            justify-content: space-between; padding: 0 24px; color: #fff;
+            font-size: 22px; pointer-events: none;
+        }
+        .gm-swipe-fondo .material-symbols-outlined { color: #fff; font-size: 24px; }
+        .gm-swipe-front { position: relative; will-change: transform; }
+        .gm-swipe-anim { transition: transform 220ms cubic-bezier(.2, 0, 0, 1); }
+
+        /* Fila seleccionada en modo seleccion */
+        .gm-sel { background-color: #1b3a57 !important; }
+        #email-list.gm-modo-sel .email-row-hover { user-select: none; }
+
+        /* Indicador de "tirar para actualizar" */
+        #gm-refresh {
+            position: absolute; top: 0; left: 50%; z-index: 30;
+            width: 36px; height: 36px; margin-left: -18px; border-radius: 9999px;
+            background: #303134; box-shadow: 0 2px 8px rgba(0, 0, 0, .4);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+        }
+        #gm-refresh .material-symbols-outlined { color: #8ab4f8; font-size: 20px; }
+        #gm-refresh.gm-girando .material-symbols-outlined { animation: gmGirar .8s linear infinite; }
+        @keyframes gmGirar { to { transform: rotate(360deg) } }
+
         /* ============ Modo oscuro en movil ============ */
         /* En movil toda la app es oscura, incluidos los paneles que en
            escritorio son claros (correo abierto y redactar).            */
@@ -512,7 +539,33 @@
                     </div>
                 </div>
             </div>
-            <div id="email-list" class="flex-1 overflow-y-auto bg-white max-md:bg-[#0f0f0f] max-md:pb-32">
+            <!-- Barra que aparece al seleccionar correos (movil) -->
+            <div id="barra-seleccion"
+                class="hidden md:hidden absolute top-0 left-0 right-0 z-40 bg-[#1a1a1c] h-16 items-center gap-1 px-2 border-b border-[#3c4043]">
+                <button onclick="window.__salirSeleccion()"
+                    class="p-2 rounded-full active:bg-[#303134] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[#e8eaed]">close</span>
+                </button>
+                <span id="sel-conteo" class="text-[#e8eaed] text-[18px] font-medium ml-2 flex-1">0</span>
+                <button onclick="window.__accionSeleccion('archivar')"
+                    class="p-2 rounded-full active:bg-[#303134]"><span
+                        class="material-symbols-outlined text-[#e8eaed]">archive</span></button>
+                <button onclick="window.__accionSeleccion('eliminar')"
+                    class="p-2 rounded-full active:bg-[#303134]"><span
+                        class="material-symbols-outlined text-[#e8eaed]">delete</span></button>
+                <button onclick="window.__accionSeleccion('leido')"
+                    class="p-2 rounded-full active:bg-[#303134]"><span
+                        class="material-symbols-outlined text-[#e8eaed]">mark_email_read</span></button>
+                <button onclick="window.__accionSeleccion('destacar')"
+                    class="p-2 rounded-full active:bg-[#303134]"><span
+                        class="material-symbols-outlined text-[#e8eaed]">star</span></button>
+                <button onclick="window.__accionSeleccion('spam')"
+                    class="p-2 rounded-full active:bg-[#303134]"><span
+                        class="material-symbols-outlined text-[#e8eaed]">report</span></button>
+            </div>
+
+            <div id="email-list" class="flex-1 overflow-y-auto bg-white max-md:bg-[#0f0f0f] max-md:pb-32 relative">
+                <div id="gm-refresh"><span class="material-symbols-outlined">refresh</span></div>
             </div>
         </main>
 
@@ -2289,7 +2342,11 @@
                 var draftTag = m.draft ? '<span class="text-[#d93025] mr-1">Borrador</span>' : '';
 
                 return '' +
-                    '<div class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none ' + rowBg + ' max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group" data-id="' + m.id + '"' + (m.secret ? ' data-secret="1"' : '') + '>' +
+                    '<div class="gm-swipe-wrap" data-wrap="' + m.id + '">' +
+                    '<div class="gm-swipe-fondo" style="background-color:#1e8e3e">' +
+                    '<span class="material-symbols-outlined">archive</span>' +
+                    '<span class="material-symbols-outlined">archive</span></div>' +
+                    '<div class="flex max-md:items-start items-center px-4 max-md:pt-3 max-md:pb-3 md:py-2 border-b border-gray-100 max-md:border-none ' + rowBg + ' max-md:bg-[#0f0f0f] cursor-pointer relative email-row-hover group gm-swipe-front" data-id="' + m.id + '"' + (m.secret ? ' data-secret="1"' : '') + '>' +
                     '<div class="hidden max-md:flex w-[40px] h-[40px] rounded-full ' + m.bg + ' ' + m.fg + ' font-medium items-center justify-center text-[20px] shrink-0 mt-0.5 mr-[14px]">' + m.initial + '</div>' +
                     '<div class="hidden md:flex items-center gap-3 w-16 shrink-0">' +
                     '<span class="material-symbols-outlined text-gray-300 hover:text-gray-800" style="font-size:18px;">check_box_outline_blank</span>' +
@@ -2316,11 +2373,12 @@
                         : '<span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full" title="Marcar como spam">report</span>') +
                     '<span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full" title="Marcar leído">' + (unread ? 'mark_email_read' : 'mark_email_unread') + '</span>' +
                     '<span class="material-symbols-outlined p-1.5 hover:bg-gray-100 rounded-full" title="Posponer">schedule</span>' +
-                    '</div></div>';
+                    '</div></div></div>';
             }
 
             function render() {
                 var list = document.getElementById('email-list');
+                var indicador = document.getElementById('gm-refresh');
                 var rows = listFor(current);
                 if (!rows.length) {
                     var msg = query.trim()
@@ -2330,6 +2388,8 @@
                 } else {
                     list.innerHTML = rows.map(rowHtml).join('');
                 }
+                if (indicador) list.insertBefore(indicador, list.firstChild);
+                if (modoSel) pintarSeleccion();
                 if (window.__actualizarTitulo) window.__actualizarTitulo();
                 var counter = document.getElementById('range-counter');
                 if (counter) counter.textContent = rows.length ? ('1-' + rows.length + ' de ' + rows.length) : '0 de 0';
@@ -2344,6 +2404,7 @@
             //  ACCIONES
             // =====================================================
             window.__switchFolder = function (name) {
+                if (modoSel) window.__salirSeleccion();
                 current = name;
                 query = '';
                 var d = document.getElementById('search-desktop'); if (d) d.value = '';
@@ -2537,11 +2598,186 @@
             };
 
             // =====================================================
+            //  GESTOS TACTILES (deslizar, mantener, tirar)
+            // =====================================================
+            var seleccion = [];
+            var modoSel = false;
+
+            function esMovil() { return window.matchMedia('(max-width: 767px)').matches; }
+
+            window.__salirSeleccion = function () {
+                modoSel = false;
+                seleccion = [];
+                document.getElementById('barra-seleccion').classList.add('hidden');
+                document.getElementById('barra-seleccion').classList.remove('flex');
+                document.getElementById('email-list').classList.remove('gm-modo-sel');
+                render();
+            };
+
+            function pintarSeleccion() {
+                var barra = document.getElementById('barra-seleccion');
+                document.getElementById('sel-conteo').textContent = seleccion.length;
+                barra.classList.toggle('hidden', !modoSel);
+                barra.classList.toggle('flex', modoSel);
+                document.querySelectorAll('#email-list .email-row-hover').forEach(function (r) {
+                    r.classList.toggle('gm-sel', seleccion.indexOf(r.dataset.id) !== -1);
+                });
+            }
+
+            function alternarSeleccion(id) {
+                var i = seleccion.indexOf(id);
+                if (i >= 0) seleccion.splice(i, 1); else seleccion.push(id);
+                if (!seleccion.length) { window.__salirSeleccion(); return; }
+                pintarSeleccion();
+            }
+
+            window.__accionSeleccion = function (accion) {
+                var ids = seleccion.slice();
+                var previos = ids.map(function (id) { var m = byId(id); return { m: m, f: m.folder, r: m.read, s: m.starred }; });
+                ids.forEach(function (id) {
+                    var m = byId(id); if (!m) return;
+                    if (accion === 'archivar') m.folder = 'archivados';
+                    else if (accion === 'eliminar') m.folder = 'papelera';
+                    else if (accion === 'spam') m.folder = 'spam';
+                    else if (accion === 'leido') m.read = true;
+                    else if (accion === 'destacar') m.starred = true;
+                });
+                var textos = {
+                    archivar: 'archivadas', eliminar: 'movidas a Papelera', spam: 'marcadas como spam',
+                    leido: 'marcadas como leídas', destacar: 'destacadas'
+                };
+                var n = ids.length;
+                window.__salirSeleccion();
+                window.__toast(n + (n === 1 ? ' conversación ' : ' conversaciones ') + textos[accion], function () {
+                    previos.forEach(function (p) { p.m.folder = p.f; p.m.read = p.r; p.m.starred = p.s; });
+                    render();
+                });
+            };
+
+            (function gestos() {
+                var lista = document.getElementById('email-list');
+                var x0 = 0, y0 = 0, frente = null, wrap = null, arrastrando = false;
+                var temporizador = null, movido = false;
+                var tirando = false, y0Tirar = 0;
+                var indicador = document.getElementById('gm-refresh');
+
+                function limpiar() {
+                    clearTimeout(temporizador);
+                    if (frente) {
+                        frente.classList.add('gm-swipe-anim');
+                        frente.style.transform = '';
+                        setTimeout(function (f) { return function () { f.classList.remove('gm-swipe-anim'); }; }(frente), 240);
+                    }
+                    frente = null; wrap = null; arrastrando = false; tirando = false;
+                }
+
+                lista.addEventListener('touchstart', function (e) {
+                    if (!esMovil() || e.touches.length !== 1) return;
+                    var t = e.touches[0];
+                    x0 = t.clientX; y0 = t.clientY; movido = false;
+                    var f = e.target.closest ? e.target.closest('.gm-swipe-front') : null;
+                    frente = f;
+                    wrap = f ? f.closest('.gm-swipe-wrap') : null;
+
+                    if (lista.scrollTop <= 0) { tirando = true; y0Tirar = t.clientY; }
+
+                    // Mantener presionado -> modo seleccion
+                    if (f && !modoSel) {
+                        temporizador = setTimeout(function () {
+                            if (movido) return;
+                            modoSel = true;
+                            seleccion = [f.dataset.id];
+                            lista.classList.add('gm-modo-sel');
+                            pintarSeleccion();
+                            if (navigator.vibrate) navigator.vibrate(12);
+                        }, 450);
+                    }
+                }, { passive: true });
+
+                lista.addEventListener('touchmove', function (e) {
+                    if (!esMovil() || e.touches.length !== 1) return;
+                    var t = e.touches[0];
+                    var dx = t.clientX - x0, dy = t.clientY - y0;
+                    if (Math.abs(dx) > 6 || Math.abs(dy) > 6) { movido = true; clearTimeout(temporizador); }
+
+                    // Tirar para actualizar
+                    if (tirando && !arrastrando && dy > 0 && Math.abs(dx) < 40 && lista.scrollTop <= 0) {
+                        var d = Math.min(dy, 120);
+                        indicador.style.opacity = Math.min(d / 70, 1);
+                        indicador.style.transform = 'translateY(' + (d * 0.6) + 'px) rotate(' + d * 3 + 'deg)';
+                        return;
+                    }
+
+                    // Deslizar la fila
+                    if (!frente || modoSel) return;
+                    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+                        arrastrando = true;
+                        frente.style.transform = 'translateX(' + dx + 'px)';
+                        if (wrap) {
+                            var fondo = wrap.querySelector('.gm-swipe-fondo');
+                            var enPapelera = current === 'papelera';
+                            fondo.style.backgroundColor = enPapelera ? '#1a73e8' : '#1e8e3e';
+                            fondo.querySelectorAll('.material-symbols-outlined').forEach(function (ic) {
+                                ic.textContent = enPapelera ? 'restore_from_trash' : 'archive';
+                            });
+                        }
+                    }
+                }, { passive: true });
+
+                lista.addEventListener('touchend', function (e) {
+                    if (!esMovil()) return;
+                    clearTimeout(temporizador);
+
+                    // Soltar el tirón -> actualizar
+                    if (tirando && !arrastrando) {
+                        var subida = parseFloat(indicador.style.opacity || 0);
+                        if (subida >= 1) {
+                            indicador.style.opacity = '1';
+                            indicador.style.transform = 'translateY(60px)';
+                            indicador.classList.add('gm-girando');
+                            setTimeout(function () {
+                                indicador.classList.remove('gm-girando');
+                                indicador.style.opacity = '0';
+                                indicador.style.transform = '';
+                                render();
+                                window.__toast('Bandeja actualizada');
+                            }, 900);
+                        } else {
+                            indicador.style.opacity = '0';
+                            indicador.style.transform = '';
+                        }
+                        tirando = false;
+                    }
+
+                    // Soltar el deslizamiento
+                    if (arrastrando && frente) {
+                        var m = byId(frente.dataset.id);
+                        var dx = (e.changedTouches[0].clientX - x0);
+                        if (Math.abs(dx) > 90 && m) {
+                            var f = frente;
+                            f.classList.add('gm-swipe-anim');
+                            f.style.transform = 'translateX(' + (dx > 0 ? '110%' : '-110%') + ')';
+                            setTimeout(function () {
+                                if (current === 'papelera') window.__restoreRow(f);
+                                else window.__archiveRow(f);
+                            }, 200);
+                            frente = null; wrap = null; arrastrando = false;
+                            return;
+                        }
+                    }
+                    limpiar();
+                }, { passive: true });
+
+                lista.addEventListener('touchcancel', limpiar, { passive: true });
+            })();
+
+            // =====================================================
             //  CLICS EN LA LISTA
             // =====================================================
             document.getElementById('email-list').addEventListener('click', function (e) {
                 var row = e.target.closest('.email-row-hover');
                 if (!row) return;
+                if (modoSel) { alternarSeleccion(row.dataset.id); return; }
                 var icon = e.target.closest('.material-symbols-outlined');
                 if (icon) {
                     var t = icon.textContent.trim();
