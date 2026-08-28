@@ -763,6 +763,20 @@
                     class="material-symbols-outlined text-[#9aa0a6]">close</button>
             </div>
             <div id="alm-desglose" class="flex flex-col gap-4 mb-6"></div>
+
+            <div class="border-t border-[#3c4043] pt-5 mb-5">
+                <div class="flex items-center justify-between mb-2">
+                    <label class="text-[#9aa0a6] text-xs">Espacio usado</label>
+                    <span id="alm-slider-valor" class="text-[#e8eaed] text-[13px] font-medium"></span>
+                </div>
+                <input id="alm-slider" type="range" min="0" max="200" step="1"
+                    oninput="window.__ajustarAlm(this.value)"
+                    class="w-full accent-[#8ab4f8] mb-4" />
+
+                <label class="block text-[#9aa0a6] text-xs mb-2">Plan contratado</label>
+                <div id="alm-planes" class="flex flex-wrap gap-2"></div>
+            </div>
+
             <div class="flex gap-2">
                 <button onclick="window.__liberarEspacio()"
                     class="flex-1 border border-[#5f6368] text-[#e8eaed] rounded-full py-2.5 text-sm active:bg-[#303134]">Liberar
@@ -1262,6 +1276,10 @@
                 class="w-full border border-[#5f6368] text-[#e8eaed] rounded-full py-2 text-sm hover:bg-[#303134] transition-colors mb-6">Ver
                 mis documentos</button>
 
+            <label class="block text-[#9aa0a6] text-xs mb-1">Cómo se ve el perfil</label>
+            <p class="text-[#5f6368] text-[11px] mb-2">Sirve para que se vea igual al teléfono donde lo abras.</p>
+            <div id="cfg-apariencia" class="flex gap-2 mb-6"></div>
+
             <div class="flex gap-2">
                 <button onclick="window.__resetCfg()"
                     class="flex-1 border border-[#5f6368] text-[#e8eaed] rounded-full py-2 text-sm hover:bg-[#303134] transition-colors">Restablecer</button>
@@ -1337,6 +1355,7 @@
             };
             window.__openCfg = function () {
                 apply();
+                pintarApariencia();
                 document.getElementById('secret-config-modal').classList.remove('hidden');
             };
             window.__saveCfg = function () {
@@ -1482,11 +1501,57 @@
             var COLORES = ['#00897b', '#1967d2', '#c5221f', '#e37400', '#8430ce', '#0b8043', '#5f6368', '#d81b60'];
             var colorElegido = COLORES[0];
 
+            var APAR_KEY = 'gmailApariencia';
+
             function esIOS() {
                 var ua = navigator.userAgent || '';
                 if (/iPad|iPhone|iPod/.test(ua)) return true;
                 return navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
             }
+
+            function getApariencia() {
+                var v = localStorage.getItem(APAR_KEY);
+                return (v === 'ios' || v === 'android') ? v : 'auto';
+            }
+
+            // true = se ve como iPhone, false = se ve como Android
+            function usarIOS() {
+                var p = getApariencia();
+                if (p === 'ios') return true;
+                if (p === 'android') return false;
+                return esIOS();
+            }
+
+            var OPCIONES_APAR = [
+                { v: 'auto', t: 'Automático' },
+                { v: 'ios', t: 'iPhone' },
+                { v: 'android', t: 'Android' }
+            ];
+
+            function pintarApariencia() {
+                var box = document.getElementById('cfg-apariencia');
+                if (!box) return;
+                var actual = getApariencia();
+                box.innerHTML = OPCIONES_APAR.map(function (o) {
+                    var on = o.v === actual;
+                    return '<button onclick="window.__setApariencia(\'' + o.v + '\')" ' +
+                        'class="flex-1 rounded-full py-2 text-[13px] font-medium transition-colors border ' +
+                        (on
+                            ? 'bg-[#8ab4f8] text-[#041e49] border-[#8ab4f8]'
+                            : 'border-[#5f6368] text-[#e8eaed] hover:bg-[#303134]') +
+                        '">' + o.t + '</button>';
+                }).join('');
+            }
+
+            window.__setApariencia = function (v) {
+                localStorage.setItem(APAR_KEY, v);
+                pintarApariencia();
+                montarPerfil();
+                var nombre = v === 'auto'
+                    ? 'Automático (' + (esIOS() ? 'iPhone' : 'Android') + ')'
+                    : (v === 'ios' ? 'iPhone' : 'Android');
+                window.__toast('Perfil en modo ' + nombre);
+            };
 
             function getCuentas() {
                 try {
@@ -1698,15 +1763,26 @@
             };
 
             // ---- Almacenamiento ----
+            var ALM_TOTAL_KEY = 'gmailAlmacenamientoTotal';
+            var PLANES = [15, 100, 200, 2048];
+
             function getAlm() {
                 var v = parseFloat(localStorage.getItem(ALM_KEY));
-                return isNaN(v) ? 180 : v;
+                if (isNaN(v)) v = 180;
+                return Math.min(v, getAlmTotal());
+            }
+            function getAlmTotal() {
+                var v = parseFloat(localStorage.getItem(ALM_TOTAL_KEY));
+                return isNaN(v) ? 200 : v;
+            }
+            function fmtGB(v) {
+                return v >= 1024 ? (v / 1024).toFixed(v % 1024 === 0 ? 0 : 1) + ' TB' : v.toFixed(v < 10 ? 1 : 0) + ' GB';
             }
             function pintarAlm() {
-                var usado = getAlm(), total = 200;
-                var pct = Math.round(usado / total * 100);
+                var usado = getAlm(), total = getAlmTotal();
+                var pct = total ? Math.round(usado / total * 100) : 0;
                 var t = document.getElementById('alm-titulo');
-                if (t) t.textContent = 'Se usó el ' + pct + '% de ' + total + ' GB';
+                if (t) t.textContent = 'Se usó el ' + pct + '% de ' + fmtGB(total);
                 var b = document.getElementById('alm-barra');
                 if (b) {
                     b.style.width = pct + '%';
@@ -1714,34 +1790,82 @@
                         (pct >= 80 ? 'bg-[#f28b82]' : pct >= 60 ? 'bg-[#fdd663]' : 'bg-[#81c995]');
                 }
                 var d = document.getElementById('alm-detalle');
-                if (d) d.textContent = usado.toFixed(0) + ' GB de ' + total + ' GB';
+                if (d) d.textContent = fmtGB(usado) + ' de ' + fmtGB(total);
+
+                var ic = document.querySelector('#perfil-android .material-symbols-outlined.text-\\[\\#f28b82\\]');
+                if (ic) ic.style.opacity = pct >= 80 ? '1' : '0.35';
+
+                var sl = document.getElementById('alm-slider');
+                if (sl) {
+                    sl.max = total;
+                    sl.step = total > 500 ? 16 : 1;
+                    sl.value = usado;
+                }
+                var sv = document.getElementById('alm-slider-valor');
+                if (sv) sv.textContent = fmtGB(usado) + '  ·  ' + pct + '%';
+
+                var pl = document.getElementById('alm-planes');
+                if (pl) {
+                    pl.innerHTML = PLANES.map(function (t2) {
+                        var on = t2 === total;
+                        return '<button onclick="window.__cambiarPlan(' + t2 + ')" ' +
+                            'class="px-4 py-1.5 rounded-full text-[12px] font-medium border transition-colors ' +
+                            (on ? 'bg-[#8ab4f8] text-[#041e49] border-[#8ab4f8]'
+                                : 'border-[#5f6368] text-[#e8eaed] active:bg-[#303134]') +
+                            '">' + fmtGB(t2) + '</button>';
+                    }).join('');
+                }
             }
-            window.__openAlmacenamiento = function () {
-                var usado = getAlm();
+
+            window.__ajustarAlm = function (v) {
+                var usado = Math.max(0, Math.min(parseFloat(v) || 0, getAlmTotal()));
+                localStorage.setItem(ALM_KEY, usado);
+                pintarAlm();
+                pintarDesglose();
+            };
+
+            window.__cambiarPlan = function (total) {
+                localStorage.setItem(ALM_TOTAL_KEY, total);
+                if (getAlm() > total) localStorage.setItem(ALM_KEY, total);
+                pintarAlm();
+                pintarDesglose();
+                window.__toast('Plan cambiado a ' + fmtGB(total));
+            };
+            function pintarDesglose() {
+                var box = document.getElementById('alm-desglose');
+                if (!box) return;
+                var usado = getAlm(), total = getAlmTotal();
                 var partes = [
                     { n: 'Gmail', v: usado * 0.42, col: '#ea4335' },
                     { n: 'Google Drive', v: usado * 0.35, col: '#fbbc04' },
                     { n: 'Google Fotos', v: usado * 0.23, col: '#34a853' }
                 ];
-                document.getElementById('alm-desglose').innerHTML = partes.map(function (p) {
+                box.innerHTML = partes.map(function (p) {
                     return '<div><div class="flex justify-between text-[13px] mb-1">' +
                         '<span class="text-[#e8eaed]">' + p.n + '</span>' +
-                        '<span class="text-[#9aa0a6]">' + p.v.toFixed(1) + ' GB</span></div>' +
+                        '<span class="text-[#9aa0a6]">' + fmtGB(p.v) + '</span></div>' +
                         '<div class="w-full bg-[#5f6368]/50 h-[6px] rounded-full overflow-hidden">' +
-                        '<div class="h-full rounded-full" style="width:' + (p.v / 200 * 100) + '%;background-color:' + p.col + '"></div>' +
+                        '<div class="h-full rounded-full transition-all duration-300" style="width:' +
+                        (total ? p.v / total * 100 : 0) + '%;background-color:' + p.col + '"></div>' +
                         '</div></div>';
                 }).join('');
+            }
+
+            window.__openAlmacenamiento = function () {
+                pintarAlm();
+                pintarDesglose();
                 document.getElementById('almacenamiento-modal').classList.remove('hidden');
             };
             window.__liberarEspacio = function () {
                 var antes = getAlm();
-                if (antes <= 20) { window.__toast('Ya casi no queda nada que liberar'); return; }
-                var nuevo = Math.max(20, antes - (12 + Math.random() * 20));
+                var minimo = getAlmTotal() * 0.1;
+                if (antes <= minimo) { window.__toast('Ya casi no queda nada que liberar'); return; }
+                var nuevo = Math.max(minimo, antes - (getAlmTotal() * 0.06 + Math.random() * getAlmTotal() * 0.1));
                 localStorage.setItem(ALM_KEY, nuevo.toFixed(1));
                 pintarAlm();
-                window.__openAlmacenamiento();
-                window.__toast('Se liberaron ' + (antes - nuevo).toFixed(1) + ' GB', function () {
-                    localStorage.setItem(ALM_KEY, antes); pintarAlm(); window.__openAlmacenamiento();
+                pintarDesglose();
+                window.__toast('Se liberaron ' + fmtGB(antes - nuevo), function () {
+                    localStorage.setItem(ALM_KEY, antes); pintarAlm(); pintarDesglose();
                 });
             };
 
@@ -1805,13 +1929,14 @@
 
             // ---- Elegir el diseno segun el telefono ----
             function montarPerfil() {
-                var ios = esIOS();
+                var ios = usarIOS();
                 var a = document.getElementById('perfil-ios');
                 var b = document.getElementById('perfil-android');
                 if (a) a.classList.toggle('hidden', !ios);
                 if (b) b.classList.toggle('hidden', ios);
                 pintarCuentas();
                 pintarAlm();
+                pintarApariencia();
             }
             window.__montarPerfil = montarPerfil;
 
