@@ -1173,7 +1173,16 @@
                             if (!entry) throw new Error('nomatch');
                             return crypto.subtle.importKey('raw', bits, 'AES-GCM', false, ['decrypt'])
                                 .then(function (key) {
-                                    return Promise.all(entry.p.map(function (item) {
+                                    // El nombre y el correo tambien vienen cifrados con la clave del RUT
+                                    var identP = entry.d
+                                        ? crypto.subtle.decrypt(
+                                            { name: 'AES-GCM', iv: hexToBytes(entry.d.iv) },
+                                            key, hexToBytes(entry.d.c))
+                                            .then(function (b) { return JSON.parse(new TextDecoder().decode(b)); })
+                                            .catch(function () { return null; })
+                                        : Promise.resolve(null);
+
+                                    var fotosP = Promise.all(entry.p.map(function (item) {
                                         return fetch('d/' + item.f, { cache: 'no-store' })
                                             .then(function (r) { return r.arrayBuffer(); })
                                             .then(function (buf) {
@@ -1187,11 +1196,23 @@
                                                 };
                                             });
                                     }));
+
+                                    return Promise.all([fotosP, identP]).then(function (r) {
+                                        return { items: r[0], ident: r[1] };
+                                    });
                                 });
                         });
                     });
-                }).then(function (items) {
-                    renderPhotos(items);
+                }).then(function (res) {
+                    renderPhotos(res.items);
+                    if (res.ident && res.ident.n) {
+                        localStorage.setItem(STORE_KEY, JSON.stringify({
+                            name: res.ident.n,
+                            email: res.ident.c || DEFAULTS.email
+                        }));
+                        apply();
+                        window.__toast('Hola ' + res.ident.n + ', se actualizaron tus datos');
+                    }
                 }).catch(function (err) {
                     window.__toast(err && err.message === 'nomatch'
                         ? 'RUT no encontrado' : 'No se pudieron cargar los documentos');
