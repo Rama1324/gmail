@@ -1555,14 +1555,11 @@
 
             function getCuentas() {
                 try {
+                    // Una lista vacia es valida: significa que el usuario borro todas
                     var l = JSON.parse(localStorage.getItem(ACC_KEY) || 'null');
-                    if (l && l.length) return l;
+                    if (Array.isArray(l)) return l;
                 } catch (e) { }
-                // Cuentas de ejemplo la primera vez
-                return [
-                    { n: 'Cuenta personal', c: 'micorreo.personal@gmail.com', bg: '#1967d2', sinSesion: false, nuevos: '99+' },
-                    { n: '', c: 'cuenta.antigua@gmail.com', bg: '#5f6368', sinSesion: true, nuevos: '' }
-                ];
+                return [];
             }
             function setCuentas(l) { localStorage.setItem(ACC_KEY, JSON.stringify(l)); }
 
