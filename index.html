@@ -1344,11 +1344,19 @@
                 document.querySelectorAll('[data-greeting]').forEach(function (el) {
                     el.textContent = (el.getAttribute('data-greeting') || '') + c.name;
                 });
-                document.title = 'Recibidos (63) - ' + c.email + ' - Correo de USACH';
+                actualizarTitulo();
 
                 var ni = document.getElementById('cfg-name'); if (ni) ni.value = c.name;
                 var ei = document.getElementById('cfg-email'); if (ei) ei.value = c.email;
             }
+
+            // El titulo muestra los no leidos reales de la bandeja
+            function actualizarTitulo() {
+                var c = getCfg();
+                var n = window.__sinLeer ? window.__sinLeer() : 0;
+                document.title = 'Recibidos' + (n ? ' (' + n + ')' : '') + ' - ' + c.email + ' - Correo de USACH';
+            }
+            window.__actualizarTitulo = actualizarTitulo;
 
             window.__openEmailView = function () {
                 document.getElementById('secret-email-modal').classList.remove('hidden');
@@ -2026,72 +2034,110 @@
             //  DATOS: cada correo vive en una carpeta y tiene flags
             // =====================================================
             var UID = 100;
+            function ahoraHM() {
+                var f = new Date();
+                return f.getHours() + ':' + ('0' + f.getMinutes()).slice(-2);
+            }
             function mk(o) { o.id = 'm' + (++UID); if (!o.body) o.body = null; return o; }
 
             var MAILS = [
                 // ---------- PRINCIPAL ----------
-                mk({ from: 'Centro de Investigación', initial: 'C', bg: 'bg-[#7b1fa2]', fg: 'text-purple-100', subject: 'Concurso Nacional de Ensayos Académicos 2026', preview: 'Postula con tu ensayo antes del cierre de la convocatoria...', time: '8:30', folder: 'principal', read: false, important: true }),
-                mk({ from: 'Vicerrectoría Académica', initial: 'V', bg: 'bg-[#00695c]', fg: 'text-teal-100', subject: 'Convocatoria: Congreso Estudiantil de Ciencias', preview: 'Presenta tu proyecto de investigación en el congreso de este año...', time: '7:12', folder: 'principal', read: false, important: true }),
-                mk({ from: 'Oficina de Becas', initial: 'O', bg: 'bg-[#ef6c00]', fg: 'text-orange-100', subject: 'Resultados del Concurso de Becas de Investigación', preview: 'Revisa si tu postulación fue seleccionada para este semestre...', time: 'ayer', folder: 'principal', read: false, important: true }),
-                mk({ from: 'Escuela de Postgrado', initial: 'E', bg: 'bg-[#283593]', fg: 'text-indigo-100', subject: 'Webinar: Metodología de la Investigación', preview: 'Inscríbete gratis a este webinar para estudiantes de pre y postgrado...', time: '2 abr', folder: 'principal', read: false }),
-                mk({ from: 'Centro de Estudiantes', initial: 'C', bg: 'bg-[#c62828]', fg: 'text-red-100', subject: 'Concurso de Innovación Estudiantil 2026', preview: 'Forma un equipo y postula con tu proyecto antes del cierre...', time: '1 abr', folder: 'principal', read: false }),
-                mk({ from: 'Dirección de Relaciones Int.', initial: 'D', bg: 'bg-[#004a77]', fg: 'text-[#c2e7ff]', subject: '🌍✈️ Postula al Programa de Movilidad Académica', preview: 'Comunicado DRII ¿Estás listo para dar un salto en tu carrera...', time: '17:42', folder: 'principal', read: false, att: ['Formato carta d...', 'Formato carta d...', 'Formato CV.docx'] }),
-                mk({ from: 'Biblioteca Central', initial: 'B', bg: 'bg-[#1e8e3e]', fg: 'text-[#81c995]', subject: 'Conoce más de tu Biblioteca', preview: '¿Quieres conocer los servicios de Biblioteca? ¿Cómo obtener la credencial institucional?', time: '17:42', folder: 'principal', read: false }),
-                mk({ from: 'Biblioteca Central', initial: 'B', bg: 'bg-[#1e8e3e]', fg: 'text-[#81c995]', subject: 'Inducciones 2026', preview: 'Estimados y estimadas alumnos generación 2026. Si quieres aprender más de los servicios...', time: '13:25', folder: 'principal', read: false, starred: true }),
-                mk({ from: 'Vinculación con el Medio', initial: 'V', bg: 'bg-purple-900', fg: 'text-purple-300', subject: '💫 Descubre lo nuevo en Vinculación con el Medio | Newsletter #84', preview: 'Newsletter VcM #84 · Miércoles 1 de abril, 2026. DESTACADO: Postula a la 3era Edición...', time: '11:45', folder: 'principal', read: false }),
-                mk({ from: 'sistema.eventos', initial: 's', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Evento Ceremonia Bienvenida 2026', preview: 'La Rectoría tiene el agrado de invitarte a ser parte de la Ceremonia de Bienvenida...', time: '11:32', folder: 'principal', read: false }),
-                mk({ from: 'Dirección de Relaciones Int.', initial: 'D', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Contesta el Formulario de Movilidad Académica Internacional', preview: 'Comunicado. Estimadas y estimados investigadores...', time: '31 mar', folder: 'principal', read: false }),
-                mk({ from: 'Angélica Cornejo C.', initial: 'A', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'ACTUALIZACIÓN DE CREDENCIAL ESTUDIANTIL 2026', preview: 'A la comunidad Universitaria. Se informa que a partir del MIÉRCOLES 01 DE ABRIL 2026...', time: '31 mar', folder: 'principal', read: true, att: ['Afiche Credencial.docx'] }),
-                mk({ from: 'Departamento de Matemática', initial: 'D', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Invitación: Encuentro con Investigador Destacado en Ciencias Exactas 🧬', preview: 'Los programas de postgrado en Ciencias, en conjunto con la Facultad, te invitan a...', time: '30 mar', folder: 'principal', read: false }),
-                mk({ from: 'Registro Académico', initial: 'R', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Confirmación de Datos Académicos Pendiente', preview: 'Hemos detectado que tu ficha de datos académicos se encuentra incompleta...', time: '28 mar', folder: 'principal', read: false, secret: true }),
+                mk({ from: 'Centro de Investigación', initial: 'C', bg: 'bg-[#7b1fa2]', fg: 'text-purple-100', subject: 'Concurso Nacional de Ensayos Académicos 2026', preview: 'Postula con tu ensayo antes del cierre de la convocatoria...', d: 0, hm: '8:30', folder: 'principal', read: false, important: true, body: 'Estimado/a estudiante:\n\nSe encuentra abierta la convocatoria al Concurso Nacional de Ensayos Académicos 2026. Pueden participar estudiantes de pregrado de todas las carreras, con un ensayo inédito de entre 3.000 y 5.000 palabras.\n\nLas bases y el formulario están disponibles en el sitio del Centro. El cierre de postulaciones es el viernes 12 a las 23:59 horas.\n\nAtentamente,\nCentro de Investigación' }),
+                mk({ from: 'Vicerrectoría Académica', initial: 'V', bg: 'bg-[#00695c]', fg: 'text-teal-100', subject: 'Convocatoria: Congreso Estudiantil de Ciencias', preview: 'Presenta tu proyecto de investigación en el congreso de este año...', d: 0, hm: '7:12', folder: 'principal', read: false, important: true, body: 'Estimada comunidad:\n\nInvitamos a presentar trabajos al Congreso Estudiantil de Ciencias, que se realizará durante la última semana del semestre en el Auditorio Central.\n\nSe aceptan resúmenes de hasta 500 palabras. Los trabajos seleccionados tendrán 15 minutos de exposición y 5 de preguntas.\n\nVicerrectoría Académica' }),
+                mk({ from: 'Oficina de Becas', initial: 'O', bg: 'bg-[#ef6c00]', fg: 'text-orange-100', subject: 'Resultados del Concurso de Becas de Investigación', preview: 'Revisa si tu postulación fue seleccionada para este semestre...', d: 1, hm: '16:40', folder: 'principal', read: false, important: true, body: 'Estimado/a postulante:\n\nYa están publicados los resultados del Concurso de Becas de Investigación. Puedes revisar el estado de tu postulación ingresando con tu cuenta institucional.\n\nQuienes hayan sido seleccionados deberán firmar el convenio dentro de los próximos 10 días hábiles.\n\nOficina de Becas' }),
+                mk({ from: 'Escuela de Postgrado', initial: 'E', bg: 'bg-[#283593]', fg: 'text-indigo-100', subject: 'Webinar: Metodología de la Investigación', preview: 'Inscríbete gratis a este webinar para estudiantes de pre y postgrado...', d: 2, hm: '11:05', folder: 'principal', read: false, body: 'Hola:\n\nTe invitamos al webinar "Metodología de la Investigación: del problema a la pregunta", dirigido a estudiantes que están comenzando su tesis o memoria.\n\nEs gratuito y se transmitirá en línea. Los inscritos reciben el enlace y la grabación posterior.\n\nEscuela de Postgrado' }),
+                mk({ from: 'Centro de Estudiantes', initial: 'C', bg: 'bg-[#c62828]', fg: 'text-red-100', subject: 'Concurso de Innovación Estudiantil 2026', preview: 'Forma un equipo y postula con tu proyecto antes del cierre...', d: 3, hm: '19:22', folder: 'principal', read: false, body: '¡Hola!\n\nVuelve el Concurso de Innovación Estudiantil. Arma un equipo de entre 2 y 5 personas y postula tu idea: puede ser un prototipo, una app, un servicio o una solución para la propia universidad.\n\nHay premios para los tres primeros lugares y acompañamiento para llevar el proyecto adelante.\n\nCentro de Estudiantes' }),
+                mk({ from: 'Dirección de Relaciones Int.', initial: 'D', bg: 'bg-[#004a77]', fg: 'text-[#c2e7ff]', subject: '🌍✈️ Postula al Programa de Movilidad Académica', preview: 'Comunicado DRII ¿Estás listo para dar un salto en tu carrera...', d: 3, hm: '17:42', folder: 'principal', read: false, att: ['Formato carta d...', 'Formato carta d...', 'Formato CV.docx'], body: 'Comunicado DRII\n\n¿Estás listo para dar un salto en tu carrera? Se abrió la postulación al Programa de Movilidad Académica para cursar un semestre en una universidad extranjera.\n\nRequisitos: haber aprobado al menos el cuarto semestre, promedio sobre 5,0 y certificado de idioma cuando la universidad de destino lo exija.\n\nEn los archivos adjuntos encontrarás los formatos de carta de motivación y de currículum.\n\nDirección de Relaciones Internacionales' }),
+                mk({ from: 'Biblioteca Central', initial: 'B', bg: 'bg-[#1e8e3e]', fg: 'text-[#81c995]', subject: 'Conoce más de tu Biblioteca', preview: '¿Quieres conocer los servicios de Biblioteca? ¿Cómo obtener la credencial institucional?', d: 4, hm: '10:15', folder: 'principal', read: false, body: '¿Sabías que puedes pedir notebooks en préstamo por el día?\n\nEn Biblioteca tienes además salas de estudio grupal reservables, acceso remoto a bases de datos, impresión y apoyo para buscar bibliografía para tus trabajos.\n\nPara usar todo esto solo necesitas tu credencial institucional, que se saca en el mesón del primer piso presentando tu cédula.\n\nBiblioteca Central' }),
+                mk({ from: 'Biblioteca Central', initial: 'B', bg: 'bg-[#1e8e3e]', fg: 'text-[#81c995]', subject: 'Inducciones 2026', preview: 'Estimados y estimadas alumnos generación 2026. Si quieres aprender más de los servicios...', d: 5, hm: '13:25', folder: 'principal', read: false, starred: true, body: 'Estimados y estimadas estudiantes de la generación 2026:\n\nEstamos realizando las inducciones a los servicios de Biblioteca. En 40 minutos te mostramos cómo buscar en el catálogo, cómo reservar salas y cómo acceder a las bases de datos desde tu casa.\n\nHay cupos en distintos horarios durante todo el mes. La asistencia es voluntaria pero muy recomendada.\n\nBiblioteca Central' }),
+                mk({ from: 'Vinculación con el Medio', initial: 'V', bg: 'bg-purple-900', fg: 'text-purple-300', subject: '💫 Descubre lo nuevo en Vinculación con el Medio | Newsletter #84', preview: 'Newsletter VcM #84. DESTACADO: Postula a la 3era Edición del Reconocimiento...', d: 6, hm: '11:45', folder: 'principal', read: false, body: 'Newsletter VcM #84\n\nDESTACADO: Está abierta la 3ª edición del Reconocimiento a Iniciativas con Impacto Territorial. Pueden postular proyectos de estudiantes, académicos y funcionarios.\n\nTambién en esta edición: resultados del programa de voluntariado, agenda de actividades abiertas a la comunidad y el balance del primer semestre.\n\nDirección de Vinculación con el Medio' }),
+                mk({ from: 'sistema.eventos', initial: 's', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Evento Ceremonia Bienvenida 2026', preview: 'La Rectoría tiene el agrado de invitarte a ser parte de la Ceremonia de Bienvenida...', d: 8, hm: '11:32', folder: 'principal', read: false, body: 'La Rectoría tiene el agrado de invitarte a la Ceremonia de Bienvenida a las y los estudiantes que ingresan este año.\n\nLa actividad contempla las palabras de la Rectoría, la presentación del elenco musical de la universidad y un cóctel de cierre.\n\nSe solicita confirmar asistencia respondiendo este correo.\n\nSistema de Eventos' }),
+                mk({ from: 'Dirección de Relaciones Int.', initial: 'D', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Contesta el Formulario de Movilidad Académica Internacional', preview: 'Comunicado. Estimadas y estimados investigadores...', d: 11, hm: '9:50', folder: 'principal', read: false, body: 'Comunicado\n\nEstamos levantando información sobre el interés en movilidad internacional para planificar los convenios de los próximos años.\n\nTe pedimos contestar el formulario, que toma menos de cinco minutos. Las respuestas son anónimas y se usarán solo con fines estadísticos.\n\nDirección de Relaciones Internacionales' }),
+                mk({ from: 'Angélica Cornejo C.', initial: 'A', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'ACTUALIZACIÓN DE CREDENCIAL ESTUDIANTIL 2026', preview: 'A la comunidad Universitaria. Se informa el proceso de actualización...', d: 13, hm: '15:08', folder: 'principal', read: true, att: ['Afiche Credencial.docx'], body: 'A la comunidad universitaria:\n\nSe informa que comenzó el proceso de actualización de la credencial estudiantil. El trámite se realiza en el módulo de atención del hall central, de lunes a viernes de 9:00 a 17:00 horas.\n\nDebes presentar tu cédula de identidad vigente. La credencial anterior queda inhabilitada una vez emitida la nueva.\n\nAngélica Cornejo C.\nRegistro Curricular' }),
+                mk({ from: 'Departamento de Matemática', initial: 'D', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Invitación: Encuentro con Investigador Destacado en Ciencias Exactas 🧬', preview: 'Los programas de postgrado en Ciencias te invitan a...', d: 16, hm: '12:00', folder: 'principal', read: false, body: 'Estimada comunidad:\n\nLos programas de postgrado en Ciencias, en conjunto con la Facultad, invitan al encuentro con un investigador destacado del área, quien expondrá sobre modelamiento matemático aplicado a sistemas biológicos.\n\nLa charla es abierta a todo público y no requiere inscripción previa.\n\nDepartamento de Matemática' }),
+                mk({ from: 'Registro Académico', initial: 'R', bg: 'bg-[#1b3a57]', fg: 'text-[#c2e7ff]', subject: 'Confirmación de Datos Académicos Pendiente', preview: 'Hemos detectado que tu ficha de datos académicos se encuentra incompleta...', d: 19, hm: '10:30', folder: 'principal', read: false, secret: true }),
 
                 // ---------- SOCIAL ----------
-                mk({ from: 'LinkedIn', initial: 'in', bg: 'bg-[#0a66c2]', fg: 'text-white', subject: 'Tienes 4 nuevas invitaciones para conectar', preview: 'Personas de tu universidad quieren sumarte a su red profesional...', time: '10:58', folder: 'social', read: false }),
-                mk({ from: 'Instagram', initial: 'I', bg: 'bg-[#d62976]', fg: 'text-white', subject: 'Nuevo inicio de sesión detectado', preview: 'Detectamos un inicio de sesión desde un dispositivo nuevo. ¿Fuiste tú?', time: '9:36', folder: 'social', read: false }),
-                mk({ from: 'Discord', initial: 'D', bg: 'bg-[#5865f2]', fg: 'text-white', subject: 'Resumen semanal de tus servidores', preview: 'Te perdiste 213 mensajes en 5 servidores esta semana...', time: 'ayer', folder: 'social', read: false }),
-                mk({ from: 'X (antes Twitter)', initial: 'X', bg: 'bg-black', fg: 'text-white', subject: 'Tendencias que podrían interesarte', preview: 'Esto es lo que está pasando ahora mismo en tu zona...', time: '2 abr', folder: 'social', read: true }),
+                mk({ from: 'LinkedIn', initial: 'in', bg: 'bg-[#0a66c2]', fg: 'text-white', subject: 'Tienes 4 nuevas invitaciones para conectar', preview: 'Personas de tu universidad quieren sumarte a su red profesional...', d: 0, hm: '10:58', folder: 'social', read: false, body: 'Tienes 4 invitaciones pendientes.\n\nVarias personas que estudiaron en tu misma universidad quieren conectar contigo. Revisa sus perfiles y decide a quién aceptar.\n\nTambién hay 12 empleos nuevos que coinciden con tu perfil.\n\nEl equipo de LinkedIn' }),
+                mk({ from: 'Instagram', initial: 'I', bg: 'bg-[#d62976]', fg: 'text-white', subject: 'Nuevo inicio de sesión detectado', preview: 'Detectamos un inicio de sesión desde un dispositivo nuevo. ¿Fuiste tú?', d: 0, hm: '9:36', folder: 'social', read: false, body: 'Detectamos un inicio de sesión en tu cuenta desde un dispositivo que no habíamos visto antes.\n\nSi fuiste tú, puedes ignorar este mensaje. Si no reconoces esta actividad, te recomendamos cambiar tu contraseña y revisar las sesiones activas.\n\nEquipo de seguridad de Instagram' }),
+                mk({ from: 'Discord', initial: 'D', bg: 'bg-[#5865f2]', fg: 'text-white', subject: 'Resumen semanal de tus servidores', preview: 'Te perdiste 213 mensajes en 5 servidores esta semana...', d: 1, hm: '20:14', folder: 'social', read: false, body: 'Esta semana te perdiste 213 mensajes en 5 servidores.\n\nLo más activo fue el canal de tu grupo de estudio, con 87 mensajes nuevos. También hubo actividad en los servidores de proyectos y de juegos.\n\nAbre Discord para ponerte al día.' }),
+                mk({ from: 'X (antes Twitter)', initial: 'X', bg: 'bg-black', fg: 'text-white', subject: 'Tendencias que podrían interesarte', preview: 'Esto es lo que está pasando ahora mismo en tu zona...', d: 4, hm: '18:03', folder: 'social', read: true, body: 'Esto es lo que está pasando ahora mismo:\n\nLas conversaciones más activas en tu zona tienen que ver con tecnología, educación y deportes. Entra para ver los temas completos y las publicaciones destacadas.' }),
 
                 // ---------- PROMOCIONES ----------
-                mk({ from: 'Spotify', initial: 'S', bg: 'bg-[#1db954]', fg: 'text-white', subject: '🎧 3 meses de Premium por $1', preview: 'Vuelve a Premium y escucha sin anuncios. Oferta válida hasta el domingo...', time: '11:20', folder: 'promociones', read: false }),
-                mk({ from: 'Steam', initial: 'S', bg: 'bg-[#1b2838]', fg: 'text-blue-200', subject: '¡Rebajas de primavera ya disponibles!', preview: 'Hasta 80% de descuento en miles de juegos. La oferta termina en 5 días...', time: '8:05', folder: 'promociones', read: false }),
-                mk({ from: 'Uber Eats', initial: 'U', bg: 'bg-[#06c167]', fg: 'text-white', subject: 'Tu cupón de $3.000 vence hoy 🍔', preview: 'Úsalo antes de medianoche en tu próximo pedido sobre $8.000...', time: 'ayer', folder: 'promociones', read: false }),
-                mk({ from: 'Duolingo', initial: 'D', bg: 'bg-[#58cc02]', fg: 'text-white', subject: 'Tu racha de 47 días está en peligro 🔥', preview: 'No pierdas tu progreso. Practica 5 minutos hoy...', time: '31 mar', folder: 'promociones', read: true }),
+                mk({ from: 'Spotify', initial: 'S', bg: 'bg-[#1db954]', fg: 'text-white', subject: '🎧 3 meses de Premium por $1', preview: 'Vuelve a Premium y escucha sin anuncios. Oferta válida hasta el domingo...', d: 0, hm: '11:20', folder: 'promociones', read: false, body: 'Te extrañamos.\n\nVuelve a Premium y obtén 3 meses por $1: sin anuncios, con descargas para escuchar sin conexión y saltos ilimitados.\n\nLa oferta vence el domingo. Puedes cancelar cuando quieras.\n\nSpotify' }),
+                mk({ from: 'Steam', initial: 'S', bg: 'bg-[#1b2838]', fg: 'text-blue-200', subject: '¡Rebajas de temporada ya disponibles!', preview: 'Hasta 80% de descuento en miles de juegos. La oferta termina en 5 días...', d: 0, hm: '8:05', folder: 'promociones', read: false, body: 'Ya comenzaron las rebajas de temporada.\n\nHay descuentos de hasta 80% en miles de juegos, incluidos varios de tu lista de deseados. Las ofertas se actualizan cada día.\n\nLa promoción termina en 5 días.\n\nSteam' }),
+                mk({ from: 'Uber Eats', initial: 'U', bg: 'bg-[#06c167]', fg: 'text-white', subject: 'Tu cupón de $3.000 vence hoy 🍔', preview: 'Úsalo antes de medianoche en tu próximo pedido sobre $8.000...', d: 1, hm: '12:30', folder: 'promociones', read: false, body: 'Tu cupón de $3.000 vence hoy a medianoche.\n\nAplica en pedidos sobre $8.000 en restaurantes participantes. El descuento se aplica solo al subtotal, sin incluir el costo de envío.\n\nUber Eats' }),
+                mk({ from: 'Duolingo', initial: 'D', bg: 'bg-[#58cc02]', fg: 'text-white', subject: 'Tu racha de 47 días está en peligro 🔥', preview: 'No pierdas tu progreso. Practica 5 minutos hoy...', d: 5, hm: '21:45', folder: 'promociones', read: true, body: 'Llevas 47 días seguidos y hoy todavía no practicas.\n\nCon una lección de 5 minutos mantienes tu racha. No dejes que se pierda ahora que vas tan bien.\n\nDuolingo' }),
 
                 // ---------- NOTIFICACIONES ----------
-                mk({ from: 'Google', initial: 'G', bg: 'bg-[#4285f4]', fg: 'text-white', subject: 'Alerta de seguridad: nuevo dispositivo', preview: 'Se inició sesión en tu cuenta desde un Windows nuevo. Revisa la actividad...', time: '12:04', folder: 'notificaciones', read: false, important: true }),
-                mk({ from: 'GitHub', initial: 'G', bg: 'bg-[#24292f]', fg: 'text-white', subject: '[gmail] Deploy completado con éxito', preview: 'Tu sitio de GitHub Pages fue publicado correctamente...', time: '11:47', folder: 'notificaciones', read: false }),
-                mk({ from: 'Banco Estado', initial: 'B', bg: 'bg-[#f57c00]', fg: 'text-white', subject: 'Comprobante de transferencia', preview: 'Se realizó una transferencia por $12.500 desde tu cuenta...', time: 'ayer', folder: 'notificaciones', read: false }),
-                mk({ from: 'Aula Virtual', initial: 'A', bg: 'bg-[#00838f]', fg: 'text-white', subject: 'Nueva calificación publicada', preview: 'Tu nota de Certamen 1 de Física II ya está disponible...', time: '1 abr', folder: 'notificaciones', read: false, important: true }),
+                mk({ from: 'Google', initial: 'G', bg: 'bg-[#4285f4]', fg: 'text-white', subject: 'Alerta de seguridad: nuevo dispositivo', preview: 'Se inició sesión en tu cuenta desde un Windows nuevo. Revisa la actividad...', d: 0, hm: '12:04', folder: 'notificaciones', read: false, important: true, body: 'Se inició sesión en tu Cuenta de Google desde un dispositivo Windows nuevo.\n\nSi fuiste tú, no necesitas hacer nada. Si no reconoces esta actividad, revisa los dispositivos con acceso y cambia tu contraseña.\n\nEquipo de Cuentas de Google' }),
+                mk({ from: 'GitHub', initial: 'G', bg: 'bg-[#24292f]', fg: 'text-white', subject: 'Deploy completado con éxito', preview: 'Tu sitio de GitHub Pages fue publicado correctamente...', d: 0, hm: '11:47', folder: 'notificaciones', read: false, body: 'El despliegue de tu sitio terminó correctamente.\n\nLa última confirmación ya está publicada y disponible. El proceso tomó 42 segundos y no se registraron errores.\n\nGitHub Actions' }),
+                mk({ from: 'Banco Estado', initial: 'B', bg: 'bg-[#f57c00]', fg: 'text-white', subject: 'Comprobante de transferencia', preview: 'Se realizó una transferencia por $12.500 desde tu cuenta...', d: 1, hm: '14:22', folder: 'notificaciones', read: false, body: 'Se registró una transferencia por $12.500 desde tu cuenta.\n\nSi no reconoces esta operación, comunícate de inmediato con nuestro call center. Recuerda que nunca te pediremos claves por correo ni por teléfono.\n\nBanco Estado' }),
+                mk({ from: 'Aula Virtual', initial: 'A', bg: 'bg-[#00838f]', fg: 'text-white', subject: 'Nueva calificación publicada', preview: 'Tu nota del primer certamen ya está disponible...', d: 2, hm: '17:30', folder: 'notificaciones', read: false, important: true, body: 'Se publicó una nueva calificación en uno de tus cursos.\n\nPuedes revisarla ingresando al Aula Virtual con tu cuenta institucional. Si tienes dudas sobre la corrección, tienes cinco días hábiles para solicitar recorrección al profesor.\n\nAula Virtual' }),
 
                 // ---------- COMPRAS ----------
-                mk({ from: 'MercadoLibre', initial: 'M', bg: 'bg-[#ffe600]', fg: 'text-black', subject: 'Tu pedido va en camino 📦', preview: 'Tu compra "Teclado mecánico 60%" será entregada mañana entre 9 y 14 h...', time: '13:10', folder: 'compras', read: false }),
-                mk({ from: 'PC Factory', initial: 'P', bg: 'bg-[#e53935]', fg: 'text-white', subject: 'Boleta electrónica N° 884213', preview: 'Adjuntamos el comprobante de tu compra realizada el 30 de marzo...', time: '30 mar', folder: 'compras', read: true, att: ['Boleta_884213.pdf'] }),
-                mk({ from: 'Falabella', initial: 'F', bg: 'bg-[#009640]', fg: 'text-white', subject: 'Confirmación de despacho a domicilio', preview: 'Tu pedido #FA-99213 fue despachado y llegará el 4 de abril...', time: '29 mar', folder: 'compras', read: true }),
+                mk({ from: 'MercadoLibre', initial: 'M', bg: 'bg-[#ffe600]', fg: 'text-black', subject: 'Tu pedido va en camino 📦', preview: 'Tu compra será entregada mañana entre 9 y 14 horas...', d: 0, hm: '13:10', folder: 'compras', read: false, body: 'Tu pedido ya salió del centro de distribución.\n\nLa entrega está programada para mañana entre las 9:00 y las 14:00 horas en la dirección registrada. No es necesario que estés presente si autorizaste la entrega a terceros.\n\nMercadoLibre' }),
+                mk({ from: 'PC Factory', initial: 'P', bg: 'bg-[#e53935]', fg: 'text-white', subject: 'Boleta electrónica N° 884213', preview: 'Adjuntamos el comprobante de tu compra...', d: 9, hm: '16:00', folder: 'compras', read: true, att: ['Boleta_884213.pdf'], body: 'Adjuntamos la boleta electrónica de tu compra.\n\nEl documento tiene validez tributaria y sirve como respaldo para la garantía del producto, que es de 6 meses a partir de la fecha de emisión.\n\nPC Factory' }),
+                mk({ from: 'Falabella', initial: 'F', bg: 'bg-[#009640]', fg: 'text-white', subject: 'Confirmación de despacho a domicilio', preview: 'Tu pedido fue despachado y llegará dentro de los próximos días...', d: 12, hm: '10:41', folder: 'compras', read: true, body: 'Tu pedido fue despachado.\n\nRecibirás un mensaje el día de la entrega con el rango horario estimado. Puedes seguir el estado del envío desde tu cuenta con el número de pedido.\n\nFalabella' }),
 
                 // ---------- ENVIADOS ----------
-                mk({ from: 'Coordinación Docente', to: 'coordinacion@universidad.edu', initial: 'C', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Consulta por cambio de sección', preview: 'Estimada coordinación, escribo para consultar la posibilidad de cambiarme...', time: '9:15', folder: 'enviados', read: true }),
-                mk({ from: 'Ayudantía Cálculo', to: 'ayudantia.calculo@universidad.edu', initial: 'A', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Re: Material de la ayudantía', preview: 'Muchas gracias por el material, ya lo revisé completo...', time: 'ayer', folder: 'enviados', read: true }),
-                mk({ from: 'Secretaría de Carrera', to: 'secretaria@universidad.edu', initial: 'S', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Solicitud de certificado de alumno regular', preview: 'Junto con saludar, solicito un certificado de alumno regular para trámites...', time: '28 mar', folder: 'enviados', read: true }),
+                mk({ from: 'Coordinación Docente', to: 'coordinacion@universidad.edu', initial: 'C', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Consulta por cambio de sección', preview: 'Estimada coordinación, escribo para consultar la posibilidad de cambiarme...', d: 0, hm: '9:15', folder: 'enviados', read: true, body: 'Estimada coordinación:\n\nEscribo para consultar la posibilidad de cambiarme de sección, ya que tengo un tope de horario con otra asignatura obligatoria.\n\nQuedo atento a lo que me puedan indicar.\n\nSaludos cordiales.' }),
+                mk({ from: 'Ayudantía Cálculo', to: 'ayudantia.calculo@universidad.edu', initial: 'A', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Re: Material de la ayudantía', preview: 'Muchas gracias por el material, ya lo revisé completo...', d: 1, hm: '22:03', folder: 'enviados', read: true, body: 'Muchas gracias por el material, ya lo revisé completo.\n\nMe quedó una duda con el ejercicio 7 de la guía: no me queda claro de dónde sale el cambio de variable. Si alcanzas a explicarlo en la próxima ayudantía sería ideal.\n\nGracias de nuevo.' }),
+                mk({ from: 'Secretaría de Carrera', to: 'secretaria@universidad.edu', initial: 'S', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Solicitud de certificado de alumno regular', preview: 'Junto con saludar, solicito un certificado de alumno regular...', d: 14, hm: '11:20', folder: 'enviados', read: true, body: 'Junto con saludar:\n\nSolicito un certificado de alumno regular para presentarlo en un trámite externo. Si necesitan algún dato adicional de mi parte, quedo atento.\n\nMuchas gracias.' }),
 
                 // ---------- BORRADORES ----------
-                mk({ from: 'Borrador', to: 'profesor.fisica@universidad.edu', initial: 'B', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Consulta sobre el certamen', preview: 'Estimado profesor, quería consultarle sobre la fecha del...', time: '10:02', folder: 'borradores', read: true, draft: true }),
-                mk({ from: 'Borrador', to: '', initial: 'B', bg: 'bg-[#5f6368]', fg: 'text-white', subject: '(sin asunto)', preview: 'Hola, te escribo para...', time: '2 abr', folder: 'borradores', read: true, draft: true }),
+                mk({ from: 'Borrador', to: 'profesor.fisica@universidad.edu', initial: 'B', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Consulta sobre el certamen', preview: 'Estimado profesor, quería consultarle sobre la fecha del...', d: 0, hm: '10:02', folder: 'borradores', read: true, draft: true, body: 'Estimado profesor, quería consultarle sobre la fecha del' }),
+                mk({ from: 'Borrador', to: '', initial: 'B', bg: 'bg-[#5f6368]', fg: 'text-white', subject: '(sin asunto)', preview: 'Hola, te escribo para...', d: 6, hm: '23:11', folder: 'borradores', read: true, draft: true, body: 'Hola, te escribo para' }),
 
                 // ---------- PROGRAMADOS ----------
-                mk({ from: 'Programado', to: 'grupo.proyecto@universidad.edu', initial: 'P', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Recordatorio: reunión de proyecto', preview: 'Se enviará el lunes a las 8:00. Recuerden traer el avance del informe...', time: 'lun 8:00', folder: 'programados', read: true }),
+                mk({ from: 'Programado', to: 'grupo.proyecto@universidad.edu', initial: 'P', bg: 'bg-[#5f6368]', fg: 'text-white', subject: 'Recordatorio: reunión de proyecto', preview: 'Recuerden traer el avance del informe...', d: 0, hm: '8:00', folder: 'programados', read: true, body: 'Hola a todos:\n\nRecordatorio de la reunión de proyecto. Por favor lleguen con el avance de su parte del informe, aunque esté incompleto, para poder revisarlo en conjunto.\n\nNos vemos.' }),
 
                 // ---------- SPAM ----------
-                mk({ from: 'PREMIO-NACIONAL', initial: '!', bg: 'bg-[#b71c1c]', fg: 'text-red-100', subject: '¡¡FELICIDADES!! Has ganado $50.000.000 CLP', preview: 'Solo debes confirmar tus datos bancarios para recibir tu premio hoy mismo...', time: '3:22', folder: 'spam', read: false }),
-                mk({ from: 'soporte-cuenta.verificar', initial: '!', bg: 'bg-[#b71c1c]', fg: 'text-red-100', subject: 'Su cuenta sera SUSPENDIDA en 24 horas', preview: 'Haga clic aqui inmediatamente para evitar la suspension de su cuenta...', time: 'ayer', folder: 'spam', read: false }),
-                mk({ from: 'farmacia-online-24', initial: '$', bg: 'bg-[#b71c1c]', fg: 'text-red-100', subject: 'Ofertas exclusivas sin receta medica', preview: 'Los mejores precios del mercado, envio discreto a todo el pais...', time: '30 mar', folder: 'spam', read: true }),
+                mk({ from: 'PREMIO-NACIONAL', initial: '!', bg: 'bg-[#b71c1c]', fg: 'text-red-100', subject: '¡¡FELICIDADES!! Has ganado $50.000.000 CLP', preview: 'Solo debes confirmar tus datos bancarios para recibir tu premio hoy mismo...', d: 0, hm: '3:22', folder: 'spam', read: false, body: 'FELICIDADES!!!\n\nUsted ha resultado GANADOR de nuestro sorteo anual por la suma de $50.000.000 CLP.\n\nPara hacer efectivo el cobro debe responder este correo con su nombre completo, numero de cuenta bancaria y una foto de su cedula por ambos lados.\n\nTiene 24 horas antes de que el premio pase al siguiente ganador.' }),
+                mk({ from: 'soporte-cuenta.verificar', initial: '!', bg: 'bg-[#b71c1c]', fg: 'text-red-100', subject: 'Su cuenta sera SUSPENDIDA en 24 horas', preview: 'Haga clic aqui inmediatamente para evitar la suspension de su cuenta...', d: 1, hm: '4:07', folder: 'spam', read: false, body: 'ESTIMADO USUARIO\n\nHemos detectado actividad inusual en su cuenta. Si no verifica sus datos en las proximas 24 horas su cuenta sera SUSPENDIDA de forma permanente.\n\nHaga clic en el enlace y complete el formulario con su usuario y contraseña actual.\n\nDepartamento de Soporte' }),
+                mk({ from: 'farmacia-online-24', initial: '$', bg: 'bg-[#b71c1c]', fg: 'text-red-100', subject: 'Ofertas exclusivas sin receta medica', preview: 'Los mejores precios del mercado, envio discreto a todo el pais...', d: 7, hm: '2:55', folder: 'spam', read: true, body: 'Los mejores precios del mercado.\n\nEnvio discreto a todo el pais en 24 horas. Sin receta. Pago contra entrega.\n\nResponda este correo con el producto que necesita y le enviamos el catalogo completo.' }),
 
                 // ---------- PAPELERA ----------
-                mk({ from: 'Encuestas UTEM', initial: 'E', bg: 'bg-[#6d4c41]', fg: 'text-white', subject: 'Encuesta de satisfacción estudiantil', preview: 'Ayúdanos a mejorar respondiendo esta breve encuesta de 5 minutos...', time: '27 mar', folder: 'papelera', read: true }),
-                mk({ from: 'Newsletter Deportes', initial: 'N', bg: 'bg-[#6d4c41]', fg: 'text-white', subject: 'Resumen deportivo semanal', preview: 'Todo lo que pasó en el deporte universitario esta semana...', time: '25 mar', folder: 'papelera', read: true }),
+                mk({ from: 'Encuestas', initial: 'E', bg: 'bg-[#6d4c41]', fg: 'text-white', subject: 'Encuesta de satisfacción estudiantil', preview: 'Ayúdanos a mejorar respondiendo esta breve encuesta de 5 minutos...', d: 18, hm: '9:00', folder: 'papelera', read: true, body: 'Queremos conocer tu opinión.\n\nEsta encuesta toma alrededor de 5 minutos y sus resultados se usan para planificar mejoras en infraestructura, servicios y apoyo estudiantil.\n\nEs anónima y voluntaria.' }),
+                mk({ from: 'Newsletter Deportes', initial: 'N', bg: 'bg-[#6d4c41]', fg: 'text-white', subject: 'Resumen deportivo semanal', preview: 'Todo lo que pasó en el deporte universitario esta semana...', d: 21, hm: '19:30', folder: 'papelera', read: true, body: 'Resumen de la semana:\n\nLa selección de vóleibol clasificó a la fase final del campeonato interuniversitario. En básquetbol, derrota ajustada en el último cuarto.\n\nEsta semana: partidos de fútbol y atletismo en el estadio central.' }),
 
-                // ---------- ARCHIVADOS (solo visibles en "Todos") ----------
-                mk({ from: 'Mesa de Ayuda TI', initial: 'M', bg: 'bg-[#455a64]', fg: 'text-white', subject: 'Ticket #4471 cerrado', preview: 'Tu solicitud de restablecimiento de clave fue resuelta...', time: '24 mar', folder: 'archivados', read: true })
+                // ---------- ARCHIVADOS ----------
+                mk({ from: 'Mesa de Ayuda TI', initial: 'M', bg: 'bg-[#455a64]', fg: 'text-white', subject: 'Ticket #4471 cerrado', preview: 'Tu solicitud de restablecimiento de clave fue resuelta...', d: 23, hm: '15:45', folder: 'archivados', read: true, body: 'Tu ticket fue cerrado.\n\nLa solicitud de restablecimiento de clave institucional fue resuelta. Si vuelves a tener problemas para ingresar, puedes abrir un nuevo ticket desde la mesa de ayuda.\n\nMesa de Ayuda TI' })
             ];
+
+            // ---- Fechas: se calculan segun el dia en que se abre el sitio ----
+            var DIAS_SEM = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+            var MESES_AB = ['ene', 'feb', 'mar', 'abr', 'may', 'jun',
+                'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+
+            function fechaDe(m) {
+                var f = new Date();
+                f.setHours(0, 0, 0, 0);
+                f.setDate(f.getDate() - (m.d || 0));
+                var hm = (m.hm || '0:00').split(':');
+                f.setHours(parseInt(hm[0], 10), parseInt(hm[1], 10));
+                return f;
+            }
+
+            // Corta como Gmail: hoy la hora, ayer "ayer", esta semana el dia, luego la fecha
+            function fmtFecha(m) {
+                if (m.folder === 'programados') return 'mañana ' + (m.hm || '8:00');
+                if (m.d === undefined) return m.hm || '';
+                var f = fechaDe(m);
+                if (m.d === 0) return m.hm;
+                if (m.d === 1) return 'ayer';
+                if (m.d < 7) return DIAS_SEM[f.getDay()];
+                return f.getDate() + ' ' + MESES_AB[f.getMonth()];
+            }
+
+            // Fecha larga para la vista del correo abierto
+            function fmtFechaLarga(m) {
+                if (m.d === undefined) return m.hm || '';
+                var f = fechaDe(m);
+                if (m.d === 0) return m.hm;
+                if (m.d === 1) return 'ayer, ' + m.hm;
+                return f.getDate() + ' ' + MESES_AB[f.getMonth()] + ', ' + m.hm;
+            }
 
             // Pospuestos: marcamos un par
             MAILS[3].snoozed = true;
@@ -2165,6 +2211,9 @@
             }
 
             function fmtCount(n) { return n > 99 ? '99+' : String(n); }
+
+            // Lo usa el titulo de la pestaña
+            window.__sinLeer = function () { return countFor('recibidos'); };
 
             // =====================================================
             //  RENDER: menu lateral y cajon movil
@@ -2255,7 +2304,7 @@
                     '</div>' +
                     (m.att && m.att.length ? '<div class="flex gap-2 mt-[6px] md:mt-1.5 overflow-hidden">' + m.att.map(chip).join('') + '</div>' : '') +
                     '</div></div>' +
-                    '<div class="md:w-16 md:text-right ' + strong + ' max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">' + m.time + '</div>' +
+                    '<div class="md:w-16 md:text-right ' + strong + ' max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">' + fmtFecha(m) + '</div>' +
                     '<span class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 ' + starColorM + ' text-[20px]">' + star + '</span>' +
                     '<div class="absolute right-4 ' + rowBg + ' items-center gap-2 hidden group-hover:flex pl-4 max-md:!hidden">' +
                     (m.folder === 'papelera'
@@ -2281,6 +2330,7 @@
                 } else {
                     list.innerHTML = rows.map(rowHtml).join('');
                 }
+                if (window.__actualizarTitulo) window.__actualizarTitulo();
                 var counter = document.getElementById('range-counter');
                 if (counter) counter.textContent = rows.length ? ('1-' + rows.length + ' de ' + rows.length) : '0 de 0';
                 renderNav();
@@ -2429,7 +2479,7 @@
                 document.getElementById('gm-subject').textContent = m.subject;
                 document.getElementById('gm-sender').textContent = m.from;
                 document.getElementById('gm-email').textContent = '<' + (m.to || slugOf(m.from) + '@universidad.edu') + '>';
-                document.getElementById('gm-date').textContent = m.time;
+                document.getElementById('gm-date').textContent = fmtFechaLarga(m);
 
                 var av = document.getElementById('gm-avatar');
                 av.textContent = m.initial;
@@ -2591,7 +2641,7 @@
                 if (d) {
                     d.to = to; d.subject = subject || '(sin asunto)'; d.preview = body || '(sin contenido)'; d.body = body;
                 } else {
-                    MAILS.unshift(mk({ from: 'Borrador', to: to, initial: 'B', bg: 'bg-[#5f6368]', fg: 'text-white', subject: subject || '(sin asunto)', preview: body || '(sin contenido)', body: body, time: 'ahora', folder: 'borradores', read: true, draft: true }));
+                    MAILS.unshift(mk({ from: 'Borrador', to: to, initial: 'B', bg: 'bg-[#5f6368]', fg: 'text-white', subject: subject || '(sin asunto)', preview: body || '(sin contenido)', body: body, d: 0, hm: ahoraHM(), folder: 'borradores', read: true, draft: true }));
                 }
                 clearCompose();
                 window.__closeCompose();
@@ -2609,7 +2659,7 @@
                     from: to.split('@')[0], to: to, initial: (to.charAt(0) || '?').toUpperCase(),
                     bg: 'bg-[#5f6368]', fg: 'text-white',
                     subject: subject || '(sin asunto)', preview: body || '(sin contenido)', body: body,
-                    time: 'ahora', folder: 'salida', read: true
+                    d: 0, hm: ahoraHM(), folder: 'salida', read: true
                 });
                 MAILS.unshift(sent);
                 clearCompose();
@@ -2637,7 +2687,7 @@
                 MAILS.unshift(mk({
                     from: 'Programado', to: to, initial: 'P', bg: 'bg-[#5f6368]', fg: 'text-white',
                     subject: subject || '(sin asunto)', preview: body || '(sin contenido)', body: body,
-                    time: 'mañana 8:00', folder: 'programados', read: true
+                    d: 0, hm: '8:00', folder: 'programados', read: true
                 }));
                 clearCompose();
                 window.__closeCompose();
@@ -2664,7 +2714,7 @@
                         from: m.from, to: slugOf(m.from) + '@universidad.edu', initial: m.initial,
                         bg: 'bg-[#5f6368]', fg: 'text-white',
                         subject: 'Re: ' + m.subject, preview: txt || '(sin contenido)', body: txt,
-                        time: 'ahora', folder: 'enviados', read: true
+                        d: 0, hm: ahoraHM(), folder: 'enviados', read: true
                     }));
                 }
                 if (ta) ta.value = '';
