@@ -143,22 +143,22 @@
         #horario-photos-modal.gm-closing > div { animation: gmPopOut 170ms var(--gm-out) forwards; }
 
         /* ---- Lista de correos: entrada escalonada al cambiar de carpeta ---- */
-        #email-list.gm-stagger > .email-row-hover { animation: gmRowIn 300ms var(--gm-in) both; }
-        #email-list.gm-stagger > .email-row-hover:nth-child(1)  { animation-delay: 0ms }
-        #email-list.gm-stagger > .email-row-hover:nth-child(2)  { animation-delay: 22ms }
-        #email-list.gm-stagger > .email-row-hover:nth-child(3)  { animation-delay: 44ms }
-        #email-list.gm-stagger > .email-row-hover:nth-child(4)  { animation-delay: 66ms }
-        #email-list.gm-stagger > .email-row-hover:nth-child(5)  { animation-delay: 88ms }
-        #email-list.gm-stagger > .email-row-hover:nth-child(6)  { animation-delay: 110ms }
-        #email-list.gm-stagger > .email-row-hover:nth-child(7)  { animation-delay: 132ms }
-        #email-list.gm-stagger > .email-row-hover:nth-child(8)  { animation-delay: 154ms }
-        #email-list.gm-stagger > .email-row-hover:nth-child(9)  { animation-delay: 176ms }
-        #email-list.gm-stagger > .email-row-hover:nth-child(n+10) { animation-delay: 198ms }
+        #email-list.gm-stagger > .gm-swipe-wrap { animation: gmRowIn 300ms var(--gm-in) both; }
+        #email-list.gm-stagger > .gm-swipe-wrap:nth-child(1)  { animation-delay: 0ms }
+        #email-list.gm-stagger > .gm-swipe-wrap:nth-child(2)  { animation-delay: 22ms }
+        #email-list.gm-stagger > .gm-swipe-wrap:nth-child(3)  { animation-delay: 44ms }
+        #email-list.gm-stagger > .gm-swipe-wrap:nth-child(4)  { animation-delay: 66ms }
+        #email-list.gm-stagger > .gm-swipe-wrap:nth-child(5)  { animation-delay: 88ms }
+        #email-list.gm-stagger > .gm-swipe-wrap:nth-child(6)  { animation-delay: 110ms }
+        #email-list.gm-stagger > .gm-swipe-wrap:nth-child(7)  { animation-delay: 132ms }
+        #email-list.gm-stagger > .gm-swipe-wrap:nth-child(8)  { animation-delay: 154ms }
+        #email-list.gm-stagger > .gm-swipe-wrap:nth-child(9)  { animation-delay: 176ms }
+        #email-list.gm-stagger > .gm-swipe-wrap:nth-child(n+10) { animation-delay: 198ms }
 
         /* ---- Retroalimentacion al tocar ---- */
         .email-row-hover { transition: background-color 140ms ease; }
         @media (max-width: 767px) {
-            #email-list > .email-row-hover:active { background-color: #1c1c1f; }
+            #email-list .email-row-hover:active { background-color: #1c1c1f; }
         }
         .gm-press { transition: transform 110ms ease; }
         .gm-press:active { transform: scale(.94); }
@@ -2388,7 +2388,7 @@
                 } else {
                     list.innerHTML = rows.map(rowHtml).join('');
                 }
-                if (indicador) list.insertBefore(indicador, list.firstChild);
+                if (indicador) list.appendChild(indicador);
                 if (modoSel) pintarSeleccion();
                 if (window.__actualizarTitulo) window.__actualizarTitulo();
                 var counter = document.getElementById('range-counter');
@@ -2497,7 +2497,7 @@
                 var icon = document.getElementById('select-all-icon');
                 var checked = icon.textContent.trim() === 'check_box';
                 icon.textContent = checked ? 'check_box_outline_blank' : 'check_box';
-                document.querySelectorAll('#email-list > .email-row-hover').forEach(function (row) {
+                document.querySelectorAll('#email-list .email-row-hover').forEach(function (row) {
                     row.classList.toggle('bg-blue-50', !checked);
                     row.querySelectorAll('.material-symbols-outlined').forEach(function (ic) {
                         var t = ic.textContent.trim();
