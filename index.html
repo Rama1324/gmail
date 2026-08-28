@@ -2415,6 +2415,17 @@
                     '<span class="material-symbols-outlined mr-1" style="font-size:16px;color:#1a73e8;">description</span>' + name + '</div>';
             }
 
+            // Gmail muestra los adjuntos de cualquier mensaje del hilo
+            function adjuntosDe(conv) {
+                var vistos = {}, out = [];
+                conv.mensajes.forEach(function (m) {
+                    (m.att || []).forEach(function (a) {
+                        if (!vistos[a]) { vistos[a] = 1; out.push(a); }
+                    });
+                });
+                return out;
+            }
+
             function mostrarPrevia() {
                 var p = window.__getPrefs ? window.__getPrefs() : null;
                 return !p || p.vistaPrevia;
@@ -2453,7 +2464,7 @@
                     '<span class="' + strong + ' max-md:text-[#e8eaed] max-md:truncate">' + draftTag + m.subject + '</span>' +
                     (mostrarPrevia() ? '<span class="text-gray-500 max-md:text-[#9aa0a6] md:ml-1 max-md:truncate max-md:mt-[2px]">- ' + m.preview + '</span>' : '') +
                     '</div>' +
-                    (m.att && m.att.length ? '<div class="flex gap-2 mt-[6px] md:mt-1.5 overflow-hidden">' + m.att.map(chip).join('') + '</div>' : '') +
+                    (adjuntosDe(conv).length ? '<div class="flex gap-2 mt-[6px] md:mt-1.5 overflow-hidden">' + adjuntosDe(conv).map(chip).join('') + '</div>' : '') +
                     '</div></div>' +
                     '<div class="md:w-16 md:text-right ' + strong + ' max-md:text-[#e8eaed] text-xs shrink-0 max-md:absolute max-md:top-[14px] max-md:right-4 group-hover:hidden">' + fmtFecha(m) + '</div>' +
                     '<span class="hidden max-md:block material-symbols-outlined absolute right-4 bottom-4 ' + starColorM + ' text-[20px]">' + star + '</span>' +
@@ -2719,7 +2730,15 @@
                         '<span class="text-xs text-gray-500 shrink-0">' + fmtFechaLarga(p) + '</span></div>' +
                         '<div class="text-xs text-gray-500 mb-2">' + p.subject + '</div>' +
                         '<p class="text-sm text-gray-800 leading-relaxed whitespace-pre-line">' +
-                        bodyOf(p).replace(/</g, '&lt;') + '</p></div>';
+                        bodyOf(p).replace(/</g, '&lt;') + '</p>' +
+                        (p.att && p.att.length
+                            ? '<div class="flex flex-wrap gap-2 mt-3">' + p.att.map(function (a) {
+                                return '<div onclick="window.__toast(\'Descarga no disponible en esta demo\')" ' +
+                                    'class="flex items-center gap-1.5 border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs text-gray-700 cursor-pointer">' +
+                                    '<span class="material-symbols-outlined" style="font-size:15px;color:#1a73e8;">description</span>' + a + '</div>';
+                            }).join('') + '</div>'
+                            : '') +
+                        '</div>';
                 }).join('');
             }
 
