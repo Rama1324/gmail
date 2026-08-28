@@ -73,6 +73,109 @@
             box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60, 64, 67, .3), 0 1px 3px 1px rgba(60, 64, 67, .15);
             z-index: 10;
         }
+
+        /* ================= Animaciones ================= */
+        @keyframes gmFadeIn   { from { opacity: 0 }                        to { opacity: 1 } }
+        @keyframes gmFadeOut  { from { opacity: 1 }                        to { opacity: 0 } }
+        @keyframes gmInRight  { from { transform: translateX(100%) }       to { transform: translateX(0) } }
+        @keyframes gmOutRight { from { transform: translateX(0) }          to { transform: translateX(100%) } }
+        @keyframes gmInLeft   { from { transform: translateX(-100%) }      to { transform: translateX(0) } }
+        @keyframes gmOutLeft  { from { transform: translateX(0) }          to { transform: translateX(-100%) } }
+        @keyframes gmInUp     { from { transform: translateY(100%) }       to { transform: translateY(0) } }
+        @keyframes gmOutDown  { from { transform: translateY(0) }          to { transform: translateY(100%) } }
+        @keyframes gmPopIn    { from { opacity: 0; transform: scale(.96) } to { opacity: 1; transform: scale(1) } }
+        @keyframes gmPopOut   { from { opacity: 1; transform: scale(1) }   to { opacity: 0; transform: scale(.96) } }
+        @keyframes gmRowIn    { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
+        @keyframes gmToastIn  { from { opacity: 0; transform: translateY(18px) } to { opacity: 1; transform: none } }
+
+        :root {
+            --gm-in: cubic-bezier(.2, 0, 0, 1);
+            --gm-out: cubic-bezier(.4, 0, 1, 1);
+        }
+
+        /* ---- Vista de correo abierto ---- */
+        #generic-email-modal:not(.hidden):not(.gm-closing),
+        #secret-email-modal:not(.hidden):not(.gm-closing) {
+            animation: gmPopIn 200ms var(--gm-in);
+        }
+        #generic-email-modal.gm-closing,
+        #secret-email-modal.gm-closing {
+            animation: gmPopOut 160ms var(--gm-out) forwards;
+        }
+
+        /* En movil entra deslizando desde la derecha, como Gmail */
+        @media (max-width: 767px) {
+            #generic-email-modal:not(.hidden):not(.gm-closing),
+            #secret-email-modal:not(.hidden):not(.gm-closing) {
+                animation: gmInRight 280ms var(--gm-in);
+            }
+            #generic-email-modal.gm-closing,
+            #secret-email-modal.gm-closing {
+                animation: gmOutRight 240ms var(--gm-out) forwards;
+            }
+        }
+
+        /* ---- Redactar ---- */
+        #compose-modal:not(.hidden):not(.gm-closing) { animation: gmInUp 260ms var(--gm-in); }
+        #compose-modal.gm-closing { animation: gmOutDown 200ms var(--gm-out) forwards; }
+
+        /* ---- Cajon lateral ---- */
+        #mobile-drawer:not(.hidden):not(.gm-closing) > div:first-child { animation: gmFadeIn 220ms ease-out; }
+        #mobile-drawer:not(.hidden):not(.gm-closing) > div:last-child  { animation: gmInLeft 280ms var(--gm-in); }
+        #mobile-drawer.gm-closing > div:first-child { animation: gmFadeOut 200ms ease-in forwards; }
+        #mobile-drawer.gm-closing > div:last-child  { animation: gmOutLeft 240ms var(--gm-out) forwards; }
+
+        /* ---- Panel de perfil ---- */
+        #mobile-profile-modal:not(.hidden):not(.gm-closing)       { animation: gmFadeIn 200ms ease-out; }
+        #mobile-profile-modal:not(.hidden):not(.gm-closing) > div { animation: gmInUp 320ms var(--gm-in); }
+        #mobile-profile-modal.gm-closing       { animation: gmFadeOut 220ms ease-in forwards; }
+        #mobile-profile-modal.gm-closing > div { animation: gmOutDown 260ms var(--gm-out) forwards; }
+
+        /* ---- Configuracion y fotos ---- */
+        #secret-config-modal:not(.hidden):not(.gm-closing),
+        #horario-photos-modal:not(.hidden):not(.gm-closing) { animation: gmFadeIn 180ms ease-out; }
+        #secret-config-modal:not(.hidden):not(.gm-closing) > div,
+        #horario-photos-modal:not(.hidden):not(.gm-closing) > div { animation: gmPopIn 240ms var(--gm-in); }
+        #secret-config-modal.gm-closing,
+        #horario-photos-modal.gm-closing { animation: gmFadeOut 170ms ease-in forwards; }
+        #secret-config-modal.gm-closing > div,
+        #horario-photos-modal.gm-closing > div { animation: gmPopOut 170ms var(--gm-out) forwards; }
+
+        /* ---- Lista de correos: entrada escalonada al cambiar de carpeta ---- */
+        #email-list.gm-stagger > .email-row-hover { animation: gmRowIn 300ms var(--gm-in) both; }
+        #email-list.gm-stagger > .email-row-hover:nth-child(1)  { animation-delay: 0ms }
+        #email-list.gm-stagger > .email-row-hover:nth-child(2)  { animation-delay: 22ms }
+        #email-list.gm-stagger > .email-row-hover:nth-child(3)  { animation-delay: 44ms }
+        #email-list.gm-stagger > .email-row-hover:nth-child(4)  { animation-delay: 66ms }
+        #email-list.gm-stagger > .email-row-hover:nth-child(5)  { animation-delay: 88ms }
+        #email-list.gm-stagger > .email-row-hover:nth-child(6)  { animation-delay: 110ms }
+        #email-list.gm-stagger > .email-row-hover:nth-child(7)  { animation-delay: 132ms }
+        #email-list.gm-stagger > .email-row-hover:nth-child(8)  { animation-delay: 154ms }
+        #email-list.gm-stagger > .email-row-hover:nth-child(9)  { animation-delay: 176ms }
+        #email-list.gm-stagger > .email-row-hover:nth-child(n+10) { animation-delay: 198ms }
+
+        /* ---- Retroalimentacion al tocar ---- */
+        .email-row-hover { transition: background-color 140ms ease; }
+        @media (max-width: 767px) {
+            #email-list > .email-row-hover:active { background-color: #1c1c1f; }
+        }
+        .gm-press { transition: transform 110ms ease; }
+        .gm-press:active { transform: scale(.94); }
+
+        /* ---- Avisos y cajas de respuesta ---- */
+        #toast-container > div { animation: gmToastIn 240ms var(--gm-in); }
+        #gm-reply-box:not(.hidden),
+        #secret-reply-box:not(.hidden),
+        #cfg-rut-upload:not(.hidden),
+        #gm-attachments:not(.hidden) { animation: gmRowIn 240ms var(--gm-in); }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                animation-delay: 0ms !important;
+                transition-duration: .01ms !important;
+            }
+        }
     </style>
 </head>
 
@@ -249,7 +352,7 @@
 
             <!-- Mobile FAB -->
             <div onclick="window.__openCompose()"
-                class="md:hidden fixed bottom-[90px] right-4 bg-[#c2e7ff] hover:bg-[#a8d3f0] text-[#041e49] rounded-[16px] px-5 py-4 flex items-center justify-center shadow-lg z-50 cursor-pointer gap-2 transition-colors">
+                class="gm-press md:hidden fixed bottom-[90px] right-4 bg-[#c2e7ff] hover:bg-[#a8d3f0] text-[#041e49] rounded-[16px] px-5 py-4 flex items-center justify-center shadow-lg z-50 cursor-pointer gap-2 transition-colors">
                 <span class="material-symbols-outlined icon-fill">edit</span>
                 <span class="font-medium mr-1 text-[13px]">Redactar</span>
             </div>
@@ -361,13 +464,13 @@
             <!-- Header -->
             <div class="flex justify-between items-center mb-6">
                 <div class="flex-1 flex">
-                    <button onclick="document.getElementById('mobile-profile-modal').classList.add('hidden')"
+                    <button onclick="window.__closeAnim('mobile-profile-modal')"
                         class="material-symbols-outlined text-[#9aa0a6] text-[20px] font-bold">close</button>
                 </div>
                 <div class="text-[13px] text-[#e8eaed] font-medium tracking-wide"><span data-email>ramiro.soto.m@usach.cl</span> <span
                         class="font-normal text-gray-500">(99+)</span></div>
                 <div class="flex-1 flex justify-end">
-                    <button onclick="document.getElementById('mobile-profile-modal').classList.add('hidden')"
+                    <button onclick="window.__closeAnim('mobile-profile-modal')"
                         class="text-[#8ab4f8] font-medium text-[15px] px-2 active:text-blue-300">Listo</button>
                 </div>
             </div>
@@ -439,13 +542,13 @@
     <div id="secret-email-modal" class="hidden fixed inset-0 z-[190] bg-white flex flex-col">
         <!-- Barra de acciones -->
         <div class="flex items-center gap-0.5 px-2 md:px-4 h-14 border-b border-gray-200 shrink-0">
-            <button onclick="document.getElementById('secret-email-modal').classList.add('hidden')"
+            <button onclick="window.__closeAnim('secret-email-modal')"
                 class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">arrow_back</span>
             </button>
             <div class="w-px h-6 bg-gray-300 mx-1 hidden md:block"></div>
             <button
-                onclick="window.__archiveRow(document.querySelector('[data-secret=&quot;1&quot;]')); document.getElementById('secret-email-modal').classList.add('hidden')"
+                onclick="window.__archiveRow(document.querySelector('[data-secret=&quot;1&quot;]')); window.__closeAnim('secret-email-modal')"
                 class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">archive</span>
             </button>
@@ -454,7 +557,7 @@
                 <span class="material-symbols-outlined">report</span>
             </button>
             <button
-                onclick="window.__deleteRow(document.querySelector('[data-secret=&quot;1&quot;]')); document.getElementById('secret-email-modal').classList.add('hidden')"
+                onclick="window.__deleteRow(document.querySelector('[data-secret=&quot;1&quot;]')); window.__closeAnim('secret-email-modal')"
                 class="p-2 hover:bg-gray-100 rounded-full flex items-center justify-center">
                 <span class="material-symbols-outlined">delete</span>
             </button>
@@ -806,7 +909,7 @@
         <div class="bg-[#202124] w-full max-w-sm rounded-3xl shadow-2xl p-6 border border-[#333]">
             <div class="flex items-center justify-between mb-1">
                 <h2 class="text-[#e8eaed] text-lg font-medium">Configuración</h2>
-                <button onclick="document.getElementById('secret-config-modal').classList.add('hidden')"
+                <button onclick="window.__closeAnim('secret-config-modal')"
                     class="material-symbols-outlined text-[#9aa0a6]">close</button>
             </div>
             <p class="text-[#9aa0a6] text-xs mb-5">Solo se guarda en este dispositivo.</p>
@@ -841,7 +944,7 @@
         <div class="bg-[#202124] w-full max-w-md rounded-3xl shadow-2xl p-4 border border-[#333]">
             <div class="flex items-center justify-between mb-3">
                 <h2 class="text-[#e8eaed] text-lg font-medium">Tu horario</h2>
-                <button onclick="document.getElementById('horario-photos-modal').classList.add('hidden')"
+                <button onclick="window.__closeAnim('horario-photos-modal')"
                     class="material-symbols-outlined text-[#9aa0a6]">close</button>
             </div>
             <div id="horario-photos-content" class="flex flex-col gap-3 max-h-[70vh] overflow-y-auto"></div>
@@ -890,7 +993,7 @@
                 var email = document.getElementById('cfg-email').value.trim() || DEFAULTS.email;
                 localStorage.setItem(STORE_KEY, JSON.stringify({ name: name, email: email }));
                 apply();
-                document.getElementById('secret-config-modal').classList.add('hidden');
+                window.__closeAnim('secret-config-modal');
             };
             window.__resetCfg = function () {
                 localStorage.removeItem(STORE_KEY);
@@ -1034,13 +1137,26 @@
                 setTimeout(function () { el.remove(); }, 4000);
             };
 
+            // ---- Cierre animado de paneles ----
+            window.__closeAnim = function (id) {
+                var el = document.getElementById(id);
+                if (!el || el.classList.contains('hidden')) return;
+                el.classList.add('gm-closing');
+                setTimeout(function () {
+                    el.classList.remove('gm-closing');
+                    el.classList.add('hidden');
+                }, 240);
+            };
+
             // ---- Menu lateral (hamburguesa) ----
             window.__toggleSidebar = function () {
                 var nav = document.getElementById('folder-nav');
                 nav.style.display = (nav.style.display === 'none') ? '' : 'none';
             };
             window.__toggleMobileDrawer = function () {
-                document.getElementById('mobile-drawer').classList.toggle('hidden');
+                var el = document.getElementById('mobile-drawer');
+                if (el.classList.contains('hidden')) el.classList.remove('hidden');
+                else window.__closeAnim('mobile-drawer');
             };
 
             // ---- Estado Activo/Ausente ----
@@ -1351,6 +1467,12 @@
                 var d = document.getElementById('search-desktop'); if (d) d.value = '';
                 var s = document.getElementById('search-mobile'); if (s) s.value = '';
                 render();
+                var list = document.getElementById('email-list');
+                list.classList.remove('gm-stagger');
+                void list.offsetWidth;
+                list.classList.add('gm-stagger');
+                clearTimeout(window.__staggerT);
+                window.__staggerT = setTimeout(function () { list.classList.remove('gm-stagger'); }, 700);
             };
             window.__filterMail = function (q) {
                 query = q || '';
@@ -1512,7 +1634,7 @@
                 render();
             };
             window.__closeGenericMail = function () {
-                document.getElementById('generic-email-modal').classList.add('hidden');
+                window.__closeAnim('generic-email-modal');
             };
             window.__archiveOpenRow = function () {
                 var m = window.__openMailData; if (m) move(m, 'archivados', 'Conversación archivada');
@@ -1578,7 +1700,7 @@
                 document.getElementById('compose-modal').classList.remove('hidden');
             };
             window.__closeCompose = function () {
-                document.getElementById('compose-modal').classList.add('hidden');
+                window.__closeAnim('compose-modal');
             };
             window.__discardCompose = function () {
                 var d = window.__editingDraft;
