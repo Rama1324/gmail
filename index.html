@@ -549,84 +549,266 @@
     </div>
 
     <!-- Mobile Profile Modal -->
+    <!-- Panel de perfil: cambia segun el telefono (iPhone / Android) -->
     <div id="mobile-profile-modal"
         class="hidden fixed inset-0 z-[100] md:hidden bg-[#000000cc] backdrop-blur-sm transition-opacity duration-300">
         <div
             class="absolute top-[8%] left-0 right-0 bottom-0 bg-[#202124] rounded-t-3xl shadow-2xl flex flex-col p-4 overflow-y-auto">
-            <!-- Header -->
-            <div class="flex justify-between items-center mb-6">
-                <div class="flex-1 flex">
-                    <button onclick="window.__closeAnim('mobile-profile-modal')"
-                        class="material-symbols-outlined text-[#9aa0a6] text-[20px] font-bold">close</button>
-                </div>
-                <div class="text-[13px] text-[#e8eaed] font-medium tracking-wide"><span data-email>ramiro.soto.m@usach.cl</span> <span
-                        class="font-normal text-gray-500">(99+)</span></div>
-                <div class="flex-1 flex justify-end">
-                    <button onclick="window.__closeAnim('mobile-profile-modal')"
-                        class="text-[#8ab4f8] font-medium text-[15px] px-2 active:text-blue-300">Listo</button>
-                </div>
-            </div>
 
-            <!-- Profile Info -->
-            <div class="flex flex-col items-center mb-4 relative">
-                <div class="relative inline-block border-[2px] border-blue-500 rounded-full p-[2px]">
-                    <div data-avatar
-                        class="w-[66px] h-[66px] rounded-full bg-teal-600 flex items-center justify-center text-[34px] font-medium text-white">
-                        R</div>
-                    <div onclick="window.__toast('Cambiar foto no disponible en esta demo')"
-                        class="absolute bottom-0 right-0 bg-[#303134] rounded-full p-[3px] border-[2px] border-[#202124] cursor-pointer">
-                        <span
-                            class="material-symbols-outlined text-[13px] text-gray-300 flex items-center justify-center">photo_camera</span>
+            <!-- ===================== VERSION iPhone ===================== -->
+            <div id="perfil-ios" class="hidden">
+                <div class="flex justify-end items-center mb-5 pt-1 pr-1">
+                    <button onclick="window.__closeAnim('mobile-profile-modal')"
+                        class="text-[#8ab4f8] font-medium text-[17px] px-2 active:text-blue-300">Listo</button>
+                </div>
+
+                <!-- Cuenta activa -->
+                <div class="bg-[#303134] rounded-[20px] p-4 flex items-center gap-4 mb-[6px]">
+                    <div class="relative shrink-0">
+                        <div data-avatar
+                            class="w-[58px] h-[58px] rounded-full bg-teal-600 flex items-center justify-center text-[28px] font-medium text-white bg-cover bg-center">
+                            R</div>
+                        <div onclick="window.__openFoto()"
+                            class="absolute bottom-0 right-0 bg-[#5f6368] rounded-full w-[22px] h-[22px] flex items-center justify-center border-2 border-[#303134] cursor-pointer">
+                            <span class="material-symbols-outlined text-white"
+                                style="font-size: 12px;">edit</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div data-fullname class="text-[#e8eaed] text-[17px] font-normal truncate uppercase"></div>
+                        <div data-email class="text-[#9aa0a6] text-[15px] truncate"></div>
+                    </div>
+                    <div onclick="window.__toggleListaCuentas()"
+                        class="w-[38px] h-[38px] rounded-full bg-[#3c4043] flex items-center justify-center shrink-0 cursor-pointer active:bg-[#4a4d51]">
+                        <span id="cuentas-flecha-ios"
+                            class="material-symbols-outlined text-[#e8eaed] transition-transform"
+                            style="font-size: 20px;">expand_less</span>
                     </div>
                 </div>
-                <h2 data-greeting="Hola " class="text-[22px] font-medium text-[#e8eaed] mt-4 mb-4">Hola Ramiro</h2>
-            </div>
 
-            <!-- Storage Card -->
-            <div class="bg-[#303134] rounded-[24px] p-4 mb-[2px] mx-1 mt-2">
-                <div class="flex items-center gap-3 mb-[2px]">
-                    <span
-                        class="material-symbols-outlined text-[#f28b82] text-[22px] bg-[#f28b82]/20 rounded-full p-1 border-2 border-[#f28b82]/30">priority_high</span>
-                    <span class="text-[#e8eaed] font-medium text-[15px]">Se usó el 90% de 200 GB</span>
-                </div>
-                <div class="w-full bg-[#5f6368]/60 h-[5px] rounded-full mb-1 mt-[14px] overflow-hidden flex">
-                    <div class="bg-[#f28b82] h-full rounded-l-full" style="width: 90%;"></div>
-                    <div class="bg-gray-400 h-full w-[2px]"></div>
-                </div>
-                <div class="text-[12px] text-[#9aa0a6] mb-4 mt-[6px]">180 GB de 200 GB</div>
-                <div class="flex justify-end pr-2 pb-1">
-                    <button onclick="window.__toast('Gestión de almacenamiento no disponible en esta demo')"
-                        class="text-[#8ab4f8] font-medium text-[13px]">Administrar almacenamiento</button>
-                </div>
-            </div>
+                <!-- Otras cuentas -->
+                <div id="ios-otras-cuentas" class="flex flex-col gap-[6px] mb-[6px]"></div>
 
-            <!-- Accounts List -->
-            <div class="bg-[#303134] rounded-[24px] overflow-hidden mx-1">
-                <div onclick="window.__toast('Cambio de cuenta no disponible en esta demo')"
-                    class="flex justify-between items-center p-4 cursor-pointer active:bg-[#3c4043] transition-colors">
-                    <span class="text-[#e8eaed] text-[15px] font-medium">Cambiar de cuenta</span>
-                    <span class="material-symbols-outlined text-[#9aa0a6]">expand_less</span>
+                <div onclick="window.__openAgregarCuenta()"
+                    class="bg-[#303134] rounded-[20px] flex items-center gap-5 px-4 py-[18px] mb-[6px] cursor-pointer active:bg-[#3c4043]">
+                    <span class="material-symbols-outlined text-[#8ab4f8] font-light"
+                        style="font-size: 24px;">add</span>
+                    <span class="text-[#e8eaed] text-[16px]">Agregar otra cuenta</span>
                 </div>
 
-                <div onclick="window.__toast('Agregar cuenta no disponible en esta demo')"
-                    class="flex items-center gap-4 p-4 py-[14px] cursor-pointer hover:bg-[#3c4043] active:bg-[#3c4043] border-t border-[#444] transition-colors">
-                    <span class="material-symbols-outlined text-[#e8eaed] font-light text-[22px] ml-1">add</span>
-                    <span class="text-[#e8eaed] text-[14px] font-medium ml-[2px]">Agregar otra cuenta</span>
+                <div onclick="window.__openAdminCuentas()"
+                    class="bg-[#303134] rounded-[20px] flex items-center gap-5 px-4 py-[18px] mb-4 cursor-pointer active:bg-[#3c4043]">
+                    <span class="material-symbols-outlined text-[#e8eaed] font-light"
+                        style="font-size: 22px;">manage_accounts</span>
+                    <span class="text-[#e8eaed] text-[16px]">Administrar cuentas en este dispositivo</span>
                 </div>
 
-                <div onclick="window.__toast('Gestión de cuentas no disponible en esta demo')"
-                    class="flex items-center gap-4 p-4 py-[14px] cursor-pointer hover:bg-[#3c4043] active:bg-[#3c4043] border-t border-[#444] transition-colors">
-                    <span
-                        class="material-symbols-outlined text-[#e8eaed] font-light text-[20px] ml-1">manage_accounts</span>
-                    <span class="text-[#e8eaed] text-[14px] font-medium ml-[6px]">Administrar cuentas en este
-                        dispositivo</span>
+                <div onclick="window.__openCuentaGoogle()"
+                    class="bg-[#303134] rounded-[20px] flex items-center gap-5 px-4 py-[18px] cursor-pointer active:bg-[#3c4043]">
+                    <span class="text-[20px] font-bold shrink-0"
+                        style="font-family: Arial, sans-serif; background: linear-gradient(90deg,#4285f4 0%,#ea4335 33%,#fbbc04 66%,#34a853 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">G</span>
+                    <span class="text-[#e8eaed] text-[16px]">Administrar tu Cuenta de Google</span>
                 </div>
             </div>
 
-            <div class="flex flex-col items-center justify-center mt-6 text-[10px] text-[#9aa0a6] gap-2 pb-6">
-                <span class="font-medium cursor-pointer">Política de Privacidad <span
-                        class="px-2 text-gray-600 font-bold">•</span> Condiciones del Servicio</span>
+            <!-- ===================== VERSION Android ===================== -->
+            <div id="perfil-android" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex-1 flex">
+                        <button onclick="window.__closeAnim('mobile-profile-modal')"
+                            class="material-symbols-outlined text-[#9aa0a6] text-[20px] font-bold">close</button>
+                    </div>
+                    <div class="text-[13px] text-[#e8eaed] font-medium tracking-wide">
+                        <span data-email></span>
+                        <span class="font-normal text-gray-500">(99+)</span>
+                    </div>
+                    <div class="flex-1 flex justify-end">
+                        <button onclick="window.__closeAnim('mobile-profile-modal')"
+                            class="text-[#8ab4f8] font-medium text-[15px] px-2 active:text-blue-300">Listo</button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center mb-4 relative">
+                    <div class="relative inline-block border-[2px] border-blue-500 rounded-full p-[2px]">
+                        <div data-avatar
+                            class="w-[66px] h-[66px] rounded-full bg-teal-600 flex items-center justify-center text-[34px] font-medium text-white bg-cover bg-center">
+                            R</div>
+                        <div onclick="window.__openFoto()"
+                            class="absolute bottom-0 right-0 bg-[#303134] rounded-full p-[3px] border-[2px] border-[#202124] cursor-pointer">
+                            <span
+                                class="material-symbols-outlined text-[13px] text-gray-300 flex items-center justify-center">photo_camera</span>
+                        </div>
+                    </div>
+                    <h2 data-greeting="Hola " class="text-[22px] font-medium text-[#e8eaed] mt-4 mb-4"></h2>
+                    <button onclick="window.__openCuentaGoogle()"
+                        class="border border-[#5f6368] rounded-full px-5 py-[7px] text-[13px] text-[#e8eaed] font-medium active:bg-[#303134] transition-colors">Administrar
+                        tu Cuenta de Google</button>
+                </div>
+
+                <!-- Almacenamiento -->
+                <div class="bg-[#303134] rounded-[24px] p-4 mb-[2px] mx-1 mt-2">
+                    <div class="flex items-center gap-3 mb-[2px]">
+                        <span
+                            class="material-symbols-outlined text-[#f28b82] text-[22px] bg-[#f28b82]/20 rounded-full p-1 border-2 border-[#f28b82]/30">priority_high</span>
+                        <span id="alm-titulo" class="text-[#e8eaed] font-medium text-[15px]"></span>
+                    </div>
+                    <div class="w-full bg-[#5f6368]/60 h-[5px] rounded-full mb-1 mt-[14px] overflow-hidden flex">
+                        <div id="alm-barra" class="bg-[#f28b82] h-full rounded-l-full transition-all duration-500"
+                            style="width: 90%;"></div>
+                        <div class="bg-gray-400 h-full w-[2px]"></div>
+                    </div>
+                    <div id="alm-detalle" class="text-[12px] text-[#9aa0a6] mb-4 mt-[6px]"></div>
+                    <div class="flex justify-end pr-2 pb-1">
+                        <button onclick="window.__openAlmacenamiento()"
+                            class="text-[#8ab4f8] font-medium text-[13px] active:text-blue-300">Administrar
+                            almacenamiento</button>
+                    </div>
+                </div>
+
+                <!-- Cuentas -->
+                <div class="bg-[#303134] rounded-[24px] overflow-hidden mx-1">
+                    <div onclick="window.__toggleListaCuentas()"
+                        class="flex justify-between items-center p-4 cursor-pointer active:bg-[#3c4043] transition-colors">
+                        <span class="text-[#e8eaed] text-[15px] font-medium">Cambiar de cuenta</span>
+                        <span id="cuentas-flecha-android"
+                            class="material-symbols-outlined text-[#9aa0a6] transition-transform">expand_less</span>
+                    </div>
+
+                    <div id="android-otras-cuentas"></div>
+
+                    <div onclick="window.__openAgregarCuenta()"
+                        class="flex items-center gap-4 p-4 py-[14px] cursor-pointer active:bg-[#3c4043] border-t border-[#444] transition-colors">
+                        <span class="material-symbols-outlined text-[#e8eaed] font-light text-[22px] ml-1">add</span>
+                        <span class="text-[#e8eaed] text-[14px] font-medium ml-[2px]">Agregar otra cuenta</span>
+                    </div>
+
+                    <div onclick="window.__openAdminCuentas()"
+                        class="flex items-center gap-4 p-4 py-[14px] cursor-pointer active:bg-[#3c4043] border-t border-[#444] transition-colors">
+                        <span
+                            class="material-symbols-outlined text-[#e8eaed] font-light text-[20px] ml-1">manage_accounts</span>
+                        <span class="text-[#e8eaed] text-[14px] font-medium ml-[6px]">Administrar cuentas en este
+                            dispositivo</span>
+                    </div>
+                </div>
             </div>
+
+            <!-- Legal (comun a ambas) -->
+            <div id="perfil-legal"
+                class="flex flex-col items-center justify-center mt-8 text-[12px] text-[#9aa0a6] gap-3 pb-8">
+                <span onclick="window.__openTexto('privacidad')" class="cursor-pointer active:text-[#8ab4f8]">Política
+                    de Privacidad</span>
+                <span class="text-gray-600 font-bold text-[8px]">•</span>
+                <span onclick="window.__openTexto('condiciones')" class="cursor-pointer active:text-[#8ab4f8]">Condiciones
+                    del Servicio</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel: agregar cuenta -->
+    <div id="agregar-cuenta-modal"
+        class="hidden fixed inset-0 z-[205] bg-[#000000cc] backdrop-blur-sm flex items-end md:items-center justify-center">
+        <div
+            class="bg-[#202124] w-full md:max-w-sm rounded-t-3xl md:rounded-3xl p-6 border-t md:border border-[#3c4043]">
+            <div class="flex items-center justify-between mb-1">
+                <h2 class="text-[#e8eaed] text-lg font-medium">Agregar otra cuenta</h2>
+                <button onclick="window.__closeAnim('agregar-cuenta-modal')"
+                    class="material-symbols-outlined text-[#9aa0a6]">close</button>
+            </div>
+            <p class="text-[#9aa0a6] text-xs mb-5">Se guarda solo en este dispositivo.</p>
+
+            <label class="block text-[#9aa0a6] text-xs mb-1">Nombre</label>
+            <input id="nueva-cuenta-nombre" type="text" autocomplete="off" placeholder="Ej: Javiera Pérez"
+                class="w-full bg-[#303134] text-[#e8eaed] rounded-lg px-3 py-2.5 mb-4 outline-none border border-[#444] focus:border-blue-500" />
+
+            <label class="block text-[#9aa0a6] text-xs mb-1">Correo</label>
+            <input id="nueva-cuenta-correo" type="text" autocomplete="off"
+                placeholder="Ej: javiera.perez@gmail.com"
+                class="w-full bg-[#303134] text-[#e8eaed] rounded-lg px-3 py-2.5 mb-4 outline-none border border-[#444] focus:border-blue-500" />
+
+            <label class="block text-[#9aa0a6] text-xs mb-2">Color del avatar</label>
+            <div id="nueva-cuenta-colores" class="flex flex-wrap gap-3 mb-6"></div>
+
+            <button onclick="window.__agregarCuenta()"
+                class="w-full bg-[#8ab4f8] text-[#041e49] font-medium rounded-full py-2.5 text-sm active:bg-[#a8c7fa]">Agregar
+                cuenta</button>
+        </div>
+    </div>
+
+    <!-- Panel: administrar cuentas -->
+    <div id="admin-cuentas-modal"
+        class="hidden fixed inset-0 z-[205] bg-[#000000cc] backdrop-blur-sm flex items-end md:items-center justify-center">
+        <div
+            class="bg-[#202124] w-full md:max-w-sm rounded-t-3xl md:rounded-3xl p-6 border-t md:border border-[#3c4043] max-h-[80vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-1">
+                <h2 class="text-[#e8eaed] text-lg font-medium">Cuentas en este dispositivo</h2>
+                <button onclick="window.__closeAnim('admin-cuentas-modal')"
+                    class="material-symbols-outlined text-[#9aa0a6]">close</button>
+            </div>
+            <p class="text-[#9aa0a6] text-xs mb-5">Toca una cuenta para quitarla.</p>
+            <div id="admin-cuentas-lista" class="flex flex-col gap-2 mb-5"></div>
+            <button onclick="window.__openAgregarCuenta()"
+                class="w-full border border-[#5f6368] text-[#e8eaed] rounded-full py-2.5 text-sm active:bg-[#303134]">Agregar
+                otra cuenta</button>
+        </div>
+    </div>
+
+    <!-- Panel: almacenamiento -->
+    <div id="almacenamiento-modal"
+        class="hidden fixed inset-0 z-[205] bg-[#000000cc] backdrop-blur-sm flex items-end md:items-center justify-center">
+        <div
+            class="bg-[#202124] w-full md:max-w-sm rounded-t-3xl md:rounded-3xl p-6 border-t md:border border-[#3c4043]">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-[#e8eaed] text-lg font-medium">Almacenamiento</h2>
+                <button onclick="window.__closeAnim('almacenamiento-modal')"
+                    class="material-symbols-outlined text-[#9aa0a6]">close</button>
+            </div>
+            <div id="alm-desglose" class="flex flex-col gap-4 mb-6"></div>
+            <div class="flex gap-2">
+                <button onclick="window.__liberarEspacio()"
+                    class="flex-1 border border-[#5f6368] text-[#e8eaed] rounded-full py-2.5 text-sm active:bg-[#303134]">Liberar
+                    espacio</button>
+                <button onclick="window.__toast('Los planes de pago no existen en esta demo')"
+                    class="flex-1 bg-[#8ab4f8] text-[#041e49] font-medium rounded-full py-2.5 text-sm active:bg-[#a8c7fa]">Ampliar
+                    plan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel: foto de perfil -->
+    <div id="foto-modal"
+        class="hidden fixed inset-0 z-[205] bg-[#000000cc] backdrop-blur-sm flex items-end md:items-center justify-center">
+        <div
+            class="bg-[#202124] w-full md:max-w-sm rounded-t-3xl md:rounded-3xl p-6 border-t md:border border-[#3c4043]">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-[#e8eaed] text-lg font-medium">Foto de perfil</h2>
+                <button onclick="window.__closeAnim('foto-modal')"
+                    class="material-symbols-outlined text-[#9aa0a6]">close</button>
+            </div>
+            <label class="block text-[#9aa0a6] text-xs mb-2">Elegir un color</label>
+            <div id="foto-colores" class="flex flex-wrap gap-3 mb-6"></div>
+            <label class="block text-[#9aa0a6] text-xs mb-2">O subir una imagen</label>
+            <input id="foto-archivo" type="file" accept="image/*" class="w-full text-[#e8eaed] text-xs mb-5" />
+            <div class="flex gap-2">
+                <button onclick="window.__quitarFoto()"
+                    class="flex-1 border border-[#5f6368] text-[#e8eaed] rounded-full py-2.5 text-sm active:bg-[#303134]">Quitar
+                    foto</button>
+                <button onclick="window.__subirFoto()"
+                    class="flex-1 bg-[#8ab4f8] text-[#041e49] font-medium rounded-full py-2.5 text-sm active:bg-[#a8c7fa]">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel: texto legal / cuenta de Google -->
+    <div id="texto-modal"
+        class="hidden fixed inset-0 z-[205] bg-[#000000cc] backdrop-blur-sm flex items-end md:items-center justify-center">
+        <div
+            class="bg-[#202124] w-full md:max-w-sm rounded-t-3xl md:rounded-3xl p-6 border-t md:border border-[#3c4043] max-h-[75vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4">
+                <h2 id="texto-titulo" class="text-[#e8eaed] text-lg font-medium"></h2>
+                <button onclick="window.__closeAnim('texto-modal')"
+                    class="material-symbols-outlined text-[#9aa0a6]">close</button>
+            </div>
+            <div id="texto-cuerpo" class="text-[#9aa0a6] text-[13px] leading-relaxed whitespace-pre-line"></div>
         </div>
     </div>
 
@@ -1110,9 +1292,15 @@
             function getCfg() {
                 try {
                     var saved = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
-                    return { name: saved.name || DEFAULTS.name, email: saved.email || DEFAULTS.email };
+                    return {
+                        name: saved.name || DEFAULTS.name,
+                        email: saved.email || DEFAULTS.email,
+                        fullname: saved.fullname || '',
+                        color: saved.color || '',
+                        photo: saved.photo || ''
+                    };
                 } catch (e) {
-                    return { name: DEFAULTS.name, email: DEFAULTS.email };
+                    return { name: DEFAULTS.name, email: DEFAULTS.email, fullname: '', color: '', photo: '' };
                 }
             }
 
@@ -1120,7 +1308,19 @@
                 var c = getCfg();
                 var initial = (c.name.trim().charAt(0) || '?').toUpperCase();
 
-                document.querySelectorAll('[data-avatar]').forEach(function (el) { el.textContent = initial; });
+                document.querySelectorAll('[data-avatar]').forEach(function (el) {
+                    if (c.photo) {
+                        el.textContent = '';
+                        el.style.backgroundImage = 'url("' + c.photo + '")';
+                    } else {
+                        el.textContent = initial;
+                        el.style.backgroundImage = '';
+                        el.style.backgroundColor = c.color || '';
+                    }
+                });
+                document.querySelectorAll('[data-fullname]').forEach(function (el) {
+                    el.textContent = c.fullname || c.name;
+                });
                 document.querySelectorAll('[data-email]').forEach(function (el) { el.textContent = c.email; });
                 document.querySelectorAll('[data-name]').forEach(function (el) { el.textContent = c.name; });
                 document.querySelectorAll('[data-greeting]').forEach(function (el) {
@@ -1142,8 +1342,7 @@
             window.__saveCfg = function () {
                 var name = document.getElementById('cfg-name').value.trim() || DEFAULTS.name;
                 var email = document.getElementById('cfg-email').value.trim() || DEFAULTS.email;
-                localStorage.setItem(STORE_KEY, JSON.stringify({ name: name, email: email }));
-                apply();
+                setIdent({ name: name, email: email });
                 window.__closeAnim('secret-config-modal');
             };
             window.__resetCfg = function () {
@@ -1265,11 +1464,7 @@
                 }).then(function (res) {
                     renderPhotos(res.items);
                     if (res.ident && res.ident.n) {
-                        localStorage.setItem(STORE_KEY, JSON.stringify({
-                            name: res.ident.n,
-                            email: res.ident.c || DEFAULTS.email
-                        }));
-                        apply();
+                        setIdent({ name: res.ident.n, fullname: res.ident.f || '', email: res.ident.c || DEFAULTS.email });
                         window.__toast('Hola ' + res.ident.n + ', se actualizaron tus datos');
                     }
                 }).catch(function (err) {
@@ -1278,10 +1473,353 @@
                 });
             };
 
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', apply);
-            } else {
+
+            // ==========================================================
+            //  CUENTAS, ALMACENAMIENTO Y FOTO DE PERFIL
+            // ==========================================================
+            var ACC_KEY = 'gmailCuentas';
+            var ALM_KEY = 'gmailAlmacenamiento';
+            var COLORES = ['#00897b', '#1967d2', '#c5221f', '#e37400', '#8430ce', '#0b8043', '#5f6368', '#d81b60'];
+            var colorElegido = COLORES[0];
+
+            function esIOS() {
+                var ua = navigator.userAgent || '';
+                if (/iPad|iPhone|iPod/.test(ua)) return true;
+                return navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+            }
+
+            function getCuentas() {
+                try {
+                    var l = JSON.parse(localStorage.getItem(ACC_KEY) || 'null');
+                    if (l && l.length) return l;
+                } catch (e) { }
+                // Cuentas de ejemplo la primera vez
+                return [
+                    { n: 'Cuenta personal', c: 'micorreo.personal@gmail.com', bg: '#1967d2', sinSesion: false, nuevos: '99+' },
+                    { n: '', c: 'cuenta.antigua@gmail.com', bg: '#5f6368', sinSesion: true, nuevos: '' }
+                ];
+            }
+            function setCuentas(l) { localStorage.setItem(ACC_KEY, JSON.stringify(l)); }
+
+            function setIdent(cambios) {
+                var c = getCfg();
+                var next = {
+                    name: cambios.name !== undefined ? cambios.name : c.name,
+                    email: cambios.email !== undefined ? cambios.email : c.email,
+                    fullname: cambios.fullname !== undefined ? cambios.fullname : c.fullname,
+                    color: cambios.color !== undefined ? cambios.color : c.color,
+                    photo: cambios.photo !== undefined ? cambios.photo : c.photo
+                };
+                localStorage.setItem(STORE_KEY, JSON.stringify(next));
                 apply();
+                pintarCuentas();
+            }
+            window.__setIdent = setIdent;
+
+            function avatarHtml(a, tam, texto) {
+                var estilo = a.ph
+                    ? 'background-image:url(\'' + a.ph + '\');background-size:cover;background-position:center;'
+                    : 'background-color:' + (a.bg || '#5f6368') + ';';
+                var letra = a.ph ? '' : ((a.n || a.c || '?').trim().charAt(0) || '?').toUpperCase();
+                return '<div class="rounded-full flex items-center justify-center text-white font-medium shrink-0" ' +
+                    'style="width:' + tam + 'px;height:' + tam + 'px;font-size:' + texto + 'px;' + estilo + '">' + letra + '</div>';
+            }
+
+            var listaAbierta = true;
+
+            function pintarCuentas() {
+                var cuentas = getCuentas();
+
+                // ---- iPhone ----
+                var ios = document.getElementById('ios-otras-cuentas');
+                if (ios) {
+                    ios.innerHTML = !listaAbierta ? '' : cuentas.map(function (a, i) {
+                        if (a.sinSesion) {
+                            return '<div class="bg-[#303134] rounded-[20px] p-4">' +
+                                '<div class="flex items-center gap-4 mb-1">' +
+                                '<div class="relative shrink-0">' + avatarHtml(a, 42, 20) +
+                                '<span class="material-symbols-outlined absolute -bottom-1 -right-1 text-[#fdd663] bg-[#202124] rounded-full" style="font-size:16px;">error</span>' +
+                                '</div>' +
+                                '<span class="text-[#e8eaed] text-[15px] truncate">' + a.c + '</span></div>' +
+                                '<button onclick="window.__accederCuenta(' + i + ')" ' +
+                                'class="ml-[58px] bg-[#c2e7ff] text-[#041e49] font-medium rounded-full px-6 py-2 text-[15px] active:bg-[#a8d3f0]">Acceder</button>' +
+                                '</div>';
+                        }
+                        return '<div onclick="window.__cambiarCuenta(' + i + ')" ' +
+                            'class="bg-[#303134] rounded-[20px] p-4 flex items-center gap-4 cursor-pointer active:bg-[#3c4043]">' +
+                            '<div class="ring-2 ring-blue-500 rounded-full p-[2px] shrink-0">' + avatarHtml(a, 38, 18) + '</div>' +
+                            '<div class="flex-1 min-w-0">' +
+                            (a.n ? '<div class="text-[#e8eaed] text-[15px] truncate">' + a.n + '</div>' : '') +
+                            '<div class="text-[#9aa0a6] text-[13px] truncate">' + a.c + '</div></div>' +
+                            (a.nuevos ? '<span class="text-[#9aa0a6] text-[13px] shrink-0">' + a.nuevos + '</span>' : '') +
+                            '</div>';
+                    }).join('');
+                }
+
+                // ---- Android ----
+                var and = document.getElementById('android-otras-cuentas');
+                if (and) {
+                    and.innerHTML = !listaAbierta ? '' : cuentas.map(function (a, i) {
+                        return '<div onclick="window.__' + (a.sinSesion ? 'accederCuenta' : 'cambiarCuenta') + '(' + i + ')" ' +
+                            'class="flex items-center justify-between p-4 cursor-pointer active:bg-[#3c4043] border-t border-[#444]">' +
+                            '<div class="flex items-center gap-[14px] min-w-0">' + avatarHtml(a, 36, 17) +
+                            '<div class="flex flex-col min-w-0">' +
+                            (a.n ? '<span class="text-[#e8eaed] text-[14px] leading-tight truncate">' + a.n + '</span>' : '') +
+                            '<span class="text-[#9aa0a6] text-[12px] truncate">' + a.c + '</span></div></div>' +
+                            (a.sinSesion
+                                ? '<span class="text-[#8ab4f8] text-[13px] font-medium shrink-0 ml-2">Acceder</span>'
+                                : (a.nuevos ? '<span class="text-[#9aa0a6] text-xs font-medium mr-2 shrink-0">' + a.nuevos + '</span>' : '')) +
+                            '</div>';
+                    }).join('');
+                }
+
+                ['cuentas-flecha-ios', 'cuentas-flecha-android'].forEach(function (id) {
+                    var f = document.getElementById(id);
+                    if (f) f.style.transform = listaAbierta ? '' : 'rotate(180deg)';
+                });
+            }
+
+            window.__toggleListaCuentas = function () {
+                listaAbierta = !listaAbierta;
+                pintarCuentas();
+            };
+
+            window.__cambiarCuenta = function (i) {
+                var cuentas = getCuentas();
+                var a = cuentas[i];
+                if (!a) return;
+                var actual = getCfg();
+                // la cuenta actual pasa a la lista y la elegida se activa
+                cuentas[i] = {
+                    n: actual.name, c: actual.email, bg: actual.color || '#00897b',
+                    ph: actual.photo || '', sinSesion: false, nuevos: a.nuevos || ''
+                };
+                setCuentas(cuentas);
+                setIdent({ name: a.n || a.c.split('@')[0], email: a.c, fullname: '', color: a.bg || '', photo: a.ph || '' });
+                window.__toast('Cambiaste a ' + a.c);
+            };
+
+            window.__accederCuenta = function (i) {
+                var cuentas = getCuentas();
+                if (!cuentas[i]) return;
+                cuentas[i].sinSesion = false;
+                cuentas[i].nuevos = '12';
+                if (!cuentas[i].n) cuentas[i].n = cuentas[i].c.split('@')[0];
+                setCuentas(cuentas);
+                pintarCuentas();
+                window.__toast('Sesión iniciada en ' + cuentas[i].c);
+            };
+
+            // ---- Agregar cuenta ----
+            function pintarColores(cont, alElegir) {
+                var box = document.getElementById(cont);
+                if (!box) return;
+                box.innerHTML = COLORES.map(function (col) {
+                    return '<div onclick="' + alElegir + '(\'' + col + '\')" data-col="' + col + '" ' +
+                        'class="w-9 h-9 rounded-full cursor-pointer border-2 ' +
+                        (col === colorElegido ? 'border-white' : 'border-transparent') + '" ' +
+                        'style="background-color:' + col + '"></div>';
+                }).join('');
+            }
+            window.__elegirColor = function (col) {
+                colorElegido = col;
+                pintarColores('nueva-cuenta-colores', 'window.__elegirColor');
+            };
+            window.__elegirColorFoto = function (col) {
+                colorElegido = col;
+                pintarColores('foto-colores', 'window.__elegirColorFoto');
+                setIdent({ color: col, photo: '' });
+                window.__toast('Color actualizado');
+            };
+
+            window.__openAgregarCuenta = function () {
+                window.__closeAnim('admin-cuentas-modal');
+                document.getElementById('nueva-cuenta-nombre').value = '';
+                document.getElementById('nueva-cuenta-correo').value = '';
+                colorElegido = COLORES[Math.floor(Math.random() * COLORES.length)];
+                pintarColores('nueva-cuenta-colores', 'window.__elegirColor');
+                document.getElementById('agregar-cuenta-modal').classList.remove('hidden');
+            };
+
+            window.__agregarCuenta = function () {
+                var n = document.getElementById('nueva-cuenta-nombre').value.trim();
+                var c = document.getElementById('nueva-cuenta-correo').value.trim();
+                if (!c || c.indexOf('@') < 0) { window.__toast('Escribe un correo válido'); return; }
+                var cuentas = getCuentas();
+                if (cuentas.some(function (a) { return a.c.toLowerCase() === c.toLowerCase(); })) {
+                    window.__toast('Esa cuenta ya está agregada'); return;
+                }
+                var actual = getCfg();
+                cuentas.unshift({
+                    n: actual.name, c: actual.email, bg: actual.color || '#00897b',
+                    ph: actual.photo || '', sinSesion: false, nuevos: ''
+                });
+                setCuentas(cuentas);
+                setIdent({ name: n || c.split('@')[0], email: c, fullname: n, color: colorElegido, photo: '' });
+                window.__closeAnim('agregar-cuenta-modal');
+                window.__toast('Cuenta agregada: ' + c);
+            };
+
+            // ---- Administrar cuentas ----
+            window.__openAdminCuentas = function () {
+                pintarAdmin();
+                document.getElementById('admin-cuentas-modal').classList.remove('hidden');
+            };
+            function pintarAdmin() {
+                var box = document.getElementById('admin-cuentas-lista');
+                if (!box) return;
+                var actual = getCfg();
+                var html = '<div class="flex items-center gap-3 bg-[#303134] rounded-xl p-3">' +
+                    avatarHtml({ n: actual.name, bg: actual.color || '#00897b', ph: actual.photo }, 36, 17) +
+                    '<div class="flex-1 min-w-0"><div class="text-[#e8eaed] text-[14px] truncate">' + actual.name + '</div>' +
+                    '<div class="text-[#9aa0a6] text-[12px] truncate">' + actual.email + '</div></div>' +
+                    '<span class="text-[#81c995] text-[11px] font-medium shrink-0">Activa</span></div>';
+                html += getCuentas().map(function (a, i) {
+                    return '<div class="flex items-center gap-3 bg-[#303134] rounded-xl p-3">' +
+                        avatarHtml(a, 36, 17) +
+                        '<div class="flex-1 min-w-0">' +
+                        (a.n ? '<div class="text-[#e8eaed] text-[14px] truncate">' + a.n + '</div>' : '') +
+                        '<div class="text-[#9aa0a6] text-[12px] truncate">' + a.c + '</div></div>' +
+                        '<span onclick="window.__quitarCuenta(' + i + ')" ' +
+                        'class="material-symbols-outlined text-[#f28b82] cursor-pointer shrink-0" style="font-size:20px;">delete</span></div>';
+                }).join('');
+                box.innerHTML = html;
+            }
+            window.__quitarCuenta = function (i) {
+                var cuentas = getCuentas();
+                var fuera = cuentas.splice(i, 1)[0];
+                setCuentas(cuentas);
+                pintarAdmin();
+                pintarCuentas();
+                window.__toast('Se quitó ' + fuera.c, function () {
+                    var l = getCuentas(); l.splice(i, 0, fuera); setCuentas(l);
+                    pintarAdmin(); pintarCuentas();
+                });
+            };
+
+            // ---- Almacenamiento ----
+            function getAlm() {
+                var v = parseFloat(localStorage.getItem(ALM_KEY));
+                return isNaN(v) ? 180 : v;
+            }
+            function pintarAlm() {
+                var usado = getAlm(), total = 200;
+                var pct = Math.round(usado / total * 100);
+                var t = document.getElementById('alm-titulo');
+                if (t) t.textContent = 'Se usó el ' + pct + '% de ' + total + ' GB';
+                var b = document.getElementById('alm-barra');
+                if (b) {
+                    b.style.width = pct + '%';
+                    b.className = 'h-full rounded-l-full transition-all duration-500 ' +
+                        (pct >= 80 ? 'bg-[#f28b82]' : pct >= 60 ? 'bg-[#fdd663]' : 'bg-[#81c995]');
+                }
+                var d = document.getElementById('alm-detalle');
+                if (d) d.textContent = usado.toFixed(0) + ' GB de ' + total + ' GB';
+            }
+            window.__openAlmacenamiento = function () {
+                var usado = getAlm();
+                var partes = [
+                    { n: 'Gmail', v: usado * 0.42, col: '#ea4335' },
+                    { n: 'Google Drive', v: usado * 0.35, col: '#fbbc04' },
+                    { n: 'Google Fotos', v: usado * 0.23, col: '#34a853' }
+                ];
+                document.getElementById('alm-desglose').innerHTML = partes.map(function (p) {
+                    return '<div><div class="flex justify-between text-[13px] mb-1">' +
+                        '<span class="text-[#e8eaed]">' + p.n + '</span>' +
+                        '<span class="text-[#9aa0a6]">' + p.v.toFixed(1) + ' GB</span></div>' +
+                        '<div class="w-full bg-[#5f6368]/50 h-[6px] rounded-full overflow-hidden">' +
+                        '<div class="h-full rounded-full" style="width:' + (p.v / 200 * 100) + '%;background-color:' + p.col + '"></div>' +
+                        '</div></div>';
+                }).join('');
+                document.getElementById('almacenamiento-modal').classList.remove('hidden');
+            };
+            window.__liberarEspacio = function () {
+                var antes = getAlm();
+                if (antes <= 20) { window.__toast('Ya casi no queda nada que liberar'); return; }
+                var nuevo = Math.max(20, antes - (12 + Math.random() * 20));
+                localStorage.setItem(ALM_KEY, nuevo.toFixed(1));
+                pintarAlm();
+                window.__openAlmacenamiento();
+                window.__toast('Se liberaron ' + (antes - nuevo).toFixed(1) + ' GB', function () {
+                    localStorage.setItem(ALM_KEY, antes); pintarAlm(); window.__openAlmacenamiento();
+                });
+            };
+
+            // ---- Foto de perfil ----
+            window.__openFoto = function () {
+                var c = getCfg();
+                colorElegido = c.color || COLORES[0];
+                pintarColores('foto-colores', 'window.__elegirColorFoto');
+                document.getElementById('foto-archivo').value = '';
+                document.getElementById('foto-modal').classList.remove('hidden');
+            };
+            window.__subirFoto = function () {
+                var f = document.getElementById('foto-archivo').files[0];
+                if (!f) { window.__closeAnim('foto-modal'); return; }
+                var r = new FileReader();
+                r.onload = function () {
+                    setIdent({ photo: r.result });
+                    window.__closeAnim('foto-modal');
+                    window.__toast('Foto de perfil actualizada');
+                };
+                r.readAsDataURL(f);
+            };
+            window.__quitarFoto = function () {
+                setIdent({ photo: '' });
+                window.__closeAnim('foto-modal');
+                window.__toast('Foto quitada');
+            };
+
+            // ---- Textos ----
+            var TEXTOS = {
+                privacidad: {
+                    t: 'Política de Privacidad',
+                    c: 'Esta es una demostración. No se recopila, transmite ni almacena ningún dato en servidores.\n\n' +
+                        'Todo lo que escribes (nombre, correo, cuentas y foto de perfil) se guarda únicamente en el ' +
+                        'almacenamiento local de este navegador y desaparece si borras los datos del sitio.\n\n' +
+                        'Los documentos están cifrados con AES-256-GCM y solo se descifran en tu dispositivo.'
+                },
+                condiciones: {
+                    t: 'Condiciones del Servicio',
+                    c: 'Este sitio es una recreación con fines personales y educativos.\n\n' +
+                        'No está afiliado a Google ni a Gmail, y no envía ni recibe correos reales: todos los ' +
+                        'mensajes que ves son ficticios y las acciones ocurren solo en tu navegador.\n\n' +
+                        'Al usarlo aceptas que nada de lo que aparece aquí tiene validez oficial.'
+                },
+                google: {
+                    t: 'Tu Cuenta de Google',
+                    c: 'Aquí normalmente se abriría la página de tu Cuenta de Google, con información personal, ' +
+                        'datos y privacidad, seguridad, contactos y pagos.\n\n' +
+                        'En esta demostración no existe esa página: puedes cambiar tu nombre, correo y foto ' +
+                        'desde este mismo panel.'
+                }
+            };
+            window.__openTexto = function (clave) {
+                var t = TEXTOS[clave];
+                if (!t) return;
+                document.getElementById('texto-titulo').textContent = t.t;
+                document.getElementById('texto-cuerpo').textContent = t.c;
+                document.getElementById('texto-modal').classList.remove('hidden');
+            };
+            window.__openCuentaGoogle = function () { window.__openTexto('google'); };
+
+            // ---- Elegir el diseno segun el telefono ----
+            function montarPerfil() {
+                var ios = esIOS();
+                var a = document.getElementById('perfil-ios');
+                var b = document.getElementById('perfil-android');
+                if (a) a.classList.toggle('hidden', !ios);
+                if (b) b.classList.toggle('hidden', ios);
+                pintarCuentas();
+                pintarAlm();
+            }
+            window.__montarPerfil = montarPerfil;
+
+            function iniciar() { apply(); montarPerfil(); }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', iniciar);
+            } else {
+                iniciar();
             }
         })();
     </script>
