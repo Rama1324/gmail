@@ -931,9 +931,35 @@
     </div>
 
     <!-- Modal de redactar (estilo Gmail) -->
-    <div id="compose-modal" class="hidden fixed bottom-0 right-0 md:right-6 z-[195] w-full md:w-[500px]">
-        <div class="bg-white w-full md:rounded-t-xl shadow-2xl border border-gray-300 flex flex-col max-h-[80vh]">
-            <div class="flex items-center justify-between bg-[#404040] text-white px-4 py-2.5 md:rounded-t-xl">
+    <div id="compose-modal"
+        class="hidden fixed inset-0 md:inset-auto md:bottom-0 md:right-6 z-[195] md:w-[500px]">
+        <div
+            class="bg-[#1f1f21] md:bg-white w-full h-full md:h-auto md:max-h-[80vh] md:rounded-t-xl shadow-2xl md:border md:border-gray-300 flex flex-col">
+
+            <!-- Barra superior en movil (como la app de Gmail) -->
+            <div class="md:hidden flex items-center justify-between px-4 h-16 shrink-0">
+                <button onclick="window.__closeComposeMobil()"
+                    class="w-9 h-9 rounded-full bg-[#2a2a2d] flex items-center justify-center active:bg-[#3c4043]">
+                    <span class="material-symbols-outlined text-[#e8eaed]" style="font-size: 20px;">close</span>
+                </button>
+                <div class="flex items-center gap-6">
+                    <span onclick="window.__toast('Ayuda para escribir no disponible en esta demo')"
+                        class="material-symbols-outlined text-[#e8eaed] gm-press"
+                        style="font-size: 22px;">edit_note</span>
+                    <span onclick="window.__toast('Adjuntar archivos no disponible en esta demo')"
+                        class="material-symbols-outlined text-[#e8eaed] gm-press"
+                        style="font-size: 22px;">attach_file</span>
+                    <span onclick="window.__sendCompose()"
+                        class="material-symbols-outlined text-[#e8eaed] gm-press" style="font-size: 22px;">send</span>
+                    <span onclick="window.__composeMenu()"
+                        class="material-symbols-outlined text-[#e8eaed] gm-press"
+                        style="font-size: 22px;">more_horiz</span>
+                </div>
+            </div>
+
+            <!-- Barra superior en escritorio -->
+            <div
+                class="hidden md:flex items-center justify-between bg-[#404040] text-white px-4 py-2.5 md:rounded-t-xl">
                 <span class="text-sm font-medium">Mensaje nuevo</span>
                 <div class="flex items-center gap-1">
                     <span onclick="window.__toast('Minimizar no disponible en esta demo')"
@@ -944,24 +970,57 @@
                         style="font-size: 18px;">close</span>
                 </div>
             </div>
+
             <div class="flex flex-col flex-1 overflow-y-auto">
-                <input id="compose-to" type="text" placeholder="Para"
-                    class="border-b border-gray-200 px-4 py-2 text-sm outline-none" />
+
+                <!-- Para -->
+                <div class="flex items-center border-b border-[#3c4043] md:border-gray-200 px-4 md:px-0">
+                    <input id="compose-to" type="text" placeholder="Para" autocomplete="off"
+                        class="flex-1 bg-transparent py-3 md:px-4 md:py-2 text-[16px] md:text-sm outline-none min-w-0" />
+                    <span onclick="window.__toast('Cc y Cco no disponibles en esta demo')"
+                        class="md:hidden material-symbols-outlined text-[#9aa0a6] shrink-0"
+                        style="font-size: 22px;">expand_more</span>
+                </div>
+
+                <!-- Sugerencias de contacto (solo movil) -->
+                <div class="md:hidden px-4 pt-4 pb-1 border-b border-[#3c4043]">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-[#e8eaed] text-[14px]">Sugerencias</span>
+                        <span onclick="window.__toast('Sugerencias basadas en tus contactos frecuentes')"
+                            class="material-symbols-outlined text-[#9aa0a6]" style="font-size: 16px;">info</span>
+                    </div>
+                    <div id="compose-suggestions" class="flex gap-6 overflow-x-auto pb-3"></div>
+                </div>
+
+                <!-- De (solo movil) -->
+                <div class="md:hidden flex items-center gap-4 border-b border-[#3c4043] px-4 py-3">
+                    <span class="text-[#9aa0a6] text-[15px] shrink-0">De</span>
+                    <span data-email class="flex-1 text-[#e8eaed] text-[15px] truncate"></span>
+                    <span onclick="window.__toast('Solo tienes una cuenta en esta demo')"
+                        class="material-symbols-outlined text-[#9aa0a6] shrink-0"
+                        style="font-size: 22px;">expand_more</span>
+                </div>
+
+                <!-- Asunto -->
                 <input id="compose-subject" type="text" placeholder="Asunto"
-                    class="border-b border-gray-200 px-4 py-2 text-sm outline-none" />
-                <textarea id="compose-body" placeholder="Redactar correo electrónico"
-                    class="flex-1 px-4 py-2 text-sm outline-none resize-none min-h-[160px]"></textarea>
+                    class="bg-transparent border-b border-[#3c4043] md:border-gray-200 px-4 py-3 md:py-2 text-[16px] md:text-sm outline-none" />
+
+                <!-- Cuerpo -->
+                <textarea id="compose-body" placeholder="Redacta un correo"
+                    class="flex-1 bg-transparent px-4 py-3 md:py-2 text-[16px] md:text-sm outline-none resize-none min-h-[160px]"></textarea>
             </div>
-            <div class="flex items-center justify-between px-4 py-2 border-t border-gray-100 gap-2">
+
+            <!-- Barra inferior (solo escritorio) -->
+            <div class="hidden md:flex items-center justify-between px-4 py-2 border-t border-gray-100 gap-2">
                 <div class="flex items-center gap-2 min-w-0">
                     <button onclick="window.__sendCompose()"
                         class="bg-brand-blue hover:bg-blue-700 text-white font-medium rounded-full px-6 py-2 text-sm transition-colors shrink-0">Enviar</button>
                     <span onclick="window.__scheduleCompose()" title="Programar envío"
                         class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5">schedule_send</span>
                     <span onclick="window.__toast('Adjuntar archivos no disponible en esta demo')" title="Adjuntar"
-                        class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5 hidden md:inline">attach_file</span>
+                        class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5">attach_file</span>
                     <span onclick="window.__toast('Insertar emoji no disponible en esta demo')" title="Emoji"
-                        class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5 hidden md:inline">mood</span>
+                        class="material-symbols-outlined cursor-pointer text-gray-500 hover:bg-gray-100 rounded-full p-1.5">mood</span>
                 </div>
                 <div class="flex items-center gap-1 shrink-0">
                     <span onclick="window.__saveDraft()" title="Guardar borrador"
@@ -1809,8 +1868,48 @@
                 document.getElementById('compose-body').value = '';
                 window.__editingDraft = null;
             }
+            // Contactos sugeridos (ficticios, del mismo mundo de la demo)
+            var SUGERENCIAS = [
+                { n: 'Coordinación', c: 'coordinacion@universidad.edu', i: 'C', bg: 'bg-[#00695c]' },
+                { n: 'Ayudantía', c: 'ayudantia.calculo@universidad.edu', i: 'A', bg: 'bg-[#283593]' },
+                { n: 'Secretaría', c: 'secretaria@universidad.edu', i: 'S', bg: 'bg-[#ef6c00]' },
+                { n: 'Biblioteca', c: 'biblioteca@universidad.edu', i: 'B', bg: 'bg-[#1e8e3e]' }
+            ];
+
+            function pintarSugerencias() {
+                var box = document.getElementById('compose-suggestions');
+                if (!box) return;
+                box.innerHTML = SUGERENCIAS.map(function (s) {
+                    return '<div onclick="window.__usarSugerencia(\'' + s.c + '\')" ' +
+                        'class="flex flex-col items-center gap-2 shrink-0 cursor-pointer gm-press">' +
+                        '<div class="w-[62px] h-[62px] rounded-full ' + s.bg + ' text-white flex items-center ' +
+                        'justify-center text-[26px] font-medium">' + s.i + '</div>' +
+                        '<span class="text-[#e8eaed] text-[13px] font-medium">' + s.n + '</span></div>';
+                }).join('');
+            }
+
+            window.__usarSugerencia = function (correo) {
+                var to = document.getElementById('compose-to');
+                to.value = correo;
+                window.__toast('Destinatario: ' + correo);
+            };
+
             window.__openCompose = function () {
+                pintarSugerencias();
                 document.getElementById('compose-modal').classList.remove('hidden');
+            };
+
+            // En movil la X guarda el borrador, igual que la app de Gmail
+            window.__closeComposeMobil = function () {
+                var hay = document.getElementById('compose-to').value.trim() ||
+                    document.getElementById('compose-subject').value.trim() ||
+                    document.getElementById('compose-body').value.trim();
+                if (hay) { window.__saveDraft(); return; }
+                window.__closeCompose();
+            };
+
+            window.__composeMenu = function () {
+                window.__discardCompose();
             };
             window.__closeCompose = function () {
                 window.__closeAnim('compose-modal');
