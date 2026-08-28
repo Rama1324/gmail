@@ -2135,8 +2135,11 @@
                     undoBtn.onclick = function () { undoFn(); el.remove(); };
                     el.appendChild(undoBtn);
                 }
+                // Gmail muestra un aviso a la vez: el nuevo reemplaza al anterior
+                container.innerHTML = '';
                 container.appendChild(el);
-                setTimeout(function () { el.remove(); }, 4000);
+                clearTimeout(window.__toastT);
+                window.__toastT = setTimeout(function () { el.remove(); }, 4000);
             };
 
             // ---- Cierre animado de paneles ----
@@ -2354,7 +2357,10 @@
             var query = '';
 
             function inFolder(m, f) {
-                if (f === 'recibidos') return INBOX_CATS.indexOf(m.folder) !== -1;
+                // Un correo pospuesto desaparece de Recibidos hasta que vuelva
+                var enBandeja = INBOX_CATS.indexOf(m.folder) !== -1;
+                if (f === 'recibidos') return enBandeja && !m.snoozed;
+                if (INBOX_CATS.indexOf(f) !== -1) return m.folder === f && !m.snoozed;
                 if (f === 'destacados') return !!m.starred && m.folder !== 'papelera';
                 if (f === 'importantes') return !!m.important && m.folder !== 'papelera';
                 if (f === 'pospuestos') return !!m.snoozed && m.folder !== 'papelera';
@@ -2483,6 +2489,21 @@
                 return out;
             }
 
+            // Gmail avisa arriba en Papelera y en Spam, con su boton para vaciar
+            function avisoCarpeta() {
+                if (current !== 'papelera' && current !== 'spam') return '';
+                var esPapelera = current === 'papelera';
+                var texto = esPapelera
+                    ? 'Los mensajes que llevan más de 30 días en la papelera se borran automáticamente.'
+                    : 'Los mensajes marcados como spam se borran después de 30 días.';
+                return '<div class="flex flex-wrap items-center justify-center gap-2 px-4 py-3 ' +
+                    'bg-[#f6f8fc] max-md:bg-[#1c1c1f] border-b border-gray-100 max-md:border-[#3c4043] text-center">' +
+                    '<span class="text-[13px] text-gray-600 max-md:text-[#9aa0a6]">' + texto + '</span>' +
+                    '<button onclick="window.__emptyTrash()" ' +
+                    'class="text-[13px] font-medium text-[#1a73e8] max-md:text-[#8ab4f8]">' +
+                    (esPapelera ? 'Vaciar la papelera ahora' : 'Vaciar el spam ahora') + '</button></div>';
+            }
+
             function mostrarPrevia() {
                 var p = window.__getPrefs ? window.__getPrefs() : null;
                 return !p || p.vistaPrevia;
@@ -2552,7 +2573,7 @@
                         : (EMPTY_MSG[current] || 'No tienes correos aquí');
                     list.innerHTML = '<div class="flex flex-col items-center justify-center text-gray-400 max-md:text-[#9aa0a6] py-20 text-sm px-6 text-center">' + msg + '</div>';
                 } else {
-                    list.innerHTML = rows.map(rowHtml).join('');
+                    list.innerHTML = avisoCarpeta() + rows.map(rowHtml).join('');
                 }
                 if (indicador) list.appendChild(indicador);
                 if (modoSel) pintarSeleccion();
@@ -2626,12 +2647,6 @@
                 var m = rowMail(el); if (!m) return;
                 move(m, 'principal', 'Conversación restaurada');
             };
-            window.__snoozeRow = function (el) {
-                var m = rowMail(el); if (!m) return;
-                m.snoozed = !m.snoozed;
-                render();
-                window.__toast(m.snoozed ? 'Conversación pospuesta' : 'Ya no está pospuesta');
-            };
             window.__toggleStar = function (icon) {
                 var el = icon.closest ? icon.closest('.email-row-hover') : null;
                 var m = rowMail(el);
@@ -2659,11 +2674,19 @@
             };
 
             window.__emptyTrash = function () {
-                var n = MAILS.filter(function (m) { return m.folder === 'papelera'; }).length;
-                if (!n) { window.__toast('La papelera ya está vacía'); return; }
-                MAILS = MAILS.filter(function (m) { return m.folder !== 'papelera'; });
+                var carpeta = current === 'spam' ? 'spam' : 'papelera';
+                var fuera = MAILS.filter(function (m) { return m.folder === carpeta; });
+                if (!fuera.length) {
+                    window.__toast(carpeta === 'spam' ? 'No hay spam que vaciar' : 'La papelera ya está vacía');
+                    return;
+                }
+                MAILS = MAILS.filter(function (m) { return m.folder !== carpeta; });
                 render();
-                window.__toast(n + ' conversaciones eliminadas para siempre');
+                window.__toast(fuera.length + (fuera.length === 1 ? ' mensaje eliminado' : ' mensajes eliminados') +
+                    ' para siempre', function () {
+                        MAILS = MAILS.concat(fuera);
+                        render();
+                    });
             };
 
             // ---- Seleccionar todos ----
@@ -3130,7 +3153,7 @@
             window.__menuPosponer = function (row) {
                 var m = row ? rowMail(row) : window.__openMailData;
                 if (!m) return;
-                function posponer(texto, dias) {
+                function posponer(texto) {
                     return function () {
                         hiloDe(m).forEach(function (x) { x.snoozed = true; });
                         var prev = m.folder;
@@ -3142,13 +3165,26 @@
                         if (window.__openMailData === m) window.__closeGenericMail();
                     };
                 }
+                // Si ya esta pospuesto, lo primero es poder devolverlo
+                if (m.snoozed) {
+                    abrirMenu('Este mensaje está pospuesto', [
+                        { t: 'Devolver a Recibidos', ic: 'unarchive', fn: function () {
+                            hiloDe(m).forEach(function (x) { x.snoozed = false; });
+                            render();
+                            window.__toast('Devuelto a Recibidos');
+                        } },
+                        { sep: true },
+                        { t: 'Cambiar la fecha', ic: 'edit_calendar', fn: posponer('la nueva fecha') }
+                    ]);
+                    return;
+                }
                 abrirMenu('Posponer hasta', [
-                    { t: 'Más tarde hoy', ic: 'schedule', fn: posponer('más tarde hoy', 0) },
-                    { t: 'Mañana', ic: 'wb_sunny', fn: posponer('mañana', 1) },
-                    { t: 'Este fin de semana', ic: 'weekend', fn: posponer('el fin de semana', 3) },
-                    { t: 'La próxima semana', ic: 'event', fn: posponer('la próxima semana', 7) },
+                    { t: 'Más tarde hoy', ic: 'schedule', fn: posponer('más tarde hoy') },
+                    { t: 'Mañana', ic: 'wb_sunny', fn: posponer('mañana') },
+                    { t: 'Este fin de semana', ic: 'weekend', fn: posponer('el fin de semana') },
+                    { t: 'La próxima semana', ic: 'event', fn: posponer('la próxima semana') },
                     { sep: true },
-                    { t: 'Elegir fecha y hora', ic: 'edit_calendar', fn: posponer('la fecha elegida', 5) }
+                    { t: 'Elegir fecha y hora', ic: 'edit_calendar', fn: posponer('la fecha elegida') }
                 ]);
             };
 
@@ -3235,7 +3271,7 @@
             //  BUSCADOR CON FILTROS
             // =====================================================
             var REC_KEY = 'gmailBusquedasRecientes';
-            var filtros = { sinLeer: false, conAdjunto: false, destacado: false, de: '' };
+            var filtros = { sinLeer: false, conAdjunto: false, destacado: false };
 
             var CHIPS = [
                 { k: 'sinLeer', t: 'Sin leer', ic: 'mark_email_unread' },
